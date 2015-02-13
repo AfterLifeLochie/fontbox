@@ -21,11 +21,9 @@ public class LayoutCalculator {
 	 * @return If a page overflow occurs - that is, if there is no more
 	 *         available vertical space for lines to occupy.
 	 */
-	public boolean boxLine(FontMetric metric, StackedPushbackStringReader text,
-			PageBox page) throws IOException {
+	public boolean boxLine(FontMetric metric, StackedPushbackStringReader text, PageBox page) throws IOException {
 		// Calculate some required properties
-		int effectiveWidth = page.page_width - page.margin_left
-				- page.margin_right;
+		int effectiveWidth = page.page_width - page.margin_left - page.margin_right;
 		int effectiveHeight = page.getFreeHeight();
 
 		int width_new_line = 0, width_new_word = 0;
@@ -48,8 +46,7 @@ public class LayoutCalculator {
 				// Push a whole word if one exists
 				if (chars.size() > 0) {
 					// Find out if there is enough space to push this word
-					int new_width_nl = width_new_line + width_new_word
-							+ page.min_space_size;
+					int new_width_nl = width_new_line + width_new_word + page.min_space_size;
 					if (effectiveWidth >= new_width_nl) {
 						// Yes, there is enough space, add the word
 						width_new_line += width_new_word;
@@ -62,7 +59,7 @@ public class LayoutCalculator {
 						width_new_word = 0;
 					} else {
 						// No, the word doesn't fit, back it up
-						text.rewind(chars.size()+1);
+						text.rewind(chars.size() + 1);
 						chars.clear();
 						width_new_word = 0;
 						break;
@@ -80,8 +77,7 @@ public class LayoutCalculator {
 		// Anything left on buffer?
 		if (chars.size() > 0) {
 			// Find out if there is enough space to push this word
-			int new_width_nl = width_new_line + width_new_word
-					+ page.min_space_size;
+			int new_width_nl = width_new_line + width_new_word + page.min_space_size;
 			if (effectiveWidth >= new_width_nl) {
 				// Yes, there is enough space, add the word
 				width_new_line += width_new_word;
@@ -136,8 +132,7 @@ public class LayoutCalculator {
 
 		// If the line is not blank, then...
 		if (words.size() > 0) {
-			int extra_px_per_space = (int) Math.floor(space_remain
-					/ words.size());
+			int extra_px_per_space = (int) Math.floor(space_remain / words.size());
 			if (width_new_line > extra_px_per_space)
 				space_width = page.min_space_size + extra_px_per_space;
 		} else
@@ -146,7 +141,7 @@ public class LayoutCalculator {
 		// Make the line height fit exactly 1 or more line units
 		int line_height = height_new_line;
 		if (line_height % page.lineheight_size != 0) {
-			line_height -= line_height % page.lineheight_size;
+			line_height += line_height % page.lineheight_size;
 			// line_height += page.lineheight_size;
 		}
 
@@ -165,21 +160,17 @@ public class LayoutCalculator {
 	 *            The text blob
 	 * @return The page results
 	 */
-	public PageBox[] boxParagraph(FontMetric metric, String text, int width,
-			int height, int margin_l, int margin_r, int min_sp, int min_lhs)
-			throws IOException {
-		StackedPushbackStringReader reader = new StackedPushbackStringReader(
-				text);
+	public PageBox[] boxParagraph(FontMetric metric, String text, int width, int height, int margin_l, int margin_r,
+			int min_sp, int min_lhs) throws IOException {
+		StackedPushbackStringReader reader = new StackedPushbackStringReader(text);
 		ArrayList<PageBox> pages = new ArrayList<PageBox>();
-		PageBox currentPage = new PageBox(width, height, margin_l, margin_r,
-				min_sp, min_lhs);
+		PageBox currentPage = new PageBox(width, height, margin_l, margin_r, min_sp, min_lhs);
 		boolean flag = false;
 		while (reader.available() > 0) {
 			flag = boxLine(metric, reader, currentPage);
 			if (flag) {
 				pages.add(currentPage);
-				currentPage = new PageBox(width, height, margin_l, margin_r,
-						min_sp, min_lhs);
+				currentPage = new PageBox(width, height, margin_l, margin_r, min_sp, min_lhs);
 			}
 		}
 		if (!flag)

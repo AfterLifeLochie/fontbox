@@ -51,6 +51,7 @@ public class WrittenFontRenderer {
 					continue;
 				GL11.glPushMatrix();
 				GL11.glTranslatef(x * 0.45f, y * 0.45f, 0.0f);
+				GL11.glColor3f(1.0f, 0.0f, 0.0f);
 				buffer.callCharacter((int) c);
 				GL11.glPopMatrix();
 				x += mx.width; // shunt by glpyh size

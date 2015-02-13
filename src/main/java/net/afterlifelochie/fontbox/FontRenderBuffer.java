@@ -76,7 +76,7 @@ public class FontRenderBuffer {
 		 */
 		GL11.glScalef(0.45f, 0.45f, 1.0f);
 		tess.startDrawingQuads();
-		tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
+		//tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
 		tess.addVertexWithUV(x, y + h, zLevel, u, v + vs);
 		tess.addVertexWithUV(x + w, y + h, zLevel, u + us, v + vs);
 		tess.addVertexWithUV(x + w, y, zLevel, u + us, v);
