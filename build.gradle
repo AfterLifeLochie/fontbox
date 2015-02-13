@@ -19,21 +19,22 @@ buildscript {
 apply plugin: 'forge'
 
 version = "1.0.0"
+ext.build = "0"
 group = "fontbox"
 archivesBaseName = "fontbox"
 
 minecraft {
 	version = "1.7.10-10.13.0.1180"
 	replace "@VERSION@", project.version
-	replace "@BUILD@", project.ext.buildNumber
+	replace "@BUILD@", project.ext.build
 }
 
 jar.version = "${minecraft.version}"
-jar.classifier = "${ext.buildNumber}"
+jar.classifier = "${project.ext.build}"
 processResources {
 	from(sourceSets.main.resources.srcDirs) {
 		include 'mcmod.info'
-		expand 'version':project.version + '-' + project.ext.buildNumber, 'mcversion':project.minecraft.version
+		expand 'version':project.version + '-' + project.ext.build, 'mcversion':project.minecraft.version
 	}
 	
 	from(sourceSets.main.resources.srcDirs) {
