@@ -62,6 +62,7 @@ public class LayoutCalculator {
 						width_new_word = 0;
 					} else {
 						// No, the word doesn't fit, back it up
+						text.rewind(chars.size()+1);
 						chars.clear();
 						width_new_word = 0;
 						break;
