@@ -1,8 +1,10 @@
-package net.afterlifelochie.fontbox;
+package net.afterlifelochie.fontbox.layout;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import net.afterlifelochie.fontbox.GLFontMetrics;
+import net.afterlifelochie.fontbox.GLGlyphMetric;
 import net.afterlifelochie.io.StackedPushbackStringReader;
 
 public class LayoutCalculator {
@@ -21,7 +23,7 @@ public class LayoutCalculator {
 	 * @return If a page overflow occurs - that is, if there is no more
 	 *         available vertical space for lines to occupy.
 	 */
-	public boolean boxLine(FontMetric metric, StackedPushbackStringReader text, PageBox page) throws IOException {
+	public boolean boxLine(GLFontMetrics metric, StackedPushbackStringReader text, PageBox page) throws IOException {
 		// Calculate some required properties
 		int effectiveWidth = page.page_width - page.margin_left - page.margin_right;
 		int effectiveHeight = page.getFreeHeight();
@@ -66,7 +68,7 @@ public class LayoutCalculator {
 					}
 				}
 			} else {
-				GlyphMetric mx = metric.glyphs.get((int) c);
+				GLGlyphMetric mx = metric.glyphs.get((int) c);
 				if (mx != null) {
 					width_new_word += mx.width;
 					chars.add(c);
@@ -101,7 +103,7 @@ public class LayoutCalculator {
 			for (int j = 0; j < word.length(); j++) {
 				char c = word.charAt(j);
 				if (c != ' ') {
-					GlyphMetric mx = metric.glyphs.get((int) c);
+					GLGlyphMetric mx = metric.glyphs.get((int) c);
 					if (mx.height > height_new_line)
 						height_new_line = mx.height;
 				}
@@ -160,7 +162,7 @@ public class LayoutCalculator {
 	 *            The text blob
 	 * @return The page results
 	 */
-	public PageBox[] boxParagraph(FontMetric metric, String text, int width, int height, int margin_l, int margin_r,
+	public PageBox[] boxParagraph(GLFontMetrics metric, String text, int width, int height, int margin_l, int margin_r,
 			int min_sp, int min_lhs) throws IOException {
 		StackedPushbackStringReader reader = new StackedPushbackStringReader(text);
 		ArrayList<PageBox> pages = new ArrayList<PageBox>();

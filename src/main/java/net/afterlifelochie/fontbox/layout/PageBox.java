@@ -1,4 +1,4 @@
-package net.afterlifelochie.fontbox;
+package net.afterlifelochie.fontbox.layout;
 
 import java.util.LinkedList;
 

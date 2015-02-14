@@ -1,8 +1,10 @@
-package net.afterlifelochie.fontbox;
+package net.afterlifelochie.fontbox.render;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import net.afterlifelochie.fontbox.GLFontMetrics;
+import net.afterlifelochie.fontbox.GLGlyphMetric;
 import net.minecraft.client.renderer.Tessellator;
 
 import org.lwjgl.opengl.GL11;
@@ -28,20 +30,18 @@ public class FontRenderBuffer {
 	 */
 	private final int listSize;
 
-	public FontRenderBuffer(FontMetric metric) {
+	public FontRenderBuffer(GLFontMetrics metric) {
 		this.listSize = metric.glyphs.size();
 		this.listOrigin = GL11.glGenLists(listSize);
 		if (this.listOrigin == 0)
 			throw new RuntimeException("Lists are not available, panic!");
 		int cx = listOrigin;
-		for (Entry<Integer, GlyphMetric> metricData : metric.glyphs.entrySet()) {
-			GlyphMetric glyph = metricData.getValue();
+		for (Entry<Integer, GLGlyphMetric> metricData : metric.glyphs.entrySet()) {
+			GLGlyphMetric glyph = metricData.getValue();
 			GL11.glNewList(cx, GL11.GL_COMPILE);
 			GL11.glPushMatrix();
-			drawTexturedRectUV(0, 0, glyph.width, glyph.height, glyph.ux
-					* (1f / metric.fontImageWidth), glyph.vy
-					* (1f / metric.fontImageHeight), glyph.width
-					* (1f / metric.fontImageWidth), glyph.height
+			drawTexturedRectUV(0, 0, glyph.width, glyph.height, glyph.ux * (1f / metric.fontImageWidth), glyph.vy
+					* (1f / metric.fontImageHeight), glyph.width * (1f / metric.fontImageWidth), glyph.height
 					* (1f / metric.fontImageHeight), 1.0);
 			GL11.glPopMatrix();
 			GL11.glEndList();
@@ -66,8 +66,8 @@ public class FontRenderBuffer {
 		GL11.glDeleteLists(listOrigin, listSize);
 	}
 
-	private void drawTexturedRectUV(double x, double y, double w, double h,
-			double u, double v, double us, double vs, double zLevel) {
+	private void drawTexturedRectUV(double x, double y, double w, double h, double u, double v, double us, double vs,
+			double zLevel) {
 		Tessellator tess = Tessellator.instance;
 		GL11.glPushMatrix();
 		/*
@@ -76,7 +76,7 @@ public class FontRenderBuffer {
 		 */
 		GL11.glScalef(0.45f, 0.45f, 1.0f);
 		tess.startDrawingQuads();
-		//tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
+		// tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
 		tess.addVertexWithUV(x, y + h, zLevel, u, v + vs);
 		tess.addVertexWithUV(x + w, y + h, zLevel, u + us, v + vs);
 		tess.addVertexWithUV(x + w, y, zLevel, u + us, v);

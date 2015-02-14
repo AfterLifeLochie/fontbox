@@ -1,5 +1,6 @@
 package net.afterlifelochie.fontbox;
 
+import java.awt.FontMetrics;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -26,59 +27,32 @@ import net.minecraft.util.ResourceLocation;
  * @author AfterLifeLochie
  * 
  */
-public class FontMetric {
-	/**
-	 * The font image
-	 */
-	public final ResourceLocation fontImageName;
-	/**
-	 * The font name
-	 */
-	public final ResourceLocation fontMetricName;
-	/**
-	 * The individual dimensions and u-v locations of each character in the set
-	 */
-	public final HashMap<Integer, GlyphMetric> glyphs = new HashMap<Integer, GlyphMetric>();
+public class GLFontMetrics {
 
-	/**
-	 * The universal width of the font image.
-	 * 
-	 * TODO: This could be generated using BufferedImage, but that requires
-	 * resource fiddling which might be expensive(?).
-	 */
-	public final float fontImageWidth;
-	/**
-	 * The universal height of the font image.
-	 * 
-	 * TODO: This could be generated using BufferedImage, but that requires
-	 * resource fiddling which might be expensive(?).
-	 */
-	public final float fontImageHeight;
-
-	public FontMetric(ResourceLocation fontImageName, int fontImageWidth,
-			int fontImageHeight, ResourceLocation fontMetricName) {
-		this.fontImageName = fontImageName;
-		this.fontImageWidth = (float) fontImageWidth;
-		this.fontImageHeight = (float) fontImageHeight;
-		this.fontMetricName = fontMetricName;
+	public static GLFontMetrics fromFontMetrics(FontMetrics font, int fontImageWidth, int fontImageHeight,
+			int charsPerRow, char minChar, char maxChar) throws FontException {
+		int off = 0;
+		GLFontMetrics metric = new GLFontMetrics(fontImageWidth, fontImageHeight);
+		for (char k = minChar; k <= maxChar; k++) {
+			int width = font.charWidth(k);
+			int height = font.getAscent();
+			int x = (off % charsPerRow) * 16;
+			int y = (off / charsPerRow) * 16;
+			metric.glyphs.put((int) k, new GLGlyphMetric(width, height, x, y));
+		}
+		return metric;
 	}
 
-	/**
-	 * Attempts to build the font
-	 * 
-	 * @throws FontException
-	 *             If the font metric file cannot be read or parsed, a
-	 *             {@link FontException} may be thrown.
-	 */
-	public void buildFont() throws FontException {
+	public static GLFontMetrics fromResource(ResourceLocation fontMetricName, int fontImageWidth, int fontImageHeight)
+			throws FontException {
 		try {
-			IResource metricResource = Minecraft.getMinecraft()
-					.getResourceManager().getResource(fontMetricName);
+			IResource metricResource = Minecraft.getMinecraft().getResourceManager().getResource(fontMetricName);
 			InputStream stream = metricResource.getInputStream();
 			if (stream == null)
 				throw new IOException("Could not open font metric file.");
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+
+			GLFontMetrics metric = new GLFontMetrics(fontImageWidth, fontImageHeight);
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(stream);
 			Element metrics = doc.getDocumentElement();
@@ -86,11 +60,9 @@ public class FontMetric {
 			NodeList list_character = metrics.getElementsByTagName("character");
 			for (int i = 0; i < list_character.getLength(); i++) {
 				Element character = (Element) list_character.item(i);
-				int charcode = Integer.parseInt(character.getAttributes()
-						.getNamedItem("key").getNodeValue());
+				int charcode = Integer.parseInt(character.getAttributes().getNamedItem("key").getNodeValue());
 				if (0 > charcode || charcode > 255)
-					throw new FontException(String.format(
-							"Unsupported character code %s", charcode));
+					throw new FontException(String.format("Unsupported character code %s", charcode));
 				int w = -1, h = -1, u = -1, v = -1;
 				NodeList character_properties = character.getChildNodes();
 				for (int k = 0; k < character_properties.getLength(); k++) {
@@ -99,8 +71,7 @@ public class FontMetric {
 						continue;
 					Element elem = (Element) property;
 					String name = elem.getNodeName().toLowerCase();
-					int val = Integer.parseInt(elem.getFirstChild()
-							.getNodeValue());
+					int val = Integer.parseInt(elem.getFirstChild().getNodeValue());
 					if (name.equals("width"))
 						w = val;
 					else if (name.equals("height"))
@@ -110,15 +81,13 @@ public class FontMetric {
 					else if (name.equals("y"))
 						v = val;
 					else
-						throw new FontException(String.format(
-								"Unexpected metric command %s", name));
+						throw new FontException(String.format("Unexpected metric command %s", name));
 				}
 				if (w == -1 || h == -1 || u == -1 || v == -1)
-					throw new FontException(String.format(
-							"Invalid metric properties set for key %s",
-							charcode));
-				glyphs.put(charcode, new GlyphMetric(w, h, u, v));
+					throw new FontException(String.format("Invalid metric properties set for key %s", charcode));
+				metric.glyphs.put(charcode, new GLGlyphMetric(w, h, u, v));
 			}
+			return metric;
 		} catch (IOException e) {
 			throw new FontException("Cannot setup font.", e);
 		} catch (ParserConfigurationException e) {
@@ -126,5 +95,24 @@ public class FontMetric {
 		} catch (SAXException e) {
 			throw new FontException("Cannot read font metric data.", e);
 		}
+	}
+
+	/**
+	 * The individual dimensions and u-v locations of each character in the set
+	 */
+	public final HashMap<Integer, GLGlyphMetric> glyphs = new HashMap<Integer, GLGlyphMetric>();
+
+	/**
+	 * The universal width of the font image.
+	 */
+	public final float fontImageWidth;
+	/**
+	 * The universal height of the font image.
+	 */
+	public final float fontImageHeight;
+
+	private GLFontMetrics(int fontImageWidth, int fontImageHeight) {
+		this.fontImageWidth = (float) fontImageWidth;
+		this.fontImageHeight = (float) fontImageHeight;
 	}
 }

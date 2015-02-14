@@ -13,23 +13,22 @@ import java.util.Stack;
  */
 public class StackedPushbackStringReader {
 
-	/**
-	 * Mutex lock.
-	 */
+	/** Mutex lock. */
 	protected Object lock;
-	/**
-	 * Map of all Characters in the stream
-	 */
+	/** Map of all Characters in the stream */
 	private ArrayList<Character> str;
-	/**
-	 * Pushback history stack
-	 */
+	/** Pushback history stack */
 	private Stack<Integer> pushback;
-	/**
-	 * Top of stream pointer
-	 */
+	/** Top of stream pointer */
 	private int next = 0;
 
+	/**
+	 * Create a new StackedPushbackStringReader at the start of the string. The
+	 * contents of the string are copied to a local buffer.
+	 * 
+	 * @param s
+	 *            The source string.
+	 */
 	public StackedPushbackStringReader(String s) {
 		this.lock = this;
 		this.str = new ArrayList<Character>();

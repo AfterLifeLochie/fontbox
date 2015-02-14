@@ -1,5 +1,10 @@
-package net.afterlifelochie.fontbox;
+package net.afterlifelochie.fontbox.render;
 
+import net.afterlifelochie.fontbox.GLFontMetrics;
+import net.afterlifelochie.fontbox.GLFont;
+import net.afterlifelochie.fontbox.GLGlyphMetric;
+import net.afterlifelochie.fontbox.layout.LineBox;
+import net.afterlifelochie.fontbox.layout.PageBox;
 import net.minecraft.client.Minecraft;
 
 import org.lwjgl.opengl.GL11;
@@ -14,8 +19,8 @@ public class WrittenFontRenderer {
 	/**
 	 * Called to render a page to the screen.
 	 * 
-	 * @param metric
-	 *            The font metric.
+	 * @param font
+	 *            The font.
 	 * @param buffer
 	 *            The font render buffer.
 	 * @param page
@@ -29,11 +34,11 @@ public class WrittenFontRenderer {
 	 * @param debug
 	 *            If the draw is debug enabled.
 	 */
-	public void renderPages(FontMetric metric, FontRenderBuffer buffer,
-			PageBox page, float ox, float oy, float z, boolean debug) {
+	public void renderPages(GLFont font, FontRenderBuffer buffer, PageBox page, float ox, float oy, float z,
+			boolean debug) {
 		float x = 0, y = 0;
-		Minecraft.getMinecraft().getTextureManager()
-				.bindTexture(metric.fontImageName);
+		GLFontMetrics metric = font.getMetric();
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureId());
 		GL11.glPushMatrix();
 		GL11.glTranslatef(ox, oy, z);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -46,7 +51,7 @@ public class WrittenFontRenderer {
 				char c = line.line.charAt(i);
 				if (c == ' ') // is a space?
 					x += line.space_size; // shunt by a space
-				GlyphMetric mx = metric.glyphs.get((int) c);
+				GLGlyphMetric mx = metric.glyphs.get((int) c);
 				if (mx == null) // blank glyph?
 					continue;
 				GL11.glPushMatrix();

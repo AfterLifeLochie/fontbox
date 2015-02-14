@@ -5,23 +5,15 @@ package net.afterlifelochie.fontbox;
  * 
  * @author AfterLifeLochie
  */
-public class GlyphMetric {
-	/**
-	 * The character's width
-	 */
-	public int width;
-	/**
-	 * The character's height
-	 */
-	public int height;
+public class GLGlyphMetric {
 
-	/**
-	 * The u-coordinate of the texture
-	 */
+	/** The character's width */
+	public int width;
+	/** The character's height */
+	public int height;
+	/** The u-coordinate of the texture */
 	public int ux;
-	/**
-	 * The v-coordinate of the texture
-	 */
+	/** The v-coordinate of the texture */
 	public int vy;
 
 	/**
@@ -36,7 +28,7 @@ public class GlyphMetric {
 	 * @param v
 	 *            The v-coordinate of the texture
 	 */
-	public GlyphMetric(int w, int h, int u, int v) {
+	public GLGlyphMetric(int w, int h, int u, int v) {
 		width = w;
 		height = h;
 		ux = u;
