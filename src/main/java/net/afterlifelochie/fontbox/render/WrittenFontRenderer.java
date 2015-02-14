@@ -6,6 +6,7 @@ import net.afterlifelochie.fontbox.GLGlyphMetric;
 import net.afterlifelochie.fontbox.layout.LineBox;
 import net.afterlifelochie.fontbox.layout.PageBox;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
 
 import org.lwjgl.opengl.GL11;
 
@@ -55,9 +56,21 @@ public class WrittenFontRenderer {
 				if (mx == null) // blank glyph?
 					continue;
 				GL11.glPushMatrix();
-				GL11.glTranslatef(x * 0.45f, y * 0.45f, 0.0f);
-				GL11.glColor3f(1.0f, 0.0f, 0.0f);
-				buffer.callCharacter((int) c);
+				GL11.glTranslatef(x, y, 0.0f);
+				// buffer.callCharacter((int) c);
+
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GL11.glColor3f(0.0f, 1.0f, 0.0f);
+				drawTexturedRectUV(0, 0, mx.width, mx.height, 0, 0, 1, 1, 1.0);
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				GL11.glColor3f(0.0f, 0.0f, 0.0f);
+				drawTexturedRectUV(0, 0, mx.width, mx.height, 
+						mx.ux / metric.fontImageWidth,
+						mx.vy / metric.fontImageHeight,
+						mx.width / metric.fontImageWidth,
+						mx.height / metric.fontImageHeight, 
+						1.0);
+
 				GL11.glPopMatrix();
 				x += mx.width; // shunt by glpyh size
 			}
@@ -65,6 +78,20 @@ public class WrittenFontRenderer {
 		}
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
+	}
 
+	private void drawTexturedRectUV(double x, double y, double w, double h, double u, double v, double us, double vs,
+			double zLevel) {
+		Tessellator tess = Tessellator.instance;
+		GL11.glPushMatrix();
+		// GL11.glScalef(0.45f, 0.45f, 1.0f);
+		tess.startDrawingQuads();
+		// tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
+		tess.addVertexWithUV(x, y + h, zLevel, u, v + vs);
+		tess.addVertexWithUV(x + w, y + h, zLevel, u + us, v + vs);
+		tess.addVertexWithUV(x + w, y, zLevel, u + us, v);
+		tess.addVertexWithUV(x, y, zLevel, u, v);
+		tess.draw();
+		GL11.glPopMatrix();
 	}
 }

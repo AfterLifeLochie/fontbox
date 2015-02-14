@@ -3,6 +3,7 @@ package net.afterlifelochie.fontbox.render;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import net.afterlifelochie.fontbox.GLFont;
 import net.afterlifelochie.fontbox.GLFontMetrics;
 import net.afterlifelochie.fontbox.GLGlyphMetric;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,25 +18,24 @@ import org.lwjgl.opengl.GL11;
  */
 public class FontRenderBuffer {
 
-	/**
-	 * The buffer map
-	 */
+	public static FontRenderBuffer fromFont(GLFont font) {
+		return new FontRenderBuffer(font.getMetric());
+	}
+
+	/** The buffer map */
 	private final HashMap<Integer, Integer> charmap = new HashMap<Integer, Integer>();
-	/**
-	 * glGenList origin result
-	 */
+	/** glGenList origin result */
 	private final int listOrigin;
-	/**
-	 * glGenList size param
-	 */
+	/** glGenList size param */
 	private final int listSize;
 
-	public FontRenderBuffer(GLFontMetrics metric) {
+	private FontRenderBuffer(GLFontMetrics metric) {
 		this.listSize = metric.glyphs.size();
 		this.listOrigin = GL11.glGenLists(listSize);
 		if (this.listOrigin == 0)
 			throw new RuntimeException("Lists are not available, panic!");
 		int cx = listOrigin;
+		System.out.println("Buffering " + metric.glyphs.size() + " glyphs");
 		for (Entry<Integer, GLGlyphMetric> metricData : metric.glyphs.entrySet()) {
 			GLGlyphMetric glyph = metricData.getValue();
 			GL11.glNewList(cx, GL11.GL_COMPILE);

@@ -1,6 +1,10 @@
 package net.afterlifelochie.fontbox;
 
+import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -29,16 +33,21 @@ import net.minecraft.util.ResourceLocation;
  */
 public class GLFontMetrics {
 
-	public static GLFontMetrics fromFontMetrics(FontMetrics font, int fontImageWidth, int fontImageHeight,
-			int charsPerRow, char minChar, char maxChar) throws FontException {
+	public static GLFontMetrics fromFontMetrics(Font font, FontRenderContext ctx, int fontImageWidth,
+			int fontImageHeight, int charsPerRow, char minChar, char maxChar) throws FontException {
 		int off = 0;
 		GLFontMetrics metric = new GLFontMetrics(fontImageWidth, fontImageHeight);
-		for (char k = minChar; k <= maxChar; k++) {
-			int width = font.charWidth(k);
-			int height = font.getAscent();
-			int x = (off % charsPerRow) * 16;
-			int y = (off / charsPerRow) * 16;
-			metric.glyphs.put((int) k, new GLGlyphMetric(width, height, x, y));
+		for (char k = minChar; k <= maxChar; k++, off++) {
+			TextLayout layout = new TextLayout(String.valueOf(k), font, ctx);
+			Rectangle2D rect = layout.getBounds();
+
+			int width = (int) rect.getWidth();
+			int height = (int) rect.getHeight();
+			int x = (off % charsPerRow) * (fontImageWidth / charsPerRow);
+			int y = (off / charsPerRow) * (fontImageWidth / charsPerRow);
+
+			int v = y - height;
+			metric.glyphs.put((int) k, new GLGlyphMetric(width, height, x, v));
 		}
 		return metric;
 	}

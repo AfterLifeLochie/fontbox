@@ -31,6 +31,10 @@ minecraft {
 
 jar.version = "${minecraft.version}"
 jar.classifier = "${project.ext.build}"
+
+sourceSets.main.java.srcDir("./src/tests/java")
+sourceSets.main.resources.srcDir("./src/tests/resources")
+
 processResources {
 	from(sourceSets.main.resources.srcDirs) {
 		include 'mcmod.info'
