@@ -28,7 +28,7 @@ public class GuiDemoBook extends GuiScreen {
 		StringBuffer fileData = new StringBuffer();
 		try {
 			IResource resource = Minecraft.getMinecraft().getResourceManager()
-					.getResource(new ResourceLocation("fontbox", "books/fable.book"));
+					.getResource(new ResourceLocation("fontbox", "books/lipsum.book"));
 			InputStream stream = resource.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			char[] buf = new char[1024];
@@ -39,7 +39,7 @@ public class GuiDemoBook extends GuiScreen {
 
 			FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
 			System.out.println("boxing...");
-			this.pages = client.fontCalculator.boxParagraph(client.font, fileData.toString(), 325, 425, 2, 2, 10, 1);
+			this.pages = client.fontCalculator.boxParagraph(client.daniel, fileData.toString(), 325, 425, 2, 2, 10, 1);
 			System.out.println("done boxing!");
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
@@ -76,21 +76,19 @@ public class GuiDemoBook extends GuiScreen {
 		if (this.pages != null) {
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			if (this.pages.length > currentPage) {
-				client.renderer.renderPages(client.font, client.fontBuffer, this.pages[currentPage], 18, 12, zLevel,
-						true);
+				client.renderer.renderPages(client.daniel, pages[currentPage], 18, 12, zLevel, false);
 				GL11.glPushMatrix();
 				GL11.glTranslatef(90.0f, 200.0f, 0.0f);
 				GL11.glScalef(0.5f, 0.5f, 1.0f);
-				fontRendererObj.drawString(String.format("- %s -", currentPage), 0, 0, 0);
+				fontRendererObj.drawString(String.format("- %s -", currentPage + 1), 0, 0, 0);
 				GL11.glPopMatrix();
 			}
 			if (this.pages.length > currentPage + 1) {
-				client.renderer.renderPages(client.font, client.fontBuffer, this.pages[currentPage + 1], 204, 12,
-						zLevel, true);
+				client.renderer.renderPages(client.ampersand, pages[currentPage + 1], 204, 12, zLevel, false);
 				GL11.glPushMatrix();
 				GL11.glTranslatef(290.0f, 200.0f, 0.0f);
 				GL11.glScalef(0.5f, 0.5f, 1.0f);
-				fontRendererObj.drawString(String.format("- %s -", currentPage + 1), 0, 0, 0);
+				fontRendererObj.drawString(String.format("- %s -", currentPage + 2), 0, 0, 0);
 				GL11.glPopMatrix();
 			}
 		}
@@ -102,7 +100,7 @@ public class GuiDemoBook extends GuiScreen {
 		super.keyTyped(par1, par2);
 
 		if (par2 == Keyboard.KEY_LEFT) {
-			if (0 < currentPage - 2)
+			if (0 <= currentPage - 2)
 				currentPage -= 2;
 		}
 

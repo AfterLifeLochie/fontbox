@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class FontboxClient extends FontboxServer {
 
-	public GLFont font;
+	public GLFont daniel, notethis, ampersand;
 	public FontRenderBuffer fontBuffer;
 	public LayoutCalculator fontCalculator;
 	public WrittenFontRenderer renderer;
@@ -22,8 +22,11 @@ public class FontboxClient extends FontboxServer {
 		super.init(e);
 		try {
 			Fontbox.setTracer(new PrintOutputTracer());
-			font = GLFont.fromTTF(Fontbox.tracer(), new ResourceLocation("fontbox", "fonts/daniel.ttf"));
-			fontBuffer = FontRenderBuffer.fromFont(font);
+			daniel = GLFont.fromTTF(Fontbox.tracer(), new ResourceLocation("fontbox", "fonts/daniel.ttf"));
+			notethis = GLFont.fromTTF(Fontbox.tracer(), new ResourceLocation("fontbox", "fonts/notethis.ttf"));
+			ampersand = GLFont.fromTTF(Fontbox.tracer(), new ResourceLocation("fontbox", "fonts/ampersand.ttf"));
+			
+			fontBuffer = FontRenderBuffer.fromFont(daniel);
 			fontCalculator = new LayoutCalculator();
 			renderer = new WrittenFontRenderer();
 		} catch (FontException f0) {
