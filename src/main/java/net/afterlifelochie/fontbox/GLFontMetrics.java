@@ -1,7 +1,6 @@
 package net.afterlifelochie.fontbox;
 
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
@@ -19,6 +18,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import net.afterlifelochie.fontbox.api.ITracer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
@@ -33,27 +33,29 @@ import net.minecraft.util.ResourceLocation;
  */
 public class GLFontMetrics {
 
-	public static GLFontMetrics fromFontMetrics(Font font, FontRenderContext ctx, int fontImageWidth,
+	public static GLFontMetrics fromFontMetrics(ITracer trace, Font font, FontRenderContext ctx, int fontImageWidth,
 			int fontImageHeight, int charsPerRow, char minChar, char maxChar) throws FontException {
 		int off = 0;
 		GLFontMetrics metric = new GLFontMetrics(fontImageWidth, fontImageHeight);
 		for (char k = minChar; k <= maxChar; k++, off++) {
 			TextLayout layout = new TextLayout(String.valueOf(k), font, ctx);
 			Rectangle2D rect = layout.getBounds();
-
-			int width = (int) rect.getWidth();
-			int height = (int) rect.getHeight();
 			int x = (off % charsPerRow) * (fontImageWidth / charsPerRow);
 			int y = (off / charsPerRow) * (fontImageWidth / charsPerRow);
+			
+			float cy = (float) rect.getHeight();
 
-			int v = y - height;
-			metric.glyphs.put((int) k, new GLGlyphMetric(width, height, x, v));
+			int u = (int) Math.ceil(rect.getWidth());
+			int v = (int) Math.ceil(layout.getAscent() + layout.getDescent());
+			trace.trace("GLFontMetrics.fromFontMetrics", "placeGlyph", k, u, v, x, y - cy);
+			metric.glyphs.put((int) k, new GLGlyphMetric(u, v, (int) layout.getAscent(), x, (int) (y - cy)));
 		}
+		trace.trace("GLFontMetrics.fromFontMetrics", metric);
 		return metric;
 	}
 
-	public static GLFontMetrics fromResource(ResourceLocation fontMetricName, int fontImageWidth, int fontImageHeight)
-			throws FontException {
+	public static GLFontMetrics fromResource(ITracer trace, ResourceLocation fontMetricName, int fontImageWidth,
+			int fontImageHeight) throws FontException {
 		try {
 			IResource metricResource = Minecraft.getMinecraft().getResourceManager().getResource(fontMetricName);
 			InputStream stream = metricResource.getInputStream();
@@ -94,8 +96,10 @@ public class GLFontMetrics {
 				}
 				if (w == -1 || h == -1 || u == -1 || v == -1)
 					throw new FontException(String.format("Invalid metric properties set for key %s", charcode));
-				metric.glyphs.put(charcode, new GLGlyphMetric(w, h, u, v));
+				trace.trace("GLFontMetrics.fromResource", "placeGlyph", charcode, w, h, u, v);
+				metric.glyphs.put(charcode, new GLGlyphMetric(w, h, h, u, v));
 			}
+			trace.trace("GLFontMetrics.fromResource", metric);
 			return metric;
 		} catch (IOException e) {
 			throw new FontException("Cannot setup font.", e);
@@ -123,5 +127,11 @@ public class GLFontMetrics {
 	private GLFontMetrics(int fontImageWidth, int fontImageHeight) {
 		this.fontImageWidth = (float) fontImageWidth;
 		this.fontImageHeight = (float) fontImageHeight;
+	}
+
+	@Override
+	public String toString() {
+		return "GLFontMetrics { hash: " + System.identityHashCode(this) + ", w: " + fontImageWidth + ", h: "
+				+ fontImageHeight + " }";
 	}
 }

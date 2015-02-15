@@ -17,7 +17,6 @@ import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -25,11 +24,10 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.Hashtable;
 
-import javax.imageio.ImageIO;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import net.afterlifelochie.fontbox.api.ITracer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
@@ -42,6 +40,8 @@ public class GLFont {
 	/**
 	 * Create a GLFont from a TTF file
 	 * 
+	 * @param trace
+	 *            The debugging tracer object
 	 * @param ttf
 	 *            The TTF file
 	 * @return The GLFont result
@@ -49,22 +49,38 @@ public class GLFont {
 	 *             Any exception which occurs when reading the TTF file, brewing
 	 *             the buffer or creating the final font.
 	 */
-	public static GLFont fromTTF(ResourceLocation ttf) throws FontException {
+	public static GLFont fromTTF(ITracer trace, ResourceLocation ttf) throws FontException {
 		try {
 			IResource metricResource = Minecraft.getMinecraft().getResourceManager().getResource(ttf);
 			InputStream stream = metricResource.getInputStream();
 			if (stream == null)
 				throw new IOException("Could not open TTF file.");
 			Font sysfont = Font.createFont(Font.TRUETYPE_FONT, stream);
-			return fromFont(sysfont.deriveFont(12.0f));
+			if (trace != null)
+				trace.trace("GLFont.fromTTF", sysfont.getName());
+			return fromFont(trace, sysfont.deriveFont(16.0f));
 		} catch (IOException ioex) {
+			trace.trace("GLFont.fromTTF", ioex);
 			throw new FontException("Can't perform I/O operation!", ioex);
 		} catch (FontFormatException ffe) {
+			trace.trace("GLFont.fromTTF", ffe);
 			throw new FontException("Invalid TTF file!", ffe);
 		}
 	}
 
-	public static GLFont fromFont(Font font) throws FontException {
+	/**
+	 * Create a GLFont from a Java Font object
+	 * 
+	 * @param trace
+	 *            The debugging tracer object
+	 * @param font
+	 *            The font object
+	 * @return The GLFont result
+	 * @throws FontException
+	 *             Any exception which occurs when brewing the buffer or
+	 *             creating the final result.
+	 */
+	public static GLFont fromFont(ITracer trace, Font font) throws FontException {
 		int uDim = 512;
 		BufferedImage buffer = new BufferedImage(uDim, uDim, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = (Graphics2D) buffer.getGraphics();
@@ -78,19 +94,19 @@ public class GLFont {
 			int y = (off / charsPerRow) * (uDim / charsPerRow);
 			float cy = (float) rect.getHeight();
 			graphics.setColor(Color.WHITE);
+			trace.trace("GLFont.fromFont", "placeGlyph", k, x, y - cy);
 			layout.draw(graphics, x, y - cy);
 		}
-		try {
-			ImageIO.write(buffer, "PNG", new File("draw.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
-		return fromBuffer(buffer, uDim, uDim, GLFontMetrics.fromFontMetrics(font, graphics.getFontRenderContext(),
-				uDim, uDim, charsPerRow, MIN_CH, MAX_CH));
+		GLFontMetrics metric = GLFontMetrics.fromFontMetrics(trace, font, graphics.getFontRenderContext(), uDim, uDim,
+				charsPerRow, MIN_CH, MAX_CH);
+		trace.trace("GLFont.fromFont", "fromMetric", metric);
+		GLFont f0 = fromBuffer(trace, buffer, uDim, uDim, metric);
+		trace.trace("GLFont.fromFont", f0);
+		return f0;
 	}
 
-	public static GLFont fromBuffer(BufferedImage image, int width, int height, GLFontMetrics metric)
+	public static GLFont fromBuffer(ITracer trace, BufferedImage image, int width, int height, GLFontMetrics metric)
 			throws FontException {
 		ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {
 				8, 8, 8, 8 }, true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
@@ -100,12 +116,6 @@ public class GLFont {
 		g.setColor(new Color(0f, 0f, 0f, 0f));
 		g.fillRect(0, 0, width, height);
 		g.drawImage(image, 0, 0, null);
-
-		try {
-			ImageIO.write(texImage, "PNG", new File("raster.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer()).getData();
 
@@ -121,10 +131,15 @@ public class GLFont {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		// GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 4);
+		System.out.println("Setup fonttex: " + width + ", " + height);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,
 				buffer);
 		tmp.rewind();
-		return new GLFont(tmp.get(0), metric);
+		int texIdx = tmp.get(0);
+		trace.trace("GLFont.fromBuffer", "texId", texIdx);
+		GLFont font = new GLFont(texIdx, metric);
+		trace.trace("GLFont.fromBuffer", font);
+		return font;
 	}
 
 	private final int textureId;
@@ -141,5 +156,11 @@ public class GLFont {
 
 	public GLFontMetrics getMetric() {
 		return metric;
+	}
+
+	@Override
+	public String toString() {
+		return "GLFont { hash: " + System.identityHashCode(this) + ", texture: " + textureId + ", metric: "
+				+ System.identityHashCode(metric) + " }";
 	}
 }

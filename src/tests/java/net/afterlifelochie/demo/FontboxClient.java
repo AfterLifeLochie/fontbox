@@ -2,7 +2,9 @@ package net.afterlifelochie.demo;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.afterlifelochie.fontbox.FontException;
+import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.GLFont;
+import net.afterlifelochie.fontbox.api.PrintOutputTracer;
 import net.afterlifelochie.fontbox.layout.LayoutCalculator;
 import net.afterlifelochie.fontbox.render.FontRenderBuffer;
 import net.afterlifelochie.fontbox.render.WrittenFontRenderer;
@@ -19,9 +21,9 @@ public class FontboxClient extends FontboxServer {
 	public void init(FMLInitializationEvent e) {
 		super.init(e);
 		try {
-			font = GLFont.fromTTF(new ResourceLocation("fontbox", "fonts/daniel.ttf"));
+			Fontbox.setTracer(new PrintOutputTracer());
+			font = GLFont.fromTTF(Fontbox.tracer(), new ResourceLocation("fontbox", "fonts/daniel.ttf"));
 			fontBuffer = FontRenderBuffer.fromFont(font);
-
 			fontCalculator = new LayoutCalculator();
 			renderer = new WrittenFontRenderer();
 		} catch (FontException f0) {
