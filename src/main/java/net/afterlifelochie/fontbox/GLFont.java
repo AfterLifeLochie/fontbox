@@ -24,6 +24,8 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.Hashtable;
 
+import javax.imageio.ImageIO;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -69,6 +71,42 @@ public class GLFont {
 	}
 
 	/**
+	 * Create a GLFont from a spritefont and XML descriptor
+	 * 
+	 * @param trace
+	 *            The debugging tracer object
+	 * @param image
+	 *            The image file
+	 * @param xml
+	 *            The XML descriptor file
+	 * @return The GLFont result
+	 * @throws FontException
+	 *             Any exception which occurs when reading the image file, when
+	 *             reading the XML descriptor, when brewing the buffer or
+	 *             creating the final font.
+	 */
+	public static GLFont fromSpritefont(ITracer trace, ResourceLocation image, ResourceLocation xml)
+			throws FontException {
+		try {
+			IResource imageResource = Minecraft.getMinecraft().getResourceManager().getResource(image);
+			InputStream stream = imageResource.getInputStream();
+			if (stream == null)
+				throw new IOException("Could not open image file.");
+			BufferedImage buffer = ImageIO.read(stream);
+
+			GLFontMetrics metric = GLFontMetrics.fromResource(trace, xml, buffer.getWidth(), buffer.getHeight());
+			trace.trace("GLFont.fromSpritefont", "fromMetric", metric);
+			GLFont f0 = fromBuffer(trace, buffer, buffer.getWidth(), buffer.getHeight(), metric);
+			trace.trace("GLFont.fromSpritefont", f0);
+			return f0;
+
+		} catch (IOException ioex) {
+			trace.trace("GLFont.fromSpritefont", ioex);
+			throw new FontException("Can't perform I/O operation!", ioex);
+		}
+	}
+
+	/**
 	 * Create a GLFont from a Java Font object
 	 * 
 	 * @param trace
@@ -106,6 +144,25 @@ public class GLFont {
 		return f0;
 	}
 
+	/**
+	 * Create a GLFont from an image buffer of a specified size with a specified
+	 * metric map.
+	 * 
+	 * @param trace
+	 *            The debugging tracer object
+	 * @param image
+	 *            The buffered image
+	 * @param width
+	 *            The width of the image, absolute pixels
+	 * @param height
+	 *            The height of the image, absolute pixels
+	 * @param metric
+	 *            The font metric map
+	 * @return The GLFont result
+	 * @throws FontException
+	 *             Any exception which occurs when transforming the buffer into
+	 *             a GLFont container.
+	 */
 	public static GLFont fromBuffer(ITracer trace, BufferedImage image, int width, int height, GLFontMetrics metric)
 			throws FontException {
 		ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {
@@ -130,8 +187,6 @@ public class GLFont {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, tmp.get(0));
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		// GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 4);
-		System.out.println("Setup fonttex: " + width + ", " + height);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,
 				buffer);
 		tmp.rewind();
