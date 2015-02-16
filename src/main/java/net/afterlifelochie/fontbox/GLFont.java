@@ -75,6 +75,8 @@ public class GLFont {
 	 * 
 	 * @param trace
 	 *            The debugging tracer object
+	 * @param name
+	 *            The name of the font, case sensitive
 	 * @param image
 	 *            The image file
 	 * @param xml
@@ -85,7 +87,7 @@ public class GLFont {
 	 *             reading the XML descriptor, when brewing the buffer or
 	 *             creating the final font.
 	 */
-	public static GLFont fromSpritefont(ITracer trace, ResourceLocation image, ResourceLocation xml)
+	public static GLFont fromSpritefont(ITracer trace, String name, ResourceLocation image, ResourceLocation xml)
 			throws FontException {
 		try {
 			IResource imageResource = Minecraft.getMinecraft().getResourceManager().getResource(image);
@@ -96,7 +98,7 @@ public class GLFont {
 
 			GLFontMetrics metric = GLFontMetrics.fromResource(trace, xml, buffer.getWidth(), buffer.getHeight());
 			trace.trace("GLFont.fromSpritefont", "fromMetric", metric);
-			GLFont f0 = fromBuffer(trace, buffer, buffer.getWidth(), buffer.getHeight(), metric);
+			GLFont f0 = fromBuffer(trace, name, buffer, buffer.getWidth(), buffer.getHeight(), metric);
 			trace.trace("GLFont.fromSpritefont", f0);
 			return f0;
 
@@ -139,7 +141,7 @@ public class GLFont {
 		GLFontMetrics metric = GLFontMetrics.fromFontMetrics(trace, font, graphics.getFontRenderContext(), uDim, uDim,
 				charsPerRow, MIN_CH, MAX_CH);
 		trace.trace("GLFont.fromFont", "fromMetric", metric);
-		GLFont f0 = fromBuffer(trace, buffer, uDim, uDim, metric);
+		GLFont f0 = fromBuffer(trace, font.getFontName(), buffer, uDim, uDim, metric);
 		trace.trace("GLFont.fromFont", f0);
 		return f0;
 	}
@@ -150,6 +152,8 @@ public class GLFont {
 	 * 
 	 * @param trace
 	 *            The debugging tracer object
+	 * @param name
+	 *            The name of the font
 	 * @param image
 	 *            The buffered image
 	 * @param width
@@ -163,8 +167,8 @@ public class GLFont {
 	 *             Any exception which occurs when transforming the buffer into
 	 *             a GLFont container.
 	 */
-	public static GLFont fromBuffer(ITracer trace, BufferedImage image, int width, int height, GLFontMetrics metric)
-			throws FontException {
+	public static GLFont fromBuffer(ITracer trace, String name, BufferedImage image, int width, int height,
+			GLFontMetrics metric) throws FontException {
 		ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {
 				8, 8, 8, 8 }, true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
 		WritableRaster raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, width, height, 4, null);
@@ -192,17 +196,24 @@ public class GLFont {
 		tmp.rewind();
 		int texIdx = tmp.get(0);
 		trace.trace("GLFont.fromBuffer", "texId", texIdx);
-		GLFont font = new GLFont(texIdx, metric);
+		GLFont font = new GLFont(name, texIdx, metric);
 		trace.trace("GLFont.fromBuffer", font);
+		Fontbox.alloateFont(font);
 		return font;
 	}
 
+	private final String name;
 	private final int textureId;
 	private final GLFontMetrics metric;
 
-	private GLFont(int textureId, GLFontMetrics metric) {
+	private GLFont(String name, int textureId, GLFontMetrics metric) {
+		this.name = name;
 		this.textureId = textureId;
 		this.metric = metric;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public int getTextureId() {

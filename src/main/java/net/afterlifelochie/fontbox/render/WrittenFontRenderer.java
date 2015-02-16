@@ -3,8 +3,8 @@ package net.afterlifelochie.fontbox.render;
 import net.afterlifelochie.fontbox.GLFontMetrics;
 import net.afterlifelochie.fontbox.GLFont;
 import net.afterlifelochie.fontbox.GLGlyphMetric;
-import net.afterlifelochie.fontbox.layout.LineBox;
-import net.afterlifelochie.fontbox.layout.PageBox;
+import net.afterlifelochie.fontbox.layout.Line;
+import net.afterlifelochie.fontbox.layout.Page;
 
 import org.lwjgl.opengl.GL11;
 
@@ -31,7 +31,7 @@ public class WrittenFontRenderer {
 	 * @param debug
 	 *            If the draw is debug enabled.
 	 */
-	public void renderPages(GLFont font, PageBox page, float ox, float oy, float z, boolean debug) {
+	public void renderPages(GLFont font, Page page, float ox, float oy, float z, boolean debug) {
 		float x = 0, y = 0;
 		GLFontMetrics metric = font.getMetric();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureId());
@@ -47,11 +47,11 @@ public class WrittenFontRenderer {
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glColor3f(1.0f, 0.0f, 0.0f);
-			int realPageWidth = page.page_width + page.margin_left + page.margin_right;
-			drawRect(0, 0, realPageWidth, page.page_height, 1);
+			int realPageWidth = page.width + page.margin_left + page.margin_right;
+			drawRect(0, 0, realPageWidth, page.height, 1);
 			GL11.glTranslatef(page.margin_left, 0.0f, 0.0f);
 			GL11.glColor3f(0.0f, 1.0f, 0.0f);
-			drawRect(0, 0, page.page_width, page.page_height, 1);
+			drawRect(0, 0, page.width, page.height, 1);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glPopMatrix();
 		}
@@ -60,7 +60,7 @@ public class WrittenFontRenderer {
 		GL11.glTranslatef(page.margin_left, 0.0f, 0.0f);
 
 		// Start drawing
-		for (LineBox line : page.lines) {
+		for (Line line : page.lines) {
 			x = 0; // carriage return
 			for (int i = 0; i < line.line.length(); i++) {
 				char c = line.line.charAt(i);

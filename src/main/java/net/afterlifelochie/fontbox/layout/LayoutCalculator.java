@@ -29,10 +29,10 @@ public class LayoutCalculator {
 	 *         available vertical space for lines to occupy.
 	 * @throws FontException
 	 */
-	public boolean boxLine(ITracer trace, GLFontMetrics metric, StackedPushbackStringReader text, PageBox page)
+	public boolean boxLine(ITracer trace, GLFontMetrics metric, StackedPushbackStringReader text, Page page)
 			throws IOException, FontException {
 		// Calculate some required properties
-		int effectiveWidth = page.page_width - page.margin_left - page.margin_right;
+		int effectiveWidth = page.height - page.margin_left - page.margin_right;
 		int effectiveHeight = page.getFreeHeight();
 
 		int width_new_line = 0, width_new_word = 0;
@@ -165,7 +165,7 @@ public class LayoutCalculator {
 
 		// Create the linebox
 		trace.trace("LayoutCalculator.boxLine", "pushLine", line.toString(), space_width, line_height);
-		page.lines.add(new LineBox(line.toString(), space_width, line_height));
+		page.lines.add(new Line(line.toString(), space_width, line_height));
 		return false;
 	}
 
@@ -182,11 +182,11 @@ public class LayoutCalculator {
 	 * @return The page results
 	 * @throws FontException
 	 */
-	public PageBox[] boxParagraph(ITracer trace, GLFontMetrics metric, String text, int width, int height,
-			int margin_l, int margin_r, int min_sp, int min_lhs) throws IOException, FontException {
+	public Page[] boxParagraph(ITracer trace, GLFontMetrics metric, String text, int width, int height, int margin_l,
+			int margin_r, int min_sp, int min_lhs) throws IOException, FontException {
 		StackedPushbackStringReader reader = new StackedPushbackStringReader(text);
-		ArrayList<PageBox> pages = new ArrayList<PageBox>();
-		PageBox currentPage = new PageBox(width, height, margin_l, margin_r, min_sp, min_lhs);
+		ArrayList<Page> pages = new ArrayList<Page>();
+		Page currentPage = new Page(width, height, margin_l, margin_r, min_sp, min_lhs);
 		boolean flag = false;
 		while (reader.available() > 0) {
 			trace.trace("LayoutCalculator.boxParagraph", "boxStream", reader, reader.available());
@@ -195,14 +195,14 @@ public class LayoutCalculator {
 			if (flag) {
 				trace.trace("LayoutCalculator.boxParagraph", "pushPage", currentPage);
 				pages.add(currentPage);
-				currentPage = new PageBox(width, height, margin_l, margin_r, min_sp, min_lhs);
+				currentPage = new Page(width, height, margin_l, margin_r, min_sp, min_lhs);
 			}
 		}
 		if (!flag) {
 			trace.trace("LayoutCalculator.boxParagraph", "pushPage");
 			pages.add(currentPage);
 		}
-		PageBox[] result = pages.toArray(new PageBox[0]);
+		Page[] result = pages.toArray(new Page[0]);
 		trace.trace("LayoutCalculator.boxParagraph", result);
 		return result;
 	}
@@ -220,7 +220,7 @@ public class LayoutCalculator {
 	 * @return The page results
 	 * @throws FontException
 	 */
-	public PageBox[] boxParagraph(ITracer trace, GLFont font, String text, int width, int height, int margin_l,
+	public Page[] boxParagraph(ITracer trace, GLFont font, String text, int width, int height, int margin_l,
 			int margin_r, int min_sp, int min_lhs) throws IOException, FontException {
 		return boxParagraph(trace, font.getMetric(), text, width, height, margin_l, margin_r, min_sp, min_lhs);
 	}

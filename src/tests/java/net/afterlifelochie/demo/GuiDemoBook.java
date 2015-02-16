@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.FontException;
 import net.afterlifelochie.fontbox.Fontbox;
-import net.afterlifelochie.fontbox.layout.PageBox;
+import net.afterlifelochie.fontbox.layout.Page;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
@@ -18,7 +18,7 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiDemoBook extends GuiScreen {
-	private PageBox[] pages;
+	private Page[] pages;
 	private int currentPage = 0;
 
 	public GuiDemoBook() {
@@ -39,7 +39,7 @@ public class GuiDemoBook extends GuiScreen {
 			reader.close();
 
 			FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
-			this.pages = client.fontCalculator.boxParagraph(Fontbox.tracer(), client.daniel, fileData.toString(), 325,
+			this.pages = client.fontCalculator.boxParagraph(Fontbox.tracer(), Fontbox.fromName("Daniel"), fileData.toString(), 325,
 					425, 2, 2, 10, 1);
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
@@ -76,7 +76,7 @@ public class GuiDemoBook extends GuiScreen {
 		if (this.pages != null) {
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			if (this.pages.length > currentPage) {
-				client.renderer.renderPages(client.daniel, pages[currentPage], 18, 12, zLevel, false);
+				client.renderer.renderPages(Fontbox.fromName("Daniel"), pages[currentPage], 18, 12, zLevel, false);
 				GL11.glPushMatrix();
 				GL11.glTranslatef(90.0f, 200.0f, 0.0f);
 				GL11.glScalef(0.5f, 0.5f, 1.0f);
@@ -84,7 +84,7 @@ public class GuiDemoBook extends GuiScreen {
 				GL11.glPopMatrix();
 			}
 			if (this.pages.length > currentPage + 1) {
-				client.renderer.renderPages(client.ampersand, pages[currentPage + 1], 204, 12, zLevel, false);
+				client.renderer.renderPages(Fontbox.fromName("Ampersand"), pages[currentPage + 1], 204, 12, zLevel, false);
 				GL11.glPushMatrix();
 				GL11.glTranslatef(290.0f, 200.0f, 0.0f);
 				GL11.glScalef(0.5f, 0.5f, 1.0f);
