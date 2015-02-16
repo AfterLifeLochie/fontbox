@@ -10,14 +10,27 @@ import java.util.LinkedList;
  */
 public class Page extends Container {
 
+	/** The page layout properties container */
 	public PageProperties properties;
+	/** The list of lines */
 	public LinkedList<Line> lines = new LinkedList<Line>();
 
+	/**
+	 * Initialize a new Page with a specified set of page layout properties.
+	 * 
+	 * @param properties
+	 *            The page layout properties.
+	 */
 	public Page(PageProperties properties) {
 		super(properties.width, properties.height);
 		this.properties = properties;
 	}
 
+	/**
+	 * Get the total quantity of free height on the page.
+	 * 
+	 * @return The total quantity of free height on the page
+	 */
 	public int getFreeHeight() {
 		int h = height;
 		for (Line line : lines)

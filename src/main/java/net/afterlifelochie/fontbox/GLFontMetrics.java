@@ -33,6 +33,32 @@ import net.minecraft.util.ResourceLocation;
  */
 public class GLFontMetrics {
 
+	/**
+	 * Derive a font metric from a font file, a font render context and the
+	 * layout properties specified.
+	 * 
+	 * @param trace
+	 *            The debugging tracer object
+	 * @param font
+	 *            The Font to read from
+	 * @param ctx
+	 *            The rendering context
+	 * @param fontImageWidth
+	 *            The font image width
+	 * @param fontImageHeight
+	 *            The font image height
+	 * @param charsPerRow
+	 *            The number of characters per row on the image
+	 * @param minChar
+	 *            The starting character
+	 * @param maxChar
+	 *            The ending character
+	 * @return A GLFontMetrics object which appropriates the location of all
+	 *         fonts on the buffer, based on the parameters provided.
+	 * @throws FontException
+	 *             Any exception which is raised by producing invalid metrics
+	 *             information.
+	 */
 	public static GLFontMetrics fromFontMetrics(ITracer trace, Font font, FontRenderContext ctx, int fontImageWidth,
 			int fontImageHeight, int charsPerRow, char minChar, char maxChar) throws FontException {
 		int off = 0;
@@ -42,7 +68,7 @@ public class GLFontMetrics {
 			Rectangle2D rect = layout.getBounds();
 			int x = (off % charsPerRow) * (fontImageWidth / charsPerRow);
 			int y = (off / charsPerRow) * (fontImageWidth / charsPerRow);
-			
+
 			float cy = (float) rect.getHeight();
 
 			int u = (int) Math.ceil(rect.getWidth());
@@ -54,6 +80,24 @@ public class GLFontMetrics {
 		return metric;
 	}
 
+	/**
+	 * Derive a font metric from an XML document path and the layout properties
+	 * specified.
+	 * 
+	 * @param trace
+	 *            The debugging tracer object
+	 * @param fontMetricName
+	 *            The path to the XML metrics document
+	 * @param fontImageWidth
+	 *            The font image width
+	 * @param fontImageHeight
+	 *            The font image height
+	 * @return A GLFontMetrics object which appropriates the location of all
+	 *         fonts on the buffer, based on the parameters provided.
+	 * @throws FontException
+	 *             Any exception which is raised by producing invalid metrics
+	 *             information.
+	 */
 	public static GLFontMetrics fromResource(ITracer trace, ResourceLocation fontMetricName, int fontImageWidth,
 			int fontImageHeight) throws FontException {
 		try {

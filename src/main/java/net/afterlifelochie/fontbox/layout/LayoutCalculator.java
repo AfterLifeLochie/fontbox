@@ -10,6 +10,13 @@ import net.afterlifelochie.fontbox.GLGlyphMetric;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.io.StackedPushbackStringReader;
 
+/**
+ * Document pagination generator. Used to convert raw text into real page
+ * objects which can be rendered or manipulated.
+ * 
+ * @author AfterLifeLochie
+ *
+ */
 public class LayoutCalculator {
 	/**
 	 * Attempt to box a line or part of a line onto a PageBox. This immediately
@@ -21,13 +28,18 @@ public class LayoutCalculator {
 	 *            The debugging tracer object
 	 * @param metric
 	 *            The font metric to calculate with
-	 * @param line
-	 *            The line
+	 * @param text
+	 *            The text stream
 	 * @param page
 	 *            The page to box onto
 	 * @return If a page overflow occurs - that is, if there is no more
 	 *         available vertical space for lines to occupy.
+	 * @throws IOException
+	 *             Any exception which occurs when performing operations on the
+	 *             text stream
 	 * @throws FontException
+	 *             Any exception which occurs when placing the line onto the
+	 *             page.
 	 */
 	public boolean boxLine(ITracer trace, GLFontMetrics metric, StackedPushbackStringReader text, Page page)
 			throws IOException, FontException {
@@ -182,7 +194,12 @@ public class LayoutCalculator {
 	 * @param props
 	 *            The page layout properties
 	 * @return The page results
+	 * @throws IOException
+	 *             Any exception which occurs when performing operations on the
+	 *             text stream
 	 * @throws FontException
+	 *             Any exception which occurs when placing the line onto the
+	 *             page.
 	 */
 	public Page[] boxParagraph(ITracer trace, GLFontMetrics metric, String text, PageProperties props)
 			throws IOException, FontException {
@@ -222,7 +239,12 @@ public class LayoutCalculator {
 	 * @param props
 	 *            The page layout properties
 	 * @return The page results
+	 * @throws IOException
+	 *             Any exception which occurs when performing operations on the
+	 *             text stream
 	 * @throws FontException
+	 *             Any exception which occurs when placing the line onto the
+	 *             page.
 	 */
 	public Page[] boxParagraph(ITracer trace, GLFont font, String text, PageProperties props) throws IOException,
 			FontException {

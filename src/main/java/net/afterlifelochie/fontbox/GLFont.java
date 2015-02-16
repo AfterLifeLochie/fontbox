@@ -34,6 +34,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * Represents a Font object for OpenGL.
+ * 
+ * @author AfterLifeLochie
+ *
+ */
 public class GLFont {
 
 	private static char MIN_CH = '\u0000';
@@ -172,7 +178,7 @@ public class GLFont {
 		ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {
 				8, 8, 8, 8 }, true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
 		WritableRaster raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, width, height, 4, null);
-		BufferedImage texImage = new BufferedImage(glAlphaColorModel, raster, true, new Hashtable());
+		BufferedImage texImage = new BufferedImage(glAlphaColorModel, raster, true, new Hashtable<Object, Object>());
 		Graphics g = texImage.getGraphics();
 		g.setColor(new Color(0f, 0f, 0f, 0f));
 		g.fillRect(0, 0, width, height);
@@ -212,14 +218,29 @@ public class GLFont {
 		this.metric = metric;
 	}
 
+	/**
+	 * Get the name of the font.
+	 * 
+	 * @return The name of the font
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Get the OpenGL texture ID for this font.
+	 * 
+	 * @return The 2D texture ID for the font
+	 */
 	public int getTextureId() {
 		return textureId;
 	}
 
+	/**
+	 * Get the font metric map associated with this font.
+	 * 
+	 * @return The metric map
+	 */
 	public GLFontMetrics getMetric() {
 		return metric;
 	}

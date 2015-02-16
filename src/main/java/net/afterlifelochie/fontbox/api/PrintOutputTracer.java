@@ -1,5 +1,13 @@
 package net.afterlifelochie.fontbox.api;
 
+/**
+ * Print output tracer. Very verbose debugger; prints all trace calls to the
+ * console. Avoid using this unless you really need to see all the information
+ * from the trace.
+ * 
+ * @author AfterLifeLochie
+ *
+ */
 public class PrintOutputTracer implements ITracer {
 
 	@Override
