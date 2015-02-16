@@ -47,9 +47,9 @@ public class WrittenFontRenderer {
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glColor3f(1.0f, 0.0f, 0.0f);
-			int realPageWidth = page.width + page.margin_left + page.margin_right;
+			int realPageWidth = page.width + page.properties.margin_left + page.properties.margin_right;
 			drawRect(0, 0, realPageWidth, page.height, 1);
-			GL11.glTranslatef(page.margin_left, 0.0f, 0.0f);
+			GL11.glTranslatef(page.properties.margin_left, 0.0f, 0.0f);
 			GL11.glColor3f(0.0f, 1.0f, 0.0f);
 			drawRect(0, 0, page.width, page.height, 1);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -57,7 +57,7 @@ public class WrittenFontRenderer {
 		}
 
 		// Translate to the draw dest
-		GL11.glTranslatef(page.margin_left, 0.0f, 0.0f);
+		GL11.glTranslatef(page.properties.margin_left, 0.0f, 0.0f);
 
 		// Start drawing
 		for (Line line : page.lines) {

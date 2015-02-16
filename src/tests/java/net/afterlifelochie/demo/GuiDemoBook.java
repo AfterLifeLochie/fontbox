@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import net.afterlifelochie.fontbox.FontException;
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.layout.Page;
+import net.afterlifelochie.fontbox.layout.PageProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
@@ -39,8 +40,9 @@ public class GuiDemoBook extends GuiScreen {
 			reader.close();
 
 			FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
-			this.pages = client.fontCalculator.boxParagraph(Fontbox.tracer(), Fontbox.fromName("Daniel"), fileData.toString(), 325,
-					425, 2, 2, 10, 1);
+			PageProperties properties = new PageProperties(325, 425).bothMargin(2).lineheightSize(1).spaceSize(10);
+			this.pages = client.fontCalculator.boxParagraph(Fontbox.tracer(), Fontbox.fromName("Daniel"),
+					fileData.toString(), properties);
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
 		} catch (FontException e) {
@@ -84,7 +86,8 @@ public class GuiDemoBook extends GuiScreen {
 				GL11.glPopMatrix();
 			}
 			if (this.pages.length > currentPage + 1) {
-				client.renderer.renderPages(Fontbox.fromName("Ampersand"), pages[currentPage + 1], 204, 12, zLevel, false);
+				client.renderer.renderPages(Fontbox.fromName("Ampersand"), pages[currentPage + 1], 204, 12, zLevel,
+						false);
 				GL11.glPushMatrix();
 				GL11.glTranslatef(290.0f, 200.0f, 0.0f);
 				GL11.glScalef(0.5f, 0.5f, 1.0f);

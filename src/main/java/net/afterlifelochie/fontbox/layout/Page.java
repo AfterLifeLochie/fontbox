@@ -9,18 +9,13 @@ import java.util.LinkedList;
  * @author AfterLifeLochie
  */
 public class Page extends Container {
-	public final int margin_left;
-	public final int margin_right;
-	public final int min_space_size;
-	public final int lineheight_size;
+
+	public PageProperties properties;
 	public LinkedList<Line> lines = new LinkedList<Line>();
 
-	public Page(int w, int h, int ml, int mr, int min_sp, int min_lhs) {
-		super(w, h);
-		margin_left = ml;
-		margin_right = mr;
-		min_space_size = min_sp;
-		lineheight_size = min_lhs;
+	public Page(PageProperties properties) {
+		super(properties.width, properties.height);
+		this.properties = properties;
 	}
 
 	public int getFreeHeight() {

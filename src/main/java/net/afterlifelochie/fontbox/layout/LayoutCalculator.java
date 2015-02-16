@@ -32,7 +32,7 @@ public class LayoutCalculator {
 	public boolean boxLine(ITracer trace, GLFontMetrics metric, StackedPushbackStringReader text, Page page)
 			throws IOException, FontException {
 		// Calculate some required properties
-		int effectiveWidth = page.height - page.margin_left - page.margin_right;
+		int effectiveWidth = page.height - page.properties.margin_left - page.properties.margin_right;
 		int effectiveHeight = page.getFreeHeight();
 
 		int width_new_line = 0, width_new_word = 0;
@@ -55,7 +55,7 @@ public class LayoutCalculator {
 				// Push a whole word if one exists
 				if (chars.size() > 0) {
 					// Find out if there is enough space to push this word
-					int new_width_nl = width_new_line + width_new_word + page.min_space_size;
+					int new_width_nl = width_new_line + width_new_word + page.properties.min_space_size;
 					if (effectiveWidth >= new_width_nl) {
 						// Yes, there is enough space, add the word
 						width_new_line += width_new_word;
@@ -92,7 +92,7 @@ public class LayoutCalculator {
 		// Anything left on buffer?
 		if (chars.size() > 0) {
 			// Find out if there is enough space to push this word
-			int new_width_nl = width_new_line + width_new_word + page.min_space_size;
+			int new_width_nl = width_new_line + width_new_word + page.properties.min_space_size;
 			if (effectiveWidth >= new_width_nl) {
 				// Yes, there is enough space, add the word
 				width_new_line += width_new_word;
@@ -112,7 +112,7 @@ public class LayoutCalculator {
 		}
 
 		// Find the maximum height of any characters in the line
-		int height_new_line = page.lineheight_size;
+		int height_new_line = page.properties.lineheight_size;
 		for (int i = 0; i < words.size(); i++) {
 			String word = words.get(i);
 			for (int j = 0; j < word.length(); j++) {
@@ -146,20 +146,20 @@ public class LayoutCalculator {
 
 		// Figure out how much space is left over from the line
 		int space_remain = effectiveWidth - width_new_line;
-		int space_width = page.min_space_size;
+		int space_width = page.properties.min_space_size;
 
 		// If the line is not blank, then...
 		if (words.size() > 0) {
 			int extra_px_per_space = (int) Math.floor(space_remain / words.size());
 			if (width_new_line > extra_px_per_space)
-				space_width = page.min_space_size + extra_px_per_space;
+				space_width = page.properties.min_space_size + extra_px_per_space;
 		} else
-			height_new_line = 2 * page.lineheight_size;
+			height_new_line = 2 * page.properties.lineheight_size;
 
 		// Make the line height fit exactly 1 or more line units
 		int line_height = height_new_line;
-		if (line_height % page.lineheight_size != 0) {
-			line_height += line_height % page.lineheight_size;
+		if (line_height % page.properties.lineheight_size != 0) {
+			line_height += line_height % page.properties.lineheight_size;
 			// line_height += page.lineheight_size;
 		}
 
@@ -179,14 +179,16 @@ public class LayoutCalculator {
 	 *            The font metric to calculate with
 	 * @param text
 	 *            The text blob
+	 * @param props
+	 *            The page layout properties
 	 * @return The page results
 	 * @throws FontException
 	 */
-	public Page[] boxParagraph(ITracer trace, GLFontMetrics metric, String text, int width, int height, int margin_l,
-			int margin_r, int min_sp, int min_lhs) throws IOException, FontException {
+	public Page[] boxParagraph(ITracer trace, GLFontMetrics metric, String text, PageProperties props)
+			throws IOException, FontException {
 		StackedPushbackStringReader reader = new StackedPushbackStringReader(text);
 		ArrayList<Page> pages = new ArrayList<Page>();
-		Page currentPage = new Page(width, height, margin_l, margin_r, min_sp, min_lhs);
+		Page currentPage = new Page(props.copy());
 		boolean flag = false;
 		while (reader.available() > 0) {
 			trace.trace("LayoutCalculator.boxParagraph", "boxStream", reader, reader.available());
@@ -195,7 +197,7 @@ public class LayoutCalculator {
 			if (flag) {
 				trace.trace("LayoutCalculator.boxParagraph", "pushPage", currentPage);
 				pages.add(currentPage);
-				currentPage = new Page(width, height, margin_l, margin_r, min_sp, min_lhs);
+				currentPage = new Page(props.copy());
 			}
 		}
 		if (!flag) {
@@ -217,11 +219,13 @@ public class LayoutCalculator {
 	 *            The font to calculate with
 	 * @param text
 	 *            The text blob
+	 * @param props
+	 *            The page layout properties
 	 * @return The page results
 	 * @throws FontException
 	 */
-	public Page[] boxParagraph(ITracer trace, GLFont font, String text, int width, int height, int margin_l,
-			int margin_r, int min_sp, int min_lhs) throws IOException, FontException {
-		return boxParagraph(trace, font.getMetric(), text, width, height, margin_l, margin_r, min_sp, min_lhs);
+	public Page[] boxParagraph(ITracer trace, GLFont font, String text, PageProperties props) throws IOException,
+			FontException {
+		return boxParagraph(trace, font.getMetric(), text, props);
 	}
 }
