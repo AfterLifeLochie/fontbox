@@ -7,6 +7,7 @@ import net.afterlifelochie.fontbox.FontException;
 import net.afterlifelochie.fontbox.GLFont;
 import net.afterlifelochie.fontbox.GLFontMetrics;
 import net.afterlifelochie.fontbox.GLGlyphMetric;
+import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.io.StackedPushbackStringReader;
 
 public class LayoutCalculator {
@@ -16,6 +17,8 @@ public class LayoutCalculator {
 	 * the tail of a PageBox if the PageBox can support the addition of a line.
 	 * Any overflow text which cannot be boxed onto the page is returned.
 	 * 
+	 * @param trace
+	 *            The debugging tracer object
 	 * @param metric
 	 *            The font metric to calculate with
 	 * @param line
@@ -26,8 +29,8 @@ public class LayoutCalculator {
 	 *         available vertical space for lines to occupy.
 	 * @throws FontException
 	 */
-	public boolean boxLine(GLFontMetrics metric, StackedPushbackStringReader text, PageBox page) throws IOException,
-			FontException {
+	public boolean boxLine(ITracer trace, GLFontMetrics metric, StackedPushbackStringReader text, PageBox page)
+			throws IOException, FontException {
 		// Calculate some required properties
 		int effectiveWidth = page.page_width - page.margin_left - page.margin_right;
 		int effectiveHeight = page.getFreeHeight();
@@ -60,14 +63,13 @@ public class LayoutCalculator {
 						for (char c1 : chars)
 							builder.append(c1);
 						words.add(builder.toString());
-						System.out.println("Pushing word " + builder.toString());
+						trace.trace("LayoutCalculator.boxLine", "pushWord", builder.toString());
 						// Clear the character buffers
 						chars.clear();
 						width_new_word = 0;
 					} else {
 						// No, the word doesn't fit, back it up
-						System.out.println("Failed to fit word (new_width_nl = " + new_width_nl + ", width_new_word = "
-								+ width_new_word + "), rewind!");
+						trace.trace("LayoutCalculator.boxLine", "revertWord", width_new_word);
 						text.rewind(chars.size() + 1);
 						chars.clear();
 						width_new_word = 0;
@@ -77,10 +79,11 @@ public class LayoutCalculator {
 			} else {
 				GLGlyphMetric mx = metric.glyphs.get((int) c);
 				if (mx != null) {
-					System.out.println("glyph: " + c + ", width: " + mx.width);
+					trace.trace("LayoutCalculator.boxLine", "pushChar", c, mx);
 					width_new_word += mx.width;
 					chars.add(c);
 				} else {
+					trace.trace("LayoutCalculator.boxLine", "badChar", c);
 					throw new FontException("Unable to render glyph " + c);
 				}
 			}
@@ -96,12 +99,14 @@ public class LayoutCalculator {
 				StringBuilder builder = new StringBuilder();
 				for (char c1 : chars)
 					builder.append(c1);
+				trace.trace("LayoutCalculator.boxLine", "pushOverflow", builder.toString());
 				words.add(builder.toString());
 				// Clear the character buffers
 				chars.clear();
 				width_new_word = 0;
 			} else {
 				// No, the word doesn't fit, back it up
+				trace.trace("LayoutCalculator.boxLine", "clearOverflow", width_new_word);
 				chars.clear();
 			}
 		}
@@ -122,7 +127,7 @@ public class LayoutCalculator {
 
 		// If the line doesn't fit at all, we can't do anything
 		if (height_new_line > effectiveHeight) {
-			System.out.println("Line doesn't fit on page");
+			trace.trace("LayoutCalculator.boxLine", "revertLine", height_new_line);
 			text.popPosition(); // back out
 			return true;
 		}
@@ -159,7 +164,7 @@ public class LayoutCalculator {
 		}
 
 		// Create the linebox
-		System.out.println("push line: " + line.toString());
+		trace.trace("LayoutCalculator.boxLine", "pushLine", line.toString(), space_width, line_height);
 		page.lines.add(new LineBox(line.toString(), space_width, line_height));
 		return false;
 	}
@@ -168,6 +173,8 @@ public class LayoutCalculator {
 	 * Attempt to box a paragraph or part of a paragraph onto a collection of
 	 * PageBox instances.
 	 * 
+	 * @param trace
+	 *            The debugging trace object
 	 * @param metric
 	 *            The font metric to calculate with
 	 * @param text
@@ -175,30 +182,37 @@ public class LayoutCalculator {
 	 * @return The page results
 	 * @throws FontException
 	 */
-	public PageBox[] boxParagraph(GLFontMetrics metric, String text, int width, int height, int margin_l, int margin_r,
-			int min_sp, int min_lhs) throws IOException, FontException {
+	public PageBox[] boxParagraph(ITracer trace, GLFontMetrics metric, String text, int width, int height,
+			int margin_l, int margin_r, int min_sp, int min_lhs) throws IOException, FontException {
 		StackedPushbackStringReader reader = new StackedPushbackStringReader(text);
 		ArrayList<PageBox> pages = new ArrayList<PageBox>();
 		PageBox currentPage = new PageBox(width, height, margin_l, margin_r, min_sp, min_lhs);
 		boolean flag = false;
 		while (reader.available() > 0) {
-			System.out.println("Boxing paragraph: in: " + reader.available());
-			flag = boxLine(metric, reader, currentPage);
-			System.out.println("Flag: " + ((flag) ? "1" : "0") + ", waiting: " + reader.available());
+			trace.trace("LayoutCalculator.boxParagraph", "boxStream", reader, reader.available());
+			flag = boxLine(trace, metric, reader, currentPage);
+			trace.trace("LayoutCalculator.boxParagraph", "boxResult", reader, flag);
 			if (flag) {
+				trace.trace("LayoutCalculator.boxParagraph", "pushPage", currentPage);
 				pages.add(currentPage);
 				currentPage = new PageBox(width, height, margin_l, margin_r, min_sp, min_lhs);
 			}
 		}
-		if (!flag)
+		if (!flag) {
+			trace.trace("LayoutCalculator.boxParagraph", "pushPage");
 			pages.add(currentPage);
-		return pages.toArray(new PageBox[0]);
+		}
+		PageBox[] result = pages.toArray(new PageBox[0]);
+		trace.trace("LayoutCalculator.boxParagraph", result);
+		return result;
 	}
 
 	/**
 	 * Attempt to box a paragraph or part of a paragraph onto a collection of
 	 * PageBox instances.
 	 * 
+	 * @param trace
+	 *            The debugging trace object
 	 * @param font
 	 *            The font to calculate with
 	 * @param text
@@ -206,8 +220,8 @@ public class LayoutCalculator {
 	 * @return The page results
 	 * @throws FontException
 	 */
-	public PageBox[] boxParagraph(GLFont font, String text, int width, int height, int margin_l, int margin_r,
-			int min_sp, int min_lhs) throws IOException, FontException {
-		return boxParagraph(font.getMetric(), text, width, height, margin_l, margin_r, min_sp, min_lhs);
+	public PageBox[] boxParagraph(ITracer trace, GLFont font, String text, int width, int height, int margin_l,
+			int margin_r, int min_sp, int min_lhs) throws IOException, FontException {
+		return boxParagraph(trace, font.getMetric(), text, width, height, margin_l, margin_r, min_sp, min_lhs);
 	}
 }

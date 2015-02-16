@@ -15,6 +15,6 @@ public class MarkdownParser {
 	private static final Pattern heading = Pattern.compile("^(\\#{1,6})[ \\t]*(.+?)[ \\t]*\\#*\\n+", Pattern.MULTILINE);
 
 	public static MarkdownDocument parse(String blob) throws MarkdownException {
-		
+		return null;
 	}
 }

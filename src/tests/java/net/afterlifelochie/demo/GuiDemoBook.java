@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.FontException;
+import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.layout.PageBox;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -38,9 +39,8 @@ public class GuiDemoBook extends GuiScreen {
 			reader.close();
 
 			FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
-			System.out.println("boxing...");
-			this.pages = client.fontCalculator.boxParagraph(client.daniel, fileData.toString(), 325, 425, 2, 2, 10, 1);
-			System.out.println("done boxing!");
+			this.pages = client.fontCalculator.boxParagraph(Fontbox.tracer(), client.daniel, fileData.toString(), 325,
+					425, 2, 2, 10, 1);
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
 		} catch (FontException e) {
