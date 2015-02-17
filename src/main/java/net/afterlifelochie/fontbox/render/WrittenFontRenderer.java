@@ -54,6 +54,7 @@ public class WrittenFontRenderer {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(ox, oy, z);
 
+		// TODO: Externalize the rendering scale
 		GL11.glScalef(0.44f, 0.44f, 1.0f);
 
 		GL11.glEnable(GL11.GL_BLEND);

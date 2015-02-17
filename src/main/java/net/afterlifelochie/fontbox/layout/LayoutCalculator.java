@@ -250,6 +250,7 @@ public class LayoutCalculator {
 		return boxParagraph(trace, font.getMetric(), text, props);
 	}
 
+	// TODO: Externalize the rendering scale to the font
 	private static final float scale = 0.44F;
 
 	/**
