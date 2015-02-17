@@ -223,3 +223,11 @@ pip-log.txt
 /server_runtime/
 *~
 *.lnk
+
+#################
+## Intelij
+#################
+*.iml
+*.ipr
+*.iws
+out/
