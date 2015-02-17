@@ -41,7 +41,7 @@ public class LayoutCalculator {
 	 *             Any exception which occurs when placing the line onto the
 	 *             page.
 	 */
-	public boolean boxLine(ITracer trace, GLFontMetrics metric, StackedPushbackStringReader text, Page page)
+	public static boolean boxLine(ITracer trace, GLFontMetrics metric, StackedPushbackStringReader text, Page page)
 			throws IOException, FontException {
 		// Calculate some required properties
 		int effectiveWidth = page.width - page.properties.margin_left - page.properties.margin_right;
@@ -203,7 +203,7 @@ public class LayoutCalculator {
 	 *             Any exception which occurs when placing the line onto the
 	 *             page.
 	 */
-	public Page[] boxParagraph(ITracer trace, GLFontMetrics metric, String text, PageProperties props)
+	public static Page[] boxParagraph(ITracer trace, GLFontMetrics metric, String text, PageProperties props)
 			throws IOException, FontException {
 		StackedPushbackStringReader reader = new StackedPushbackStringReader(text);
 		ArrayList<Page> pages = new ArrayList<Page>();
@@ -248,8 +248,12 @@ public class LayoutCalculator {
 	 *             Any exception which occurs when placing the line onto the
 	 *             page.
 	 */
-	public Page[] boxParagraph(ITracer trace, GLFont font, String text, PageProperties props) throws IOException,
+	public static Page[] boxParagraph(ITracer trace, GLFont font, String text, PageProperties props) throws IOException,
 			FontException {
 		return boxParagraph(trace, font.getMetric(), text, props);
+	}
+	
+	private LayoutCalculator() {
+		/* Not instantiable */
 	}
 }

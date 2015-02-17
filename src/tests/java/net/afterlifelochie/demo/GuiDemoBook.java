@@ -6,11 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import net.afterlifelochie.fontbox.layout.Line;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.FontException;
 import net.afterlifelochie.fontbox.Fontbox;
+import net.afterlifelochie.fontbox.layout.LayoutCalculator;
 import net.afterlifelochie.fontbox.layout.Page;
 import net.afterlifelochie.fontbox.layout.PageProperties;
 import net.minecraft.client.Minecraft;
@@ -22,7 +24,7 @@ import net.minecraft.util.ResourceLocation;
 public class GuiDemoBook extends GuiScreen {
 	private Page[] pages;
 	private int currentPage = 0;
-    private int top, left;
+	private int top, left;
 
 	public GuiDemoBook() {
 		this(null);
@@ -43,7 +45,7 @@ public class GuiDemoBook extends GuiScreen {
 
 			FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
 			PageProperties properties = new PageProperties(350, 450).bothMargin(2).lineheightSize(1).spaceSize(10);
-			this.pages = client.fontCalculator.boxParagraph(Fontbox.tracer(), Fontbox.fromName("Daniel"),
+			this.pages = LayoutCalculator.boxParagraph(Fontbox.tracer(), Fontbox.fromName("Daniel"),
 					fileData.toString(), properties);
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
@@ -121,18 +123,17 @@ public class GuiDemoBook extends GuiScreen {
 
 	@Override
 	protected void mouseClicked(int par1, int par2, int par3) {
-        int mouseX = par1 - left;
-        int mouseY = par2 - top;
-        if (mouseX < 200)
-        {
-            if (this.pages.length > currentPage)
-                System.out.println(FontBoxHelper.getWord(this.pages[currentPage], Fontbox.fromName("Daniel"), mouseX - 18, mouseY - 12));
-        }
-        else
-        {
-            if (this.pages.length > currentPage + 1)
-                System.out.println(FontBoxHelper.getWord(this.pages[currentPage + 1], Fontbox.fromName("Ampersand"), mouseX - 204, mouseY - 12));
-        }
+		int mouseX = par1 - left;
+		int mouseY = par2 - top;
+		if (mouseX < 200) {
+			if (this.pages.length > currentPage)
+				System.out.println(FontBoxHelper.getWord(this.pages[currentPage], Fontbox.fromName("Daniel"),
+						mouseX - 18, mouseY - 12));
+		} else {
+			if (this.pages.length > currentPage + 1)
+				System.out.println(FontBoxHelper.getWord(this.pages[currentPage + 1], Fontbox.fromName("Ampersand"),
+						mouseX - 204, mouseY - 12));
+		}
 		super.mouseClicked(par1, par2, par3);
 	}
 
