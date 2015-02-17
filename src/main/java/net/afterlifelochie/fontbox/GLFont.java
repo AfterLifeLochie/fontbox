@@ -204,13 +204,13 @@ public class GLFont {
 		trace.trace("GLFont.fromBuffer", "texId", texIdx);
 		GLFont font = new GLFont(name, texIdx, metric);
 		trace.trace("GLFont.fromBuffer", font);
-		Fontbox.alloateFont(font);
+		Fontbox.allocateFont(font);
 		return font;
 	}
 
-	private final String name;
-	private final int textureId;
-	private final GLFontMetrics metric;
+	private String name;
+	private int textureId;
+	private GLFontMetrics metric;
 
 	private GLFont(String name, int textureId, GLFontMetrics metric) {
 		this.name = name;
@@ -243,6 +243,18 @@ public class GLFont {
 	 */
 	public GLFontMetrics getMetric() {
 		return metric;
+	}
+
+	/**
+	 * Delete the font. This releases all the resources associated with the font
+	 * immediately.
+	 */
+	public void delete() {
+		Fontbox.deleteFont(this);
+		GL11.glDeleteTextures(textureId);
+		textureId = -1;
+		name = null;
+		metric = null;
 	}
 
 	@Override

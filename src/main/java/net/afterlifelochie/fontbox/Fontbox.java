@@ -58,6 +58,20 @@ public class Fontbox {
 	}
 
 	/**
+	 * Delete a font on the font record heap. The font is de-registered from the
+	 * heap and can no longer be referenced using
+	 * {@link Fontbox#fromName(String)}. Note that this doesn't de-allocate the
+	 * resources associated with the font.
+	 * 
+	 * @see GLFont#delete()
+	 * @param font
+	 *            The font to de-register
+	 */
+	public static void deleteFont(GLFont font) {
+		Fontbox.instance().fonts.remove(font);
+	}
+
+	/**
 	 * Get a font from the font record heap. If the font hasn't been loaded or
 	 * doesn't exist, null will be returned.
 	 * 
