@@ -1,5 +1,6 @@
 package net.afterlifelochie.fontbox.render;
 
+import net.afterlifelochie.fontbox.FontException;
 import net.afterlifelochie.fontbox.GLFontMetrics;
 import net.afterlifelochie.fontbox.GLFont;
 import net.afterlifelochie.fontbox.GLGlyphMetric;
@@ -19,9 +20,9 @@ public class WrittenFontRenderer {
 	 * Called to render a page to the screen.
 	 * 
 	 * @param font
-	 *            The font.
+	 *            The font. May not be null.
 	 * @param page
-	 *            The page element.
+	 *            The page element. May not be null.
 	 * @param ox
 	 *            The origin x coord for the draw.
 	 * @param oy
@@ -30,11 +31,26 @@ public class WrittenFontRenderer {
 	 *            The z-depth of the draw.
 	 * @param debug
 	 *            If the draw is debug enabled.
+	 * @throws FontException
+	 *             Thrown if the font is invalid or if the font engine cannot
+	 *             render using the font.
 	 */
-	public void renderPages(GLFont font, Page page, float ox, float oy, float z, boolean debug) {
+	public void renderPages(GLFont font, Page page, float ox, float oy, float z, boolean debug) throws FontException {
+		if (font == null)
+			throw new IllegalArgumentException("font may not be null");
+		if (page == null)
+			throw new IllegalArgumentException("page may not be null");
+		assert ox >= 0.0f : "drawing off screen";
+		assert oy >= 0.0f : "drawing off screen";
+		assert z >= 0.0f : "drawing behind the z-buffer";
 		float x = 0, y = 0;
+		if (font.getTextureId() == -1)
+			throw new FontException("Font object not loaded!");
 		GLFontMetrics metric = font.getMetric();
+		if (metric == null)
+			throw new FontException("Font object not loaded!");
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureId());
+
 		GL11.glPushMatrix();
 		GL11.glTranslatef(ox, oy, z);
 

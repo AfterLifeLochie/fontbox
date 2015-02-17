@@ -61,6 +61,12 @@ public class GLFontMetrics {
 	 */
 	public static GLFontMetrics fromFontMetrics(ITracer trace, Font font, FontRenderContext ctx, int fontImageWidth,
 			int fontImageHeight, int charsPerRow, char minChar, char maxChar) throws FontException {
+		if (trace == null)
+			throw new IllegalArgumentException("trace may not be null");
+		if (font == null)
+			throw new IllegalArgumentException("font may not be null");
+		if (ctx == null)
+			throw new IllegalArgumentException("ctx may not be null");
 		int off = 0;
 		GLFontMetrics metric = new GLFontMetrics(fontImageWidth, fontImageHeight);
 		for (char k = minChar; k <= maxChar; k++, off++) {
@@ -100,6 +106,10 @@ public class GLFontMetrics {
 	 */
 	public static GLFontMetrics fromResource(ITracer trace, ResourceLocation fontMetricName, int fontImageWidth,
 			int fontImageHeight) throws FontException {
+		if (trace == null)
+			throw new IllegalArgumentException("trace may not be null");
+		if (fontMetricName == null)
+			throw new IllegalArgumentException("fontMetricName may not be null");
 		try {
 			IResource metricResource = Minecraft.getMinecraft().getResourceManager().getResource(fontMetricName);
 			InputStream stream = metricResource.getInputStream();
