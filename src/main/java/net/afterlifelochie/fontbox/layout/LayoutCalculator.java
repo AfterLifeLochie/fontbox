@@ -253,24 +253,23 @@ public class LayoutCalculator {
 		return boxParagraph(trace, font.getMetric(), text, props);
 	}
 
-	// TODO: Externalize the rendering scale to the font
-	private static final float scale = 0.44F;
-
 	/**
 	 * Get the {@link net.afterlifelochie.fontbox.layout.Line} on the
 	 * {@link net.afterlifelochie.fontbox.layout.Page}
 	 * 
 	 * @param page
 	 *            the given page
+	 * @param font
+	 *            the used font to write
 	 * @param offset
 	 *            the yPos
 	 * @return a line or null if offset is not on a line
 	 */
-	public static Line getLine(Page page, float offset) {
+	public static Line getLine(Page page, GLFont font, float offset) {
 		if (offset < 0)
 			return null;
 		for (Line line : page.lines)
-			if ((offset -= line.height * scale) < 0)
+			if ((offset -= line.height * font.getScale()) < 0)
 				return line;
 		return null;
 	}
@@ -289,7 +288,7 @@ public class LayoutCalculator {
 	 * @return the word clicked on or null if no word was there
 	 */
 	public static String getWord(Page page, GLFont font, float offsetX, float offsetY) {
-		Line line = getLine(page, offsetY);
+		Line line = getLine(page, font, offsetY);
 		if (line == null)
 			return null;
 		String word = "";
@@ -308,14 +307,14 @@ public class LayoutCalculator {
 			char c = line.line.charAt(i);
 			word += c;
 			if (c == ' ') {
-				offsetX -= line.space_size * scale;
+				offsetX -= line.space_size * font.getScale();
 				word = "";
 				continue;
 			}
 			GLGlyphMetric mx = font.getMetric().glyphs.get((int) c);
 			if (mx == null)
 				continue;
-			offsetX -= mx.width * scale;
+			offsetX -= mx.width * font.getScale();
 		}
 		return null;
 	}

@@ -226,19 +226,21 @@ public class GLFont {
 		tmp.rewind();
 		int texIdx = tmp.get(0);
 		trace.trace("GLFont.fromBuffer", "texId", texIdx);
-		GLFont font = new GLFont(name, texIdx, metric);
+		GLFont font = new GLFont(name, texIdx, 0.44f, metric);
 		trace.trace("GLFont.fromBuffer", font);
 		Fontbox.allocateFont(font);
 		return font;
 	}
 
 	private String name;
+	private float scale;
 	private int textureId;
 	private GLFontMetrics metric;
 
-	private GLFont(String name, int textureId, GLFontMetrics metric) {
+	private GLFont(String name, int textureId, float scale, GLFontMetrics metric) {
 		this.name = name;
 		this.textureId = textureId;
+		this.scale = scale;
 		this.metric = metric;
 	}
 
@@ -258,6 +260,15 @@ public class GLFont {
 	 */
 	public int getTextureId() {
 		return textureId;
+	}
+
+	/**
+	 * Get the OpenGL font scale for this font.
+	 * 
+	 * @return The 2D font scaling ratio
+	 */
+	public float getScale() {
+		return scale;
 	}
 
 	/**
