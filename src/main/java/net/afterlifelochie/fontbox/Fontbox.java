@@ -53,7 +53,7 @@ public class Fontbox {
 	 * @param font
 	 *            The font object
 	 */
-	public static void alloateFont(GLFont font) {
+	public static void allocateFont(GLFont font) {
 		Fontbox.instance().fonts.put(font.getName(), font);
 	}
 
