@@ -53,8 +53,22 @@ public class Fontbox {
 	 * @param font
 	 *            The font object
 	 */
-	public static void alloateFont(GLFont font) {
+	public static void allocateFont(GLFont font) {
 		Fontbox.instance().fonts.put(font.getName(), font);
+	}
+
+	/**
+	 * Delete a font on the font record heap. The font is de-registered from the
+	 * heap and can no longer be referenced using
+	 * {@link Fontbox#fromName(String)}. Note that this doesn't de-allocate the
+	 * resources associated with the font.
+	 * 
+	 * @see GLFont#delete()
+	 * @param font
+	 *            The font to de-register
+	 */
+	public static void deleteFont(GLFont font) {
+		Fontbox.instance().fonts.remove(font);
 	}
 
 	/**

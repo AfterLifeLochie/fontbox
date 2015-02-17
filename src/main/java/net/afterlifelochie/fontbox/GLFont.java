@@ -58,6 +58,10 @@ public class GLFont {
 	 *             the buffer or creating the final font.
 	 */
 	public static GLFont fromTTF(ITracer trace, ResourceLocation ttf) throws FontException {
+		if (trace == null)
+			throw new IllegalArgumentException("trace may not be null");
+		if (ttf == null)
+			throw new IllegalArgumentException("ttf may not be null");
 		try {
 			IResource metricResource = Minecraft.getMinecraft().getResourceManager().getResource(ttf);
 			InputStream stream = metricResource.getInputStream();
@@ -95,6 +99,14 @@ public class GLFont {
 	 */
 	public static GLFont fromSpritefont(ITracer trace, String name, ResourceLocation image, ResourceLocation xml)
 			throws FontException {
+		if (trace == null)
+			throw new IllegalArgumentException("trace may not be null");
+		if (name == null)
+			throw new IllegalArgumentException("name may not be null");
+		if (image == null)
+			throw new IllegalArgumentException("image may not be null");
+		if (xml == null)
+			throw new IllegalArgumentException("xml may not be null");
 		try {
 			IResource imageResource = Minecraft.getMinecraft().getResourceManager().getResource(image);
 			InputStream stream = imageResource.getInputStream();
@@ -127,6 +139,10 @@ public class GLFont {
 	 *             creating the final result.
 	 */
 	public static GLFont fromFont(ITracer trace, Font font) throws FontException {
+		if (trace == null)
+			throw new IllegalArgumentException("trace may not be null");
+		if (font == null)
+			throw new IllegalArgumentException("font may not be null");
 		int uDim = 512;
 		BufferedImage buffer = new BufferedImage(uDim, uDim, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = (Graphics2D) buffer.getGraphics();
@@ -175,6 +191,14 @@ public class GLFont {
 	 */
 	public static GLFont fromBuffer(ITracer trace, String name, BufferedImage image, int width, int height,
 			GLFontMetrics metric) throws FontException {
+		if (trace == null)
+			throw new IllegalArgumentException("trace may not be null");
+		if (name == null)
+			throw new IllegalArgumentException("name may not be null");
+		if (image == null)
+			throw new IllegalArgumentException("image may not be null");
+		if (metric == null)
+			throw new IllegalArgumentException("metric may not be null");
 		ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {
 				8, 8, 8, 8 }, true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
 		WritableRaster raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, width, height, 4, null);
@@ -204,13 +228,13 @@ public class GLFont {
 		trace.trace("GLFont.fromBuffer", "texId", texIdx);
 		GLFont font = new GLFont(name, texIdx, metric);
 		trace.trace("GLFont.fromBuffer", font);
-		Fontbox.alloateFont(font);
+		Fontbox.allocateFont(font);
 		return font;
 	}
 
-	private final String name;
-	private final int textureId;
-	private final GLFontMetrics metric;
+	private String name;
+	private int textureId;
+	private GLFontMetrics metric;
 
 	private GLFont(String name, int textureId, GLFontMetrics metric) {
 		this.name = name;
@@ -243,6 +267,18 @@ public class GLFont {
 	 */
 	public GLFontMetrics getMetric() {
 		return metric;
+	}
+
+	/**
+	 * Delete the font. This releases all the resources associated with the font
+	 * immediately.
+	 */
+	public void delete() {
+		Fontbox.deleteFont(this);
+		GL11.glDeleteTextures(textureId);
+		textureId = -1;
+		name = null;
+		metric = null;
 	}
 
 	@Override

@@ -75,27 +75,30 @@ public class GuiDemoBook extends GuiScreen {
 		GL11.glTranslatef(left = width / 2 - 200, top = height / 2 - 110, 0.0f);
 		useTexture("noteback");
 		drawTexturedRectUV(0, 0, 400, 220, 0, 0, 1083.0f / 1111.0f, 847.0f / 1024.0f);
-
-		FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
-		if (this.pages != null) {
-			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-			if (this.pages.length > currentPage) {
-				client.renderer.renderPages(Fontbox.fromName("Daniel"), pages[currentPage], 18, 12, zLevel, false);
-				GL11.glPushMatrix();
-				GL11.glTranslatef(90.0f, 200.0f, 0.0f);
-				GL11.glScalef(0.5f, 0.5f, 1.0f);
-				fontRendererObj.drawString(String.format("- %s -", currentPage + 1), 0, 0, 0);
-				GL11.glPopMatrix();
+		try {
+			FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
+			if (this.pages != null) {
+				GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+				if (this.pages.length > currentPage) {
+					client.renderer.renderPages(Fontbox.fromName("Daniel"), pages[currentPage], 18, 12, zLevel, false);
+					GL11.glPushMatrix();
+					GL11.glTranslatef(90.0f, 200.0f, 0.0f);
+					GL11.glScalef(0.5f, 0.5f, 1.0f);
+					fontRendererObj.drawString(String.format("- %s -", currentPage + 1), 0, 0, 0);
+					GL11.glPopMatrix();
+				}
+				if (this.pages.length > currentPage + 1) {
+					client.renderer.renderPages(Fontbox.fromName("Ampersand"), pages[currentPage + 1], 204, 12, zLevel,
+							false);
+					GL11.glPushMatrix();
+					GL11.glTranslatef(290.0f, 200.0f, 0.0f);
+					GL11.glScalef(0.5f, 0.5f, 1.0f);
+					fontRendererObj.drawString(String.format("- %s -", currentPage + 2), 0, 0, 0);
+					GL11.glPopMatrix();
+				}
 			}
-			if (this.pages.length > currentPage + 1) {
-				client.renderer.renderPages(Fontbox.fromName("Ampersand"), pages[currentPage + 1], 204, 12, zLevel,
-						false);
-				GL11.glPushMatrix();
-				GL11.glTranslatef(290.0f, 200.0f, 0.0f);
-				GL11.glScalef(0.5f, 0.5f, 1.0f);
-				fontRendererObj.drawString(String.format("- %s -", currentPage + 2), 0, 0, 0);
-				GL11.glPopMatrix();
-			}
+		} catch (FontException font) {
+			font.printStackTrace();
 		}
 		GL11.glPopMatrix();
 	}
