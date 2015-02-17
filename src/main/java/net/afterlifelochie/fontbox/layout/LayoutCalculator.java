@@ -44,7 +44,7 @@ public class LayoutCalculator {
 	public boolean boxLine(ITracer trace, GLFontMetrics metric, StackedPushbackStringReader text, Page page)
 			throws IOException, FontException {
 		// Calculate some required properties
-		int effectiveWidth = page.height - page.properties.margin_left - page.properties.margin_right;
+		int effectiveWidth = page.width - page.properties.margin_left - page.properties.margin_right;
 		int effectiveHeight = page.getFreeHeight();
 
 		int width_new_line = 0, width_new_word = 0;
@@ -125,17 +125,19 @@ public class LayoutCalculator {
 
 		// Find the maximum height of any characters in the line
 		int height_new_line = page.properties.lineheight_size;
-		for (int i = 0; i < words.size(); i++) {
-			String word = words.get(i);
-			for (int j = 0; j < word.length(); j++) {
-				char c = word.charAt(j);
-				if (c != ' ') {
-					GLGlyphMetric mx = metric.glyphs.get((int) c);
-					if (mx.height > height_new_line)
-						height_new_line = mx.height;
-				}
-			}
-		}
+        for (String word : words)
+        {
+            for (int j = 0; j < word.length(); j++)
+            {
+                char c = word.charAt(j);
+                if (c != ' ')
+                {
+                    GLGlyphMetric mx = metric.glyphs.get((int) c);
+                    if (mx.height > height_new_line)
+                        height_new_line = mx.height;
+                }
+            }
+        }
 
 		// If the line doesn't fit at all, we can't do anything
 		if (height_new_line > effectiveHeight) {
