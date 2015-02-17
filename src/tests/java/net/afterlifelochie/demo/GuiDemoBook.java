@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import net.afterlifelochie.fontbox.layout.Line;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -21,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 public class GuiDemoBook extends GuiScreen {
 	private Page[] pages;
 	private int currentPage = 0;
+    private int top, left;
 
 	public GuiDemoBook() {
 		this(null);
@@ -40,7 +42,7 @@ public class GuiDemoBook extends GuiScreen {
 			reader.close();
 
 			FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
-			PageProperties properties = new PageProperties(325, 425).bothMargin(2).lineheightSize(1).spaceSize(10);
+			PageProperties properties = new PageProperties(350, 450).bothMargin(2).lineheightSize(1).spaceSize(10);
 			this.pages = client.fontCalculator.boxParagraph(Fontbox.tracer(), Fontbox.fromName("Daniel"),
 					fileData.toString(), properties);
 		} catch (IOException ioex) {
@@ -70,7 +72,7 @@ public class GuiDemoBook extends GuiScreen {
 		super.drawScreen(par1, par2, par3);
 		GL11.glPushMatrix();
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		GL11.glTranslatef(width / 2 - 200, height / 2 - 110, 0.0f);
+		GL11.glTranslatef(left = width / 2 - 200, top = height / 2 - 110, 0.0f);
 		useTexture("noteback");
 		drawTexturedRectUV(0, 0, 400, 220, 0, 0, 1083.0f / 1111.0f, 847.0f / 1024.0f);
 		try {
@@ -119,8 +121,19 @@ public class GuiDemoBook extends GuiScreen {
 
 	@Override
 	protected void mouseClicked(int par1, int par2, int par3) {
+        int mouseX = par1 - left;
+        int mouseY = par2 - top;
+        if (mouseX < 200)
+        {
+            if (this.pages.length > currentPage)
+                System.out.println(FontBoxHelper.getWord(this.pages[currentPage], Fontbox.fromName("Daniel"), mouseX - 18, mouseY - 12));
+        }
+        else
+        {
+            if (this.pages.length > currentPage + 1)
+                System.out.println(FontBoxHelper.getWord(this.pages[currentPage + 1], Fontbox.fromName("Ampersand"), mouseX - 204, mouseY - 12));
+        }
 		super.mouseClicked(par1, par2, par3);
-
 	}
 
 	private void useTexture(String name) {
