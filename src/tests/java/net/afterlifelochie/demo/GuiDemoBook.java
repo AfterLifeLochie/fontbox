@@ -127,11 +127,11 @@ public class GuiDemoBook extends GuiScreen {
 		int mouseY = par2 - top;
 		if (mouseX < 200) {
 			if (this.pages.length > currentPage)
-				System.out.println(FontBoxHelper.getWord(this.pages[currentPage], Fontbox.fromName("Daniel"),
+				System.out.println(LayoutCalculator.getWord(this.pages[currentPage], Fontbox.fromName("Daniel"),
 						mouseX - 18, mouseY - 12));
 		} else {
 			if (this.pages.length > currentPage + 1)
-				System.out.println(FontBoxHelper.getWord(this.pages[currentPage + 1], Fontbox.fromName("Ampersand"),
+				System.out.println(LayoutCalculator.getWord(this.pages[currentPage + 1], Fontbox.fromName("Ampersand"),
 						mouseX - 204, mouseY - 12));
 		}
 		super.mouseClicked(par1, par2, par3);

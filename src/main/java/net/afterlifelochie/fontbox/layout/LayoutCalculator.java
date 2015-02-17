@@ -125,19 +125,16 @@ public class LayoutCalculator {
 
 		// Find the maximum height of any characters in the line
 		int height_new_line = page.properties.lineheight_size;
-        for (String word : words)
-        {
-            for (int j = 0; j < word.length(); j++)
-            {
-                char c = word.charAt(j);
-                if (c != ' ')
-                {
-                    GLGlyphMetric mx = metric.glyphs.get((int) c);
-                    if (mx.height > height_new_line)
-                        height_new_line = mx.height;
-                }
-            }
-        }
+		for (String word : words) {
+			for (int j = 0; j < word.length(); j++) {
+				char c = word.charAt(j);
+				if (c != ' ') {
+					GLGlyphMetric mx = metric.glyphs.get((int) c);
+					if (mx.height > height_new_line)
+						height_new_line = mx.height;
+				}
+			}
+		}
 
 		// If the line doesn't fit at all, we can't do anything
 		if (height_new_line > effectiveHeight) {
@@ -248,11 +245,77 @@ public class LayoutCalculator {
 	 *             Any exception which occurs when placing the line onto the
 	 *             page.
 	 */
-	public static Page[] boxParagraph(ITracer trace, GLFont font, String text, PageProperties props) throws IOException,
-			FontException {
+	public static Page[] boxParagraph(ITracer trace, GLFont font, String text, PageProperties props)
+			throws IOException, FontException {
 		return boxParagraph(trace, font.getMetric(), text, props);
 	}
-	
+
+	private static final float scale = 0.44F;
+
+	/**
+	 * Get the {@link net.afterlifelochie.fontbox.layout.Line} on the
+	 * {@link net.afterlifelochie.fontbox.layout.Page}
+	 * 
+	 * @param page
+	 *            the given page
+	 * @param offset
+	 *            the yPos
+	 * @return a line or null if offset is not on a line
+	 */
+	public static Line getLine(Page page, float offset) {
+		if (offset < 0)
+			return null;
+		for (Line line : page.lines)
+			if ((offset -= line.line_height * scale) < 0)
+				return line;
+		return null;
+	}
+
+	/**
+	 * Get the word at on the {@link Page} written in given {@link GLFont}
+	 * 
+	 * @param page
+	 *            the page to work with
+	 * @param font
+	 *            the used font to write
+	 * @param offsetX
+	 *            the xPos
+	 * @param offsetY
+	 *            the yPos
+	 * @return the word clicked on or null if no word was there
+	 */
+	public static String getWord(Page page, GLFont font, float offsetX, float offsetY) {
+		Line line = getLine(page, offsetY);
+		if (line == null)
+			return null;
+		String word = "";
+		for (int i = 0; i < line.line.length(); i++) {
+			if (offsetX < 0) {
+				if (word.isEmpty())
+					return null;
+				for (; i < line.line.length(); i++) {
+					char c = line.line.charAt(i);
+					if (c == ' ')
+						break;
+					word += c;
+				}
+				return word;
+			}
+			char c = line.line.charAt(i);
+			word += c;
+			if (c == ' ') {
+				offsetX -= line.space_size * scale;
+				word = "";
+				continue;
+			}
+			GLGlyphMetric mx = font.getMetric().glyphs.get((int) c);
+			if (mx == null)
+				continue;
+			offsetX -= mx.width * scale;
+		}
+		return null;
+	}
+
 	private LayoutCalculator() {
 		/* Not instantiable */
 	}
