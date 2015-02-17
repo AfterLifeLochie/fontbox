@@ -123,7 +123,7 @@ public class PageProperties {
 
 	/**
 	 * Copy the PageProperties object with all current values. The new object
-	 * generated is an identical clone; modifcations to the parent object will
+	 * generated is an identical clone; modifications to the parent object will
 	 * not alter any children and visa-versa.
 	 * 
 	 * @return An identical copy of this PageProperties object
