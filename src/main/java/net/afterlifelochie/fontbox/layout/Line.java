@@ -5,27 +5,27 @@ package net.afterlifelochie.fontbox.layout;
  * 
  * @author AfterLifeLochie
  */
-public class Line {
+public class Line extends Container {
 	/** The real text */
 	public final String line;
 	/** The size of the spacing between words */
 	public final int space_size;
-	/** The height of the line */
-	public final int line_height;
 
 	/**
 	 * Create a new line
 	 * 
 	 * @param line
 	 *            The line's text
+	 * @param width
+	 *            The width of the line
+	 * @param height
+	 *            The height of the line
 	 * @param space_size
 	 *            The size of the spacing between words
-	 * @param line_height
-	 *            The height of the line
 	 */
-	public Line(String line, int space_size, int line_height) {
+	public Line(String line, int width, int height, int space_size) {
+		super(width, height);
 		this.line = line;
 		this.space_size = space_size;
-		this.line_height = line_height;
 	}
 }

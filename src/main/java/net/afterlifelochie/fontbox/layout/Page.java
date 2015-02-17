@@ -34,7 +34,7 @@ public class Page extends Container {
 	public int getFreeHeight() {
 		int h = height;
 		for (Line line : lines)
-			h -= line.line_height;
+			h -= line.height;
 		return h;
 	}
 }

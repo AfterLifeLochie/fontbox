@@ -174,9 +174,12 @@ public class LayoutCalculator {
 			// line_height += page.lineheight_size;
 		}
 
+		// Really compute the width of the line
+		int real_width = width_new_line + (space_width * (words.size() - 1));
+
 		// Create the linebox
 		trace.trace("LayoutCalculator.boxLine", "pushLine", line.toString(), space_width, line_height);
-		page.lines.add(new Line(line.toString(), space_width, line_height));
+		page.lines.add(new Line(line.toString(), real_width, line_height, space_width));
 		return false;
 	}
 
@@ -267,7 +270,7 @@ public class LayoutCalculator {
 		if (offset < 0)
 			return null;
 		for (Line line : page.lines)
-			if ((offset -= line.line_height * scale) < 0)
+			if ((offset -= line.height * scale) < 0)
 				return line;
 		return null;
 	}

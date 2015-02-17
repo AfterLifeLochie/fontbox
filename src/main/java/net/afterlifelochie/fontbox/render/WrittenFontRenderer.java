@@ -97,7 +97,7 @@ public class WrittenFontRenderer {
 				drawTexturedRectUV(x, y, mx.width, mx.height, u, v, wz, hz, 1.0);
 				x += mx.width; // shunt by glpyh size
 			}
-			y += line.line_height; // shunt by line's height prop
+			y += line.height; // shunt by line's height prop
 		}
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
