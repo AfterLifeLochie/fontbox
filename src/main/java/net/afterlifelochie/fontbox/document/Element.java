@@ -1,5 +1,5 @@
 package net.afterlifelochie.fontbox.document;
 
-public class Element {
+public abstract class Element {
 
 }
