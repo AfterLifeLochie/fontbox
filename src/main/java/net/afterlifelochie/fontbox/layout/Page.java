@@ -1,6 +1,8 @@
 package net.afterlifelochie.fontbox.layout;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+
+import net.afterlifelochie.fontbox.document.Element;
 
 /**
  * One whole page containing a collection of spaced lines with line-heights and
@@ -12,12 +14,9 @@ public class Page extends Container {
 
 	/** The page layout properties container */
 	public PageProperties properties;
-	/**
-	 * The list of lines
-	 * 
-	 * @deprecated to be replaced with a list of formulated elements on the page
-	 */
-	public LinkedList<Line> lines = new LinkedList<Line>();
+
+	/** The list of elements on the page */
+	public ArrayList<Element> elements = new ArrayList<Element>();
 
 	/**
 	 * Initialize a new Page with a specified set of page layout properties.
@@ -28,18 +27,5 @@ public class Page extends Container {
 	public Page(PageProperties properties) {
 		super(properties.width, properties.height);
 		this.properties = properties;
-	}
-
-	/**
-	 * Get the total quantity of free height on the page.
-	 * 
-	 * @deprecated to be removed when formulated elements are added
-	 * @return The total quantity of free height on the page
-	 */
-	public int getFreeHeight() {
-		int h = height;
-		for (Line line : lines)
-			h -= line.height;
-		return h;
 	}
 }

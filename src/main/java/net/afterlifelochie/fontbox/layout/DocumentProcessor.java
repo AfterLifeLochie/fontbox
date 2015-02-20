@@ -1,5 +1,6 @@
 package net.afterlifelochie.fontbox.layout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.afterlifelochie.fontbox.document.Document;
@@ -7,21 +8,21 @@ import net.afterlifelochie.fontbox.document.Element;
 
 public class DocumentProcessor {
 
-	public static ArrayList<Page> generatePages(Document doc) {
-		ArrayList<Page> pages = new ArrayList<Page>();
+	public static ArrayList<Page> generatePages(Document doc, PageProperties layout) throws IOException {
+		PageWriter writer = new PageWriter(layout);
 		for (int i = 0; i < doc.elements.size(); i++) {
 			Element e0 = doc.elements.get(i);
-			pushElement(pages, e0);
+			pushElement(writer, e0);
 		}
-		return pages;
+		return writer.pages();
 	}
 
-	private static void pushElement(ArrayList<Page> pages, Element element) {
-		Page last = pages.get(pages.size() - 1);
-		pushElement(pages, element, findCursor(last));
+	private static void pushElement(PageWriter writer, Element element) throws IOException {
+		Page current = writer.current();
+		pushElement(writer, element, findCursor(current));
 	}
 
-	private static void pushElement(ArrayList<Page> pages, Element element, int cursor) {
+	private static void pushElement(PageWriter writer, Element element, int cursor) throws IOException {
 
 	}
 
@@ -30,6 +31,8 @@ public class DocumentProcessor {
 		 * page => objects->delegate() { dheight > height? height = dheight :
 		 * void; }; return dheight;
 		 */
+		
+		
 		return 0;
 	}
 
