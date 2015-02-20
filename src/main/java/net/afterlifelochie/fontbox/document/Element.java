@@ -1,8 +1,9 @@
 package net.afterlifelochie.fontbox.document;
 
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
+import net.afterlifelochie.fontbox.layout.PageWriter;
 
-public class Element {
+public abstract class Element {
 
 	private ObjectBounds bounds;
 
@@ -13,5 +14,7 @@ public class Element {
 	public void setBounds(ObjectBounds bb) {
 		this.bounds = bb;
 	}
+	
+	public abstract void layout(PageWriter writer);
 
 }
