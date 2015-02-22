@@ -45,7 +45,7 @@ public class ReliabilityTests {
 	 */
 	@Test
 	public void testPageBounding() {
-		Page testPage = new Page(new PageProperties(100, 100));
+		Page testPage = new Page(new PageProperties(100, 100, null));
 		assertTrue("box is inside page", testPage.insidePage(new ObjectBounds(0, 0, 100, 100, false)));
 		assertTrue("box is inside page", testPage.insidePage(new ObjectBounds(25, 25, 50, 50, false)));
 		assertFalse("box is outside bounds", testPage.insidePage(new ObjectBounds(-20, -20, 140, 140, false)));
