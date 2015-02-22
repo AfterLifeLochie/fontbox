@@ -7,6 +7,7 @@ import javax.print.attribute.standard.PageRanges;
 
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.font.FontException;
+import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.font.GLFontMetrics;
 import net.afterlifelochie.fontbox.font.GLGlyphMetric;
 import net.afterlifelochie.fontbox.layout.LayoutException;
@@ -42,7 +43,7 @@ public abstract class Element {
 	 *            The debugging tracer object
 	 * @param writer
 	 *            The page writer
-	 * @param metric
+	 * @param font
 	 *            The font to write with
 	 * @param what
 	 *            The text to write
@@ -52,7 +53,7 @@ public abstract class Element {
 	 *             Any layout problem which prevents the text from being laid
 	 *             out correctly
 	 */
-	protected void boxText(ITracer trace, PageWriter writer, GLFontMetrics metric, String what) throws IOException,
+	protected void boxText(ITracer trace, PageWriter writer, GLFont font, String what) throws IOException,
 			LayoutException {
 		StackedPushbackStringReader reader = new StackedPushbackStringReader(what);
 		while (reader.available() > 0) {
@@ -60,7 +61,7 @@ public abstract class Element {
 			PageWriterCursor cursor = writer.cursor();
 			ObjectBounds bounds = new ObjectBounds(cursor.x, cursor.y, current.properties.width - cursor.x,
 					current.properties.height - cursor.y, false);
-			Line[] blobs = boxText(trace, current, bounds, metric, reader);
+			Line[] blobs = boxText(trace, current, bounds, font, reader);
 			for (int i = 0; i < blobs.length; i++)
 				current.elements.add(blobs[i]);
 			if (reader.available() > 0)
@@ -90,7 +91,7 @@ public abstract class Element {
 	 *            The page being write onto
 	 * @param bounds
 	 *            The bounding box to write inside
-	 * @param metric
+	 * @param font
 	 *            The font to write with
 	 * @param text
 	 *            The text stream to read from
@@ -101,8 +102,9 @@ public abstract class Element {
 	 *             out correctly
 	 * @return The list of lines written to the page inside the bounding box
 	 */
-	protected Line[] boxText(ITracer trace, Page page, ObjectBounds bounds, GLFontMetrics metric,
+	protected Line[] boxText(ITracer trace, Page page, ObjectBounds bounds, GLFont font,
 			StackedPushbackStringReader text) throws IOException, LayoutException {
+		GLFontMetrics metric = font.getMetric();
 		// The list of lines
 		ArrayList<Line> lines = new ArrayList<Line>();
 		// The height cursor
@@ -260,7 +262,7 @@ public abstract class Element {
 
 			// Create the linebox
 			trace.trace("LayoutCalculator.boxLine", "pushLine", line.toString(), space_width, line_height);
-			lines.add(new Line(line.toString(), new ObjectBounds(bounds.x, y, real_width, line_height, false),
+			lines.add(new Line(line.toString(), new ObjectBounds(bounds.x, y, real_width, line_height, false), font,
 					space_width));
 
 			// Slide downwards

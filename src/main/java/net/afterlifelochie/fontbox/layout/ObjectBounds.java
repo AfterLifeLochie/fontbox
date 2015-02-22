@@ -23,4 +23,10 @@ public class ObjectBounds {
 		boolean flag1 = (this.y < that.y + that.height && this.y + this.height > that.y);
 		return flag0 && flag1;
 	}
+
+	public boolean encloses(int x, int y) {
+		boolean flag0 = (this.x < x && this.x + this.width > x);
+		boolean flag1 = (this.y < y && this.y + this.height > y);
+		return flag0 && flag1;
+	}
 }

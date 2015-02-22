@@ -12,10 +12,53 @@ import net.afterlifelochie.fontbox.document.Image;
 import net.afterlifelochie.fontbox.document.ImageBlock;
 import net.afterlifelochie.fontbox.document.ImageItem;
 import net.afterlifelochie.fontbox.document.Paragraph;
+import net.afterlifelochie.fontbox.font.GLFont;
+import net.afterlifelochie.fontbox.font.GLGlyphMetric;
+import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;
 
 public class DocumentProcessor {
+
+	public static Element getElementAt(Page page, int x, int y) {
+		for (Element element : page.elements)
+			if (element.bounds().encloses(x, y))
+				return element;
+		return null;
+	}
+
+	public static String getWord(Page page, int x, int y) {
+		Element element = getElementAt(page, x, y);
+		if (element == null || !(element instanceof Line))
+			return null;
+		String word = "";
+		Line line = (Line) element;
+		for (int i = 0; i < line.line.length(); i++) {
+			if (x < 0) {
+				if (word.isEmpty())
+					return null;
+				for (; i < line.line.length(); i++) {
+					char c = line.line.charAt(i);
+					if (c == ' ')
+						break;
+					word += c;
+				}
+				return word;
+			}
+			char c = line.line.charAt(i);
+			word += c;
+			if (c == ' ') {
+				x -= line.space_size * line.font.getScale();
+				word = "";
+				continue;
+			}
+			GLGlyphMetric mx = line.font.getMetric().glyphs.get((int) c);
+			if (mx == null)
+				continue;
+			x -= mx.width * line.font.getScale();
+		}
+		return null;
+	}
 
 	public static ArrayList<Page> generatePages(ITracer trace, Document doc, PageProperties layout) throws IOException,
 			LayoutException {
@@ -24,6 +67,7 @@ public class DocumentProcessor {
 			Element e0 = doc.elements.get(i);
 			pushElement(trace, writer, e0);
 		}
+		writer.close();
 		return writer.pages();
 	}
 

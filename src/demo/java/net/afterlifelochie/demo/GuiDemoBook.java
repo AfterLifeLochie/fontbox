@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.font.FontException;
+import net.afterlifelochie.fontbox.layout.DocumentProcessor;
 import net.afterlifelochie.fontbox.layout.LayoutCalculator;
 import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.Page;
@@ -44,8 +45,9 @@ public class GuiDemoBook extends GuiScreen {
 
 			FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
 			PageProperties properties = new PageProperties(350, 450).bothMargin(2).lineheightSize(1).spaceSize(10);
-			// this.pages = LayoutCalculator.boxParagraph(Fontbox.tracer(), Fontbox.fromName("Daniel"),
-			//		fileData.toString(), properties);
+			// this.pages = LayoutCalculator.boxParagraph(Fontbox.tracer(),
+			// Fontbox.fromName("Daniel"),
+			// fileData.toString(), properties);
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
 		}
@@ -124,12 +126,10 @@ public class GuiDemoBook extends GuiScreen {
 		int mouseY = par2 - top;
 		if (mouseX < 200) {
 			if (this.pages.length > currentPage)
-				System.out.println(LayoutCalculator.getWord(this.pages[currentPage], Fontbox.fromName("Daniel"),
-						mouseX - 18, mouseY - 12));
+				System.out.println(DocumentProcessor.getWord(this.pages[currentPage], mouseX - 18, mouseY - 12));
 		} else {
 			if (this.pages.length > currentPage + 1)
-				System.out.println(LayoutCalculator.getWord(this.pages[currentPage + 1], Fontbox.fromName("Ampersand"),
-						mouseX - 204, mouseY - 12));
+				System.out.println(DocumentProcessor.getWord(this.pages[currentPage + 1], mouseX - 204, mouseY - 12));
 		}
 		super.mouseClicked(par1, par2, par3);
 	}

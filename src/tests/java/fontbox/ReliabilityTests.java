@@ -27,6 +27,17 @@ public class ReliabilityTests {
 		assertFalse("box2 !intersects box1", box2.intersects(box1));
 		assertFalse("box1 !intersects box2", box1.intersects(box2));
 	}
+	
+	/**
+	 * Test to check if the ObjectBounds encloses are computed correctly.
+	 */
+	@Test
+	public void testObjectBoundsEnclose() {
+		ObjectBounds bounds = new ObjectBounds(50, 50, 50, 50, false);
+		assertTrue("bounds encloses (75, 75)", bounds.encloses(75, 75));
+		assertFalse("bounds excludes (0, 0)", bounds.encloses(0, 0));
+		assertFalse("bounds excludes (-75, -75)", bounds.encloses(-75, -75));
+	}
 
 	
 	/**

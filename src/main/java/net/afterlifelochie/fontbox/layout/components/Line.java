@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.Element;
+import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.PageWriter;
@@ -18,6 +19,8 @@ public class Line extends Element {
 	public final String line;
 	/** The size of the spacing between words */
 	public final int space_size;
+	/** The font to render the line in */
+	public GLFont font;
 
 	/**
 	 * Create a new line
@@ -26,12 +29,15 @@ public class Line extends Element {
 	 *            The line's text
 	 * @param bounds
 	 *            The location of the line
+	 * @param font
+	 *            The font to draw with
 	 * @param space_size
 	 *            The size of the spacing between words
 	 */
-	public Line(String line, ObjectBounds bounds, int space_size) {
+	public Line(String line, ObjectBounds bounds, GLFont font, int space_size) {
 		this.setBounds(bounds);
 		this.line = line;
+		this.font = font;
 		this.space_size = space_size;
 	}
 
