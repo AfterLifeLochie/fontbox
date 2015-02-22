@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 import javax.print.attribute.standard.PageRanges;
 
-import net.afterlifelochie.fontbox.FontException;
-import net.afterlifelochie.fontbox.GLFontMetrics;
-import net.afterlifelochie.fontbox.GLGlyphMetric;
 import net.afterlifelochie.fontbox.api.ITracer;
+import net.afterlifelochie.fontbox.font.FontException;
+import net.afterlifelochie.fontbox.font.GLFontMetrics;
+import net.afterlifelochie.fontbox.font.GLGlyphMetric;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.PageWriter;

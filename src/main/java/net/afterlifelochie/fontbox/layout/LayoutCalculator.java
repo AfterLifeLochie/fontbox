@@ -3,11 +3,11 @@ package net.afterlifelochie.fontbox.layout;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import net.afterlifelochie.fontbox.FontException;
-import net.afterlifelochie.fontbox.GLFont;
-import net.afterlifelochie.fontbox.GLFontMetrics;
-import net.afterlifelochie.fontbox.GLGlyphMetric;
 import net.afterlifelochie.fontbox.api.ITracer;
+import net.afterlifelochie.fontbox.font.FontException;
+import net.afterlifelochie.fontbox.font.GLFont;
+import net.afterlifelochie.fontbox.font.GLFontMetrics;
+import net.afterlifelochie.fontbox.font.GLGlyphMetric;
 import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;

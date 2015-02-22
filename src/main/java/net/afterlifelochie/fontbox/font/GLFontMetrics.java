@@ -1,4 +1,4 @@
-package net.afterlifelochie.fontbox;
+package net.afterlifelochie.fontbox.font;
 
 import java.awt.Font;
 import java.awt.font.FontRenderContext;

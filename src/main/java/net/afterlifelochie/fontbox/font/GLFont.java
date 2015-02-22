@@ -1,4 +1,4 @@
-package net.afterlifelochie.fontbox;
+package net.afterlifelochie.fontbox.font;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -29,6 +29,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;

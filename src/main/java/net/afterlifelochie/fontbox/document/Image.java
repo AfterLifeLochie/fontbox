@@ -1,7 +1,12 @@
 package net.afterlifelochie.fontbox.document;
 
+import java.io.IOException;
+
+import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.document.property.FloatMode;
+import net.afterlifelochie.fontbox.layout.LayoutException;
+import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.minecraft.util.ResourceLocation;
 
 public class Image extends Element {
@@ -26,6 +31,12 @@ public class Image extends Element {
 		this.height = height;
 		this.align = align;
 		this.floating = floating;
+	}
+
+	@Override
+	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -8,8 +8,8 @@ import java.io.InputStreamReader;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import net.afterlifelochie.fontbox.FontException;
 import net.afterlifelochie.fontbox.Fontbox;
+import net.afterlifelochie.fontbox.font.FontException;
 import net.afterlifelochie.fontbox.layout.LayoutCalculator;
 import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.Page;

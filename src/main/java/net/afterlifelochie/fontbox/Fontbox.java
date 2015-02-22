@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.api.VoidTracer;
+import net.afterlifelochie.fontbox.font.GLFont;
 
 /**
  * Fontbox main registry.
