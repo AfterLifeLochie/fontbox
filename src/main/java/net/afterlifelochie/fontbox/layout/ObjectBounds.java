@@ -18,4 +18,9 @@ public class ObjectBounds {
 		return floating;
 	}
 
+	public boolean intersects(ObjectBounds that) {
+		boolean flag0 = (this.x < that.x + that.width && this.x + this.width > that.x);
+		boolean flag1 = (this.y < that.y + that.height && this.y + this.height > that.y);
+		return flag0 && flag1;
+	}
 }
