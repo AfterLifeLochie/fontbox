@@ -34,11 +34,11 @@ public class WrittenFontRenderer {
 	 *            The z-depth of the draw.
 	 * @param debug
 	 *            If the draw is debug enabled.
-	 * @throws FontException
+	 * @throws RenderException
 	 *             Thrown if the font is invalid or if the font engine cannot
 	 *             render using the font.
 	 */
-	public void renderPages(GLFont font, Page page, float ox, float oy, float z, boolean debug) throws FontException {
+	public void renderPages(GLFont font, Page page, float ox, float oy, float z, boolean debug) throws RenderException {
 		if (font == null)
 			throw new IllegalArgumentException("font may not be null");
 		if (page == null)
@@ -48,10 +48,10 @@ public class WrittenFontRenderer {
 		assert z >= 0.0f : "drawing behind the z-buffer";
 		float x = 0, y = 0;
 		if (font.getTextureId() == -1)
-			throw new FontException("Font object not loaded!");
+			throw new RenderException("Font object not loaded!");
 		GLFontMetrics metric = font.getMetric();
 		if (metric == null)
-			throw new FontException("Font object not loaded!");
+			throw new RenderException("Font object not loaded!");
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureId());
 
 		GL11.glPushMatrix();
