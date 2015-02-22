@@ -1,4 +1,4 @@
-package net.afterlifelochie.fontbox.layout;
+package net.afterlifelochie.fontbox.layout.components;
 
 import java.util.ArrayList;
 

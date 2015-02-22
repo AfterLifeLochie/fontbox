@@ -3,9 +3,13 @@ package net.afterlifelochie.fontbox.layout;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import net.afterlifelochie.fontbox.layout.components.Page;
+import net.afterlifelochie.fontbox.layout.components.PageProperties;
+
 public class PageWriter {
 
 	private ArrayList<Page> pages = new ArrayList<Page>();
+	private ArrayList<PageWriterCursor> cursors = new ArrayList<PageWriterCursor>();
 	private PageProperties attributes;
 	private Object lock = new Object();
 	private boolean closed = false;
@@ -18,6 +22,8 @@ public class PageWriter {
 	public void close() {
 		synchronized (lock) {
 			closed = true;
+			cursors.clear();
+			cursors = null;
 		}
 	}
 
@@ -52,6 +58,13 @@ public class PageWriter {
 		}
 	}
 
+	public PageWriterCursor cursor() throws IOException {
+		synchronized (lock) {
+			checkOpen();
+			return cursors.get(ptr);
+		}
+	}
+
 	private void seek(int which) throws IOException {
 		synchronized (lock) {
 			ptr += which;
@@ -59,8 +72,10 @@ public class PageWriter {
 				ptr = 0;
 			if (ptr > pages.size())
 				ptr = pages.size();
-			if (ptr == pages.size())
+			if (ptr == pages.size()) {
 				pages.add(new Page(attributes.copy()));
+				cursors.add(new PageWriterCursor());
+			}
 		}
 	}
 

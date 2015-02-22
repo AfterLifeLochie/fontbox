@@ -5,16 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import net.afterlifelochie.fontbox.layout.Line;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.FontException;
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.layout.LayoutCalculator;
-import net.afterlifelochie.fontbox.layout.Page;
-import net.afterlifelochie.fontbox.layout.PageProperties;
+import net.afterlifelochie.fontbox.layout.components.Line;
+import net.afterlifelochie.fontbox.layout.components.Page;
+import net.afterlifelochie.fontbox.layout.components.PageProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;

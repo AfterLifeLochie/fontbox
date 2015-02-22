@@ -8,11 +8,18 @@ import net.afterlifelochie.fontbox.GLFont;
 import net.afterlifelochie.fontbox.GLFontMetrics;
 import net.afterlifelochie.fontbox.GLGlyphMetric;
 import net.afterlifelochie.fontbox.api.ITracer;
+import net.afterlifelochie.fontbox.layout.components.Line;
+import net.afterlifelochie.fontbox.layout.components.Page;
+import net.afterlifelochie.fontbox.layout.components.PageProperties;
 import net.afterlifelochie.io.StackedPushbackStringReader;
 
 /**
  * Document pagination generator. Used to convert raw text into real page
  * objects which can be rendered or manipulated.
+ * 
+ * @deprecated Replaced by {@link DocumentProcessor} instead. It delegates the
+ *             transformation of pages now, so this class is only here until
+ *             other functionals (such as clicking, etc) are moved.
  * 
  * @author AfterLifeLochie
  *
@@ -254,8 +261,8 @@ public class LayoutCalculator {
 	}
 
 	/**
-	 * Get the {@link net.afterlifelochie.fontbox.layout.Line} on the
-	 * {@link net.afterlifelochie.fontbox.layout.Page}
+	 * Get the {@link net.afterlifelochie.fontbox.layout.components.Line} on the
+	 * {@link net.afterlifelochie.fontbox.layout.components.Page}
 	 * 
 	 * @param page
 	 *            the given page

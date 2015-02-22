@@ -1,4 +1,4 @@
-package net.afterlifelochie.fontbox.layout;
+package net.afterlifelochie.fontbox.layout.components;
 
 /**
  * The page layout properties. Includes properties such as the width, the
