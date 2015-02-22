@@ -19,7 +19,7 @@ public class Heading extends Element {
 	@Override
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		// TODO: where do we get the metric from?
-		boxText(trace, writer, metric, text);
+		// boxText(trace, writer, metric, text);
 	}
 
 }

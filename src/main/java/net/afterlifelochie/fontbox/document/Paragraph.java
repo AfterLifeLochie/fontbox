@@ -25,7 +25,7 @@ public class Paragraph extends Element {
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		// TODO: where do we get the metric from?
 		// TODO: where does alignment get specified? :\
-		boxText(trace, writer, metric, text);
+		// boxText(trace, writer, metric, text);
 	}
 
 }

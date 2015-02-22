@@ -44,12 +44,10 @@ public class GuiDemoBook extends GuiScreen {
 
 			FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
 			PageProperties properties = new PageProperties(350, 450).bothMargin(2).lineheightSize(1).spaceSize(10);
-			this.pages = LayoutCalculator.boxParagraph(Fontbox.tracer(), Fontbox.fromName("Daniel"),
-					fileData.toString(), properties);
+			// this.pages = LayoutCalculator.boxParagraph(Fontbox.tracer(), Fontbox.fromName("Daniel"),
+			//		fileData.toString(), properties);
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
-		} catch (FontException e) {
-			e.printStackTrace();
 		}
 	}
 

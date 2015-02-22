@@ -19,10 +19,14 @@ public class CompilerHint extends Element {
 	public EnumSet<HintType> types;
 
 	public CompilerHint(HintType type) {
+		if (type == null)
+			throw new IllegalArgumentException("Hint type cannot be null");
 		this.types = EnumSet.of(type);
 	}
 
 	public CompilerHint(EnumSet<HintType> types) {
+		if (types.size() == 0)
+			throw new IllegalArgumentException("Hint list must include 1 or more hints");
 		this.types = types;
 	}
 

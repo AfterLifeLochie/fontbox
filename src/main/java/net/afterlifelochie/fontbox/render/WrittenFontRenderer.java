@@ -80,6 +80,7 @@ public class WrittenFontRenderer {
 		GL11.glTranslatef(page.properties.margin_left, 0.0f, 0.0f);
 
 		// Start drawing
+		/*
 		for (Line line : page.lines) {
 			x = 0; // carriage return
 			for (int i = 0; i < line.line.length(); i++) {
@@ -101,7 +102,7 @@ public class WrittenFontRenderer {
 				x += mx.width; // shunt by glpyh size
 			}
 			y += line.height; // shunt by line's height prop
-		}
+		}*/
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
