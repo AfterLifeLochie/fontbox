@@ -9,6 +9,7 @@ import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.layout.PageWriterCursor;
 import net.afterlifelochie.fontbox.layout.components.Page;
+import net.afterlifelochie.fontbox.render.BookGUI;
 
 public class CompilerHint extends Element {
 
@@ -63,5 +64,30 @@ public class CompilerHint extends Element {
 						+ ((whatHint == null) ? "<null>" : whatHint.getClass().getName()));
 			}
 		}
+	}
+
+	@Override
+	public boolean canUpdate() {
+		throw new RuntimeException("Undefined behaviour: CompilerHint in doctree!");
+	}
+
+	@Override
+	public void update() {
+		throw new RuntimeException("Undefined behaviour: CompilerHint in doctree!");
+	}
+
+	@Override
+	public void render(BookGUI gui, int mx, int my, float frame) {
+		throw new RuntimeException("Undefined behaviour: CompilerHint in doctree!");
+	}
+
+	@Override
+	public void clicked(BookGUI gui, int mx, int my) {
+		throw new RuntimeException("Undefined behaviour: CompilerHint in doctree!");
+	}
+
+	@Override
+	public void typed(BookGUI gui, char val, int code) {
+		throw new RuntimeException("Undefined behaviour: CompilerHint in doctree!");
 	}
 }
