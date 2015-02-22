@@ -8,6 +8,7 @@ import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.PageWriter;
+import net.afterlifelochie.fontbox.render.BookGUI;
 
 /**
  * One formatted line with a spacing and line-height
@@ -44,5 +45,34 @@ public class Line extends Element {
 	@Override
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		throw new LayoutException("Cannot layout Line type; Line already laid!");
+	}
+
+	@Override
+	public boolean canUpdate() {
+		return false;
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render(BookGUI gui, int mx, int my, float frame) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clicked(BookGUI gui, int mx, int my) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void typed(BookGUI gui, char val, int code) {
+		// TODO Auto-generated method stub
+		
 	}
 }
