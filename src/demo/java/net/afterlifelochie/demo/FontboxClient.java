@@ -5,7 +5,6 @@ import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.api.PrintOutputTracer;
 import net.afterlifelochie.fontbox.font.FontException;
 import net.afterlifelochie.fontbox.font.GLFont;
-import net.afterlifelochie.fontbox.layout.LayoutCalculator;
 import net.afterlifelochie.fontbox.render.WrittenFontRenderer;
 import net.minecraft.util.ResourceLocation;
 
