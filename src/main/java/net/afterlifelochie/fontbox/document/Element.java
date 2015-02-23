@@ -17,6 +17,7 @@ import net.afterlifelochie.fontbox.layout.PageWriterCursor;
 import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
+import net.afterlifelochie.fontbox.render.RenderException;
 import net.afterlifelochie.io.StackedPushbackStringReader;
 import net.minecraft.client.gui.Gui;
 
@@ -33,15 +34,15 @@ public abstract class Element {
 	}
 
 	public abstract void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException;
-	
+
 	public abstract boolean canUpdate();
-	
+
 	public abstract void update();
-	
-	public abstract void render(BookGUI gui, int mx, int my, float frame);
-	
+
+	public abstract void render(BookGUI gui, int mx, int my, float frame) throws RenderException;
+
 	public abstract void clicked(BookGUI gui, int mx, int my);
-	
+
 	public abstract void typed(BookGUI gui, char val, int code);
 
 	/**
