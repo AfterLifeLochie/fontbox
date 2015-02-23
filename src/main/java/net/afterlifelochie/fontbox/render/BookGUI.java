@@ -8,8 +8,10 @@ import org.lwjgl.opengl.GL11;
 import net.afterlifelochie.demo.FontboxClient;
 import net.afterlifelochie.demo.FontboxDemoMod;
 import net.afterlifelochie.fontbox.Fontbox;
+import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.font.FontException;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
+import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,9 +19,41 @@ import net.minecraft.util.ResourceLocation;
 
 public class BookGUI extends GuiScreen {
 
+	public static enum UpMode {
+		ONEUP(1), TWOUP(2);
+
+		public final int pages;
+
+		UpMode(int pages) {
+			this.pages = pages;
+		}
+	}
+
+	public static class Layout {
+		public int x, y;
+
+		public Layout(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
+	protected final UpMode mode;
+	protected final Layout[] layout;
+
 	protected ArrayList<Page> pages;
 	protected int ptr = 0;
-	protected int top, left;
+
+	public BookGUI(UpMode mode, Layout[] layout) {
+		if (layout == null)
+			throw new IllegalArgumentException("Layout cannot be null!");
+		if (mode == null)
+			throw new IllegalArgumentException("Mode cannot be null!");
+		if (layout.length != mode.pages)
+			throw new IllegalArgumentException("Expected " + mode.pages + " pages for mode " + mode);
+		this.mode = mode;
+		this.layout = layout;
+	}
 
 	@Override
 	public boolean doesGuiPauseGame() {
@@ -39,6 +73,18 @@ public class BookGUI extends GuiScreen {
 	@Override
 	public void drawScreen(int mx, int my, float frames) {
 		super.drawScreen(mx, my, frames);
+		try {
+			if (this.pages != null) {
+				for (int i = 0; i < mode.pages; i++) {
+					Layout where = layout[i];
+					Page page = pages.get(ptr + i);
+					GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+					renderPage(page, where.x, where.y, zLevel, mx, my, frames);
+				}
+			}
+		} catch (RenderException err) {
+			err.printStackTrace();
+		}
 	}
 
 	@Override
@@ -55,16 +101,15 @@ public class BookGUI extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mx, int my, int button) {
 		super.mouseClicked(mx, my, button);
-		int mouseX = mx - left;
-		int mouseY = my - top;
-		if (mouseX < 200) {
-			if (this.pages.size() > ptr)
-				// FIXME: Externalize constants!
-				System.out.println(DocumentProcessor.getWord(this.pages.get(ptr), mouseX - 18, mouseY - 12));
-		} else {
-			if (this.pages.size() > ptr + 1)
-				// FIXME: Externalize constants!
-				System.out.println(DocumentProcessor.getWord(this.pages.get(ptr + 1), mouseX - 204, mouseY - 12));
+		for (int i = 0; i < mode.pages; i++) {
+			Layout where = layout[i];
+			Page page = pages.get(ptr + i);
+			int mouseX = mx - where.x, mouseY = my - where.y;
+			if (mouseX >= 0 && mouseY >= 0 && mouseX <= page.width && mouseY <= page.height) {
+				Element elem = DocumentProcessor.getElementAt(page, mouseX, mouseY);
+				if (elem != null)
+					elem.clicked(this, mouseX, mouseY);
+			}
 		}
 	}
 
@@ -76,11 +121,6 @@ public class BookGUI extends GuiScreen {
 	@Override
 	protected void mouseClickMove(int mx, int my, int button, long ticks) {
 		super.mouseClickMove(mx, my, button, ticks);
-	}
-
-	protected void drawPageAt(int x, int y, int offset, int mx, int my, float frame) throws RenderException {
-		FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
-		renderPage(pages.get(ptr + offset), x, y, zLevel, mx, my, frame);
 	}
 
 	private void renderPage(Page page, float x, float y, float z, int mx, int my, float frame) throws RenderException {

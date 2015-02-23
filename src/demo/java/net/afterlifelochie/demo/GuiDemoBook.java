@@ -28,6 +28,7 @@ import net.minecraft.util.ResourceLocation;
 public class GuiDemoBook extends BookGUI {
 
 	public GuiDemoBook() {
+		super(null, null);
 		StringBuffer fileData = new StringBuffer();
 		try {
 			IResource resource = Minecraft.getMinecraft().getResourceManager()
@@ -58,29 +59,9 @@ public class GuiDemoBook extends BookGUI {
 		super.drawScreen(par1, par2, par3);
 		GL11.glPushMatrix();
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		GL11.glTranslatef(left = width / 2 - 200, top = height / 2 - 110, 0.0f);
+		GL11.glTranslatef(width / 2 - 200, height / 2 - 110, 0.0f);
 		useFontboxTexture("noteback");
 		drawTexturedRectUV(0, 0, 400, 220, 0, 0, 1083.0f / 1111.0f, 847.0f / 1024.0f);
-		try {
-			if (this.pages != null) {
-				GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-				// drawPageAt(18, 12, 0);
-				GL11.glPushMatrix();
-				GL11.glTranslatef(90.0f, 200.0f, 0.0f);
-				GL11.glScalef(0.5f, 0.5f, 1.0f);
-				fontRendererObj.drawString(String.format("- %s -", ptr + 1), 0, 0, 0);
-				GL11.glPopMatrix();
-
-				// drawPageAt(204, 12, 1);
-				GL11.glPushMatrix();
-				GL11.glTranslatef(90.0f, 200.0f, 0.0f);
-				GL11.glScalef(0.5f, 0.5f, 1.0f);
-				fontRendererObj.drawString(String.format("- %s -", ptr + 2), 0, 0, 0);
-				GL11.glPopMatrix();
-			}
-		} catch (RenderException err) {
-			err.printStackTrace();
-		}
 		GL11.glPopMatrix();
 	}
 
