@@ -138,42 +138,6 @@ public class BookGUI extends GuiScreen {
 		GL11.glPopMatrix();
 	}
 
-	protected void useFontboxTexture(String name) {
-		mc.getTextureManager().bindTexture(new ResourceLocation("fontbox", "textures/gui/" + name + ".png"));
-	}
-
-	private void drawDefaultRect(double x, double y, double w, double h) {
-		drawDefaultRect(x, y, w, h, zLevel);
-	}
-
-	private void drawDefaultRect(double x, double y, double w, double h, double zLevel) {
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex3d(x, y + h, zLevel);
-		GL11.glVertex3d(x + w, y + h, zLevel);
-		GL11.glVertex3d(x + w, y, zLevel);
-		GL11.glVertex3d(x, y, zLevel);
-		GL11.glEnd();
-	}
-
-	protected void drawTexturedRectUV(double x, double y, double w, double h, double u, double v, double us, double vs) {
-		drawTexturedRectUV(x, y, w, h, u, vs, us, vs, zLevel);
-	}
-
-	protected void drawTexturedRectUV(double x, double y, double w, double h, double u, double v, double us, double vs,
-			double zLevel) {
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2d(u, v + vs);
-		GL11.glVertex3d(x, y + h, zLevel);
-
-		GL11.glTexCoord2d(u + us, v + vs);
-		GL11.glVertex3d(x + w, y + h, zLevel);
-
-		GL11.glTexCoord2d(u + us, v);
-		GL11.glVertex3d(x + w, y, zLevel);
-
-		GL11.glTexCoord2d(u, v);
-		GL11.glVertex3d(x, y, zLevel);
-		GL11.glEnd();
-	}
+	
 
 }

@@ -18,6 +18,7 @@ import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;
 import net.afterlifelochie.fontbox.render.BookGUI;
+import net.afterlifelochie.fontbox.render.GLUtils;
 import net.afterlifelochie.fontbox.render.RenderException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -60,8 +61,8 @@ public class GuiDemoBook extends BookGUI {
 		GL11.glPushMatrix();
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		GL11.glTranslatef(width / 2 - 200, height / 2 - 110, 0.0f);
-		useFontboxTexture("noteback");
-		drawTexturedRectUV(0, 0, 400, 220, 0, 0, 1083.0f / 1111.0f, 847.0f / 1024.0f);
+		GLUtils.useFontboxTexture("noteback");
+		GLUtils.drawTexturedRectUV(0, 0, 400, 220, 0, 0, 1083.0f / 1111.0f, 847.0f / 1024.0f, zLevel);
 		GL11.glPopMatrix();
 	}
 
