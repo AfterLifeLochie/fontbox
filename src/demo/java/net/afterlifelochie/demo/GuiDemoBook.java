@@ -64,14 +64,14 @@ public class GuiDemoBook extends BookGUI {
 		try {
 			if (this.pages != null) {
 				GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-				drawPageAt(18, 12, 0);
+				// drawPageAt(18, 12, 0);
 				GL11.glPushMatrix();
 				GL11.glTranslatef(90.0f, 200.0f, 0.0f);
 				GL11.glScalef(0.5f, 0.5f, 1.0f);
 				fontRendererObj.drawString(String.format("- %s -", ptr + 1), 0, 0, 0);
 				GL11.glPopMatrix();
 
-				drawPageAt(204, 12, 1);
+				// drawPageAt(204, 12, 1);
 				GL11.glPushMatrix();
 				GL11.glTranslatef(90.0f, 200.0f, 0.0f);
 				GL11.glScalef(0.5f, 0.5f, 1.0f);
