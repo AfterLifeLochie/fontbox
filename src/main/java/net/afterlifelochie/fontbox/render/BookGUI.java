@@ -78,24 +78,62 @@ public class BookGUI extends GuiScreen {
 		super.mouseClickMove(mx, my, button, ticks);
 	}
 
-	protected void drawPageAt(int x, int y, int offset) throws RenderException {
+	protected void drawPageAt(int x, int y, int offset, int mx, int my, float frame) throws RenderException {
 		FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
-		client.renderer.renderPages(Fontbox.fromName("Daniel"), pages.get(ptr + offset), x, y, zLevel, false);
+		renderPage(pages.get(ptr + offset), x, y, zLevel, mx, my, frame);
+	}
+
+	private void renderPage(Page page, float x, float y, float z, int mx, int my, float frame) throws RenderException {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(x, y, z);
+		/*
+		 * TODO: Draw this to a displaylist, then recall the displaylist later
+		 * on. This saves us recomputing a lot of values per frame and thus
+		 * prevents avoidable performance reductions.
+		 */
+		int count = page.elements.size();
+		for (int i = 0; i < count; i++) {
+			page.elements.get(i).render(this, mx, my, frame);
+		}
+		GL11.glPopMatrix();
 	}
 
 	protected void useFontboxTexture(String name) {
 		mc.getTextureManager().bindTexture(new ResourceLocation("fontbox", "textures/gui/" + name + ".png"));
 	}
 
+	private void drawDefaultRect(double x, double y, double w, double h) {
+		drawDefaultRect(x, y, w, h, zLevel);
+	}
+
+	private void drawDefaultRect(double x, double y, double w, double h, double zLevel) {
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glVertex3d(x, y + h, zLevel);
+		GL11.glVertex3d(x + w, y + h, zLevel);
+		GL11.glVertex3d(x + w, y, zLevel);
+		GL11.glVertex3d(x, y, zLevel);
+		GL11.glEnd();
+	}
+
 	protected void drawTexturedRectUV(double x, double y, double w, double h, double u, double v, double us, double vs) {
-		Tessellator tess = Tessellator.instance;
-		tess.startDrawingQuads();
-		tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
-		tess.addVertexWithUV(x, y + h, zLevel, u, v + vs);
-		tess.addVertexWithUV(x + w, y + h, zLevel, u + us, v + vs);
-		tess.addVertexWithUV(x + w, y, zLevel, u + us, v);
-		tess.addVertexWithUV(x, y, zLevel, u, v);
-		tess.draw();
+		drawTexturedRectUV(x, y, w, h, u, vs, us, vs, zLevel);
+	}
+
+	protected void drawTexturedRectUV(double x, double y, double w, double h, double u, double v, double us, double vs,
+			double zLevel) {
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2d(u, v + vs);
+		GL11.glVertex3d(x, y + h, zLevel);
+
+		GL11.glTexCoord2d(u + us, v + vs);
+		GL11.glVertex3d(x + w, y + h, zLevel);
+
+		GL11.glTexCoord2d(u + us, v);
+		GL11.glVertex3d(x + w, y, zLevel);
+
+		GL11.glTexCoord2d(u, v);
+		GL11.glVertex3d(x, y, zLevel);
+		GL11.glEnd();
 	}
 
 }
