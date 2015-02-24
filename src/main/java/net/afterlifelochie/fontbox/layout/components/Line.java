@@ -13,6 +13,7 @@ import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.render.BookGUI;
+import net.afterlifelochie.fontbox.render.GLUtils;
 import net.afterlifelochie.fontbox.render.RenderException;
 
 /**
@@ -77,9 +78,7 @@ public class Line extends Element {
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(mx, my, 0);
-
-		// TODO: Externalize the rendering scale
-		GL11.glScalef(0.44f, 0.44f, 1.0f);
+		GL11.glScalef(font.getScale(), font.getScale(), 1.0f);
 
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -109,12 +108,7 @@ public class Line extends Element {
 			double v = (glyph.vy - glyph.ascent) / metric.fontImageHeight;
 			double wz = glyph.width / metric.fontImageWidth;
 			double hz = glyph.height / metric.fontImageHeight;
-			/*
-			 * TODO: drawTexturedRectUV and other GL functions are shared; they
-			 * should be externalized (glutils)
-			 */
-			// drawTexturedRectUV(x, y, glyph.width, glyph.height, u, v, wz, hz,
-			// 1.0);
+			GLUtils.drawTexturedRectUV(x, y, glyph.width, glyph.height, u, v, wz, hz, 1.0);
 			x += glyph.width; // shunt by glpyh size
 		}
 		GL11.glDisable(GL11.GL_BLEND);
