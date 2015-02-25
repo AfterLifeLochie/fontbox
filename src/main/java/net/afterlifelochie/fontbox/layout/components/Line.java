@@ -81,7 +81,7 @@ public class Line extends Element {
 		GL11.glTranslatef(bounds().x, bounds().y, 0);
 
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		// Translate to the draw dest
 		/*
@@ -111,6 +111,7 @@ public class Line extends Element {
 			GLUtils.drawTexturedRectUV(x, y, glyph.width, glyph.height, u, v, wz, hz, 1.0);
 			x += glyph.width; // shunt by glpyh size
 		}
+
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
