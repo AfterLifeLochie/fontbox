@@ -12,7 +12,9 @@ import org.lwjgl.opengl.GL11;
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.document.Document;
 import net.afterlifelochie.fontbox.document.Heading;
+import net.afterlifelochie.fontbox.document.Image;
 import net.afterlifelochie.fontbox.document.Paragraph;
+import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.font.FontException;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
@@ -61,6 +63,8 @@ public class GuiDemoBook extends BookGUI {
 			Document document = new Document();
 			document.push(new Heading("title", "The Tortoise and the Hare"));
 			document.push(new Heading("author", "Written by Aesop"));
+			document.push(new Image(new ResourceLocation("fontbox", "textures/books/tortoise-rocket.png"), 300, 205, AlignmentMode.CENTER));
+			
 
 			String[] lines = fable.toString().split("\n");
 			for (String para : lines)

@@ -7,9 +7,12 @@ import org.lwjgl.opengl.GL11;
 
 public class GLUtils {
 
+	public static void useSystemTexture(ResourceLocation loc) {
+		Minecraft.getMinecraft().getTextureManager().bindTexture(loc);
+	}
+
 	public static void useFontboxTexture(String name) {
-		Minecraft.getMinecraft().getTextureManager()
-				.bindTexture(new ResourceLocation("fontbox", "textures/gui/" + name + ".png"));
+		GLUtils.useSystemTexture(new ResourceLocation("fontbox", "textures/gui/" + name + ".png"));
 	}
 
 	public static void drawDefaultRect(double x, double y, double w, double h, double z) {
