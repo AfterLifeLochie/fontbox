@@ -312,15 +312,15 @@ public abstract class Element {
 					char c = word.charAt(j);
 					if (c != ' ') {
 						GLGlyphMetric mx = metric.glyphs.get((int) c);
-						if (mx.height > height_new_line)
-							height_new_line = mx.height;
+						if (mx.ascent > height_new_line)
+							height_new_line = mx.ascent;
 					}
 				}
 			}
 
 			// If the line doesn't fit at all, we can't do anything
 			if (cursor.y + height_new_line > bounds.height) {
-				trace.trace("LayoutCalculator.boxLine", "revertLine", height_new_line);
+				trace.trace("Element.boxText", "revertLine", height_new_line, cursor.y + height_new_line, bounds.height);
 				text.popPosition(); // back out
 				break; // break main
 			}
@@ -352,7 +352,8 @@ public abstract class Element {
 			// Make the line height fit exactly 1 or more line units
 			int line_height = height_new_line;
 			if (line_height % page.properties.lineheight_size != 0)
-				line_height += line_height % page.properties.lineheight_size;
+				line_height = (int) Math.ceil(line_height / (float) page.properties.lineheight_size)
+						* page.properties.lineheight_size;
 
 			// Really compute the width of the line
 			int real_width = width_new_line + (space_width * (words.size() - 1));
