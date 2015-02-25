@@ -130,6 +130,9 @@ public class BookGUI extends GuiScreen {
 			if (this.pages != null) {
 				for (int i = 0; i < mode.pages; i++) {
 					Layout where = layout[i];
+					int what = ptr + i;
+					if (pages.size() <= what)
+						break;
 					Page page = pages.get(ptr + i);
 					GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 					renderPage(page, where.x, where.y, zLevel, mx, my, frames);
@@ -144,11 +147,11 @@ public class BookGUI extends GuiScreen {
 	protected void keyTyped(char val, int code) {
 		super.keyTyped(val, code);
 		if (code == Keyboard.KEY_LEFT)
-			if (0 <= ptr - 2)
-				ptr -= 2;
+			if (0 <= ptr - mode.pages)
+				ptr -= mode.pages;
 		if (code == Keyboard.KEY_RIGHT)
-			if (ptr + 2 < pages.size())
-				ptr += 2;
+			if (ptr + mode.pages < pages.size())
+				ptr += mode.pages;
 	}
 
 	@Override
