@@ -49,17 +49,18 @@ public class GuiDemoBook extends BookGUI {
 
 			/* Get some initial fonts */
 			GLFont daniel = Fontbox.fromName("Daniel");
-			GLFont ampersand = Fontbox.fromName("Note this");
+			GLFont notethis = Fontbox.fromName("Note this");
+			GLFont ampersand = Fontbox.fromName("Ampersand");
 
 			/* Build some document properties */
 			PageProperties properties = new PageProperties(320, 450, daniel);
-			properties.headingFont(ampersand).bodyFont(ampersand);
-			properties.bothMargin(2).lineheightSize(1).spaceSize(10);
+			properties.headingFont(ampersand).bodyFont(notethis);
+			properties.bothMargin(2).lineheightSize(8).spaceSize(4);
 
 			/* Build the document */
 			Document document = new Document();
 			document.push(new Heading("title", "The Tortoise and the Hare"));
-			document.push(new Heading("author", "Aesop"));
+			document.push(new Heading("author", "Written by Aesop"));
 
 			String[] lines = fable.toString().split("\n");
 			for (String para : lines)
