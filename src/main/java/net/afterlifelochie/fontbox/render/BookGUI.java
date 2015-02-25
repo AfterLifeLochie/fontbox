@@ -10,7 +10,7 @@ import net.afterlifelochie.fontbox.layout.DocumentProcessor;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.minecraft.client.gui.GuiScreen;
 
-public class BookGUI extends GuiScreen {
+public abstract class BookGUI extends GuiScreen {
 
 	/**
 	 * The page-up mode.
@@ -126,6 +126,7 @@ public class BookGUI extends GuiScreen {
 	@Override
 	public void drawScreen(int mx, int my, float frames) {
 		super.drawScreen(mx, my, frames);
+		drawBackground(mx, my, frames);
 		try {
 			if (this.pages != null) {
 				for (int i = 0; i < mode.pages; i++) {
@@ -141,7 +142,39 @@ public class BookGUI extends GuiScreen {
 		} catch (RenderException err) {
 			err.printStackTrace();
 		}
+		drawForeground(mx, my, frames);
 	}
+
+	/**
+	 * <p>
+	 * Draw the background layer of the interface. You must leave the opengl
+	 * state such that the layout (0, 0) will be drawn in the current place.
+	 * </p>
+	 * 
+	 * @param mx
+	 *            The mouse x-coordinate
+	 * @param my
+	 *            The mouse y-coordinate
+	 * @param frame
+	 *            The partial frames rendered
+	 */
+	public abstract void drawBackground(int mx, int my, float frame);
+
+	/**
+	 * <p>
+	 * Draw the foreground layer of the interface. The opengl state is such that
+	 * the layout coordinates (0, 0) are in the top-left corner of the written
+	 * text.
+	 * </p>
+	 * 
+	 * @param mx
+	 *            The mouse x-coordinate
+	 * @param my
+	 *            The mouse y-coordinate
+	 * @param frame
+	 *            The partial frames rendered
+	 */
+	public abstract void drawForeground(int mx, int my, float frame);
 
 	@Override
 	protected void keyTyped(char val, int code) {
@@ -159,6 +192,9 @@ public class BookGUI extends GuiScreen {
 		super.mouseClicked(mx, my, button);
 		for (int i = 0; i < mode.pages; i++) {
 			Layout where = layout[i];
+			int which = ptr + i;
+			if (pages.size() <= which)
+				break;
 			Page page = pages.get(ptr + i);
 			int mouseX = mx - where.x, mouseY = my - where.y;
 			if (mouseX >= 0 && mouseY >= 0 && mouseX <= page.width && mouseY <= page.height) {

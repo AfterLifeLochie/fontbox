@@ -158,9 +158,10 @@ public abstract class Element {
 			PageWriterCursor cursor = writer.cursor();
 			ObjectBounds bounds = new ObjectBounds(cursor.x, cursor.y, current.properties.width - cursor.x,
 					current.properties.height - cursor.y, false);
-			Line[] blobs = boxText(trace, current, bounds, font, reader);
+			Line[] blobs = boxText(trace, writer, bounds, font, reader);
 			for (int i = 0; i < blobs.length; i++)
 				current.elements.add(blobs[i]);
+			trace.trace("Element.boxText", "streamRemain", reader.available());
 			if (reader.available() > 0)
 				writer.next();
 		}
@@ -184,8 +185,8 @@ public abstract class Element {
 	 *
 	 * @param trace
 	 *            The debugging tracer object
-	 * @param page
-	 *            The page being write onto
+	 * @param writer
+	 *            The underlying stream to write onto
 	 * @param bounds
 	 *            The bounding box to write inside
 	 * @param font
@@ -199,13 +200,14 @@ public abstract class Element {
 	 *             out correctly
 	 * @return The list of lines written to the page inside the bounding box
 	 */
-	protected Line[] boxText(ITracer trace, Page page, ObjectBounds bounds, GLFont font,
+	protected Line[] boxText(ITracer trace, PageWriter writer, ObjectBounds bounds, GLFont font,
 			StackedPushbackStringReader text) throws IOException, LayoutException {
+		Page page = writer.current();
+		PageWriterCursor cursor = writer.cursor();
 		GLFontMetrics metric = font.getMetric();
 		// The list of lines
 		ArrayList<Line> lines = new ArrayList<Line>();
 		// The height cursor
-		int y = 0;
 		while (text.available() > 0) {
 			// Create some placeholder counters
 			int width_new_line = 0, width_new_word = 0;
@@ -267,7 +269,6 @@ public abstract class Element {
 					// We have something not a blank char, find it
 					GLGlyphMetric mx = metric.glyphs.get((int) c);
 					if (mx != null) {
-						trace.trace("Element.boxText", "pushChar", c, mx);
 						// Record the glyph
 						width_new_word += mx.width;
 						// Push the character on the stack
@@ -296,7 +297,7 @@ public abstract class Element {
 					width_new_word = 0;
 				} else {
 					// No, the word doesn't fit, back it up
-					trace.trace("Element.boxText", "clearOverflow", width_new_word);
+					trace.trace("Element.boxText", "clearOverflow", chars.toString(), width_new_word, chars.size());
 					text.rewind(chars.size() + 1);
 					chars.clear();
 					width_new_word = 0;
@@ -317,7 +318,7 @@ public abstract class Element {
 			}
 
 			// If the line doesn't fit at all, we can't do anything
-			if (y + height_new_line > bounds.height) {
+			if (cursor.y + height_new_line > bounds.height) {
 				trace.trace("LayoutCalculator.boxLine", "revertLine", height_new_line);
 				text.popPosition(); // back out
 				break; // break main
@@ -359,11 +360,11 @@ public abstract class Element {
 
 			// Create the linebox
 			trace.trace("LayoutCalculator.boxLine", "pushLine", line.toString(), space_width, line_height);
-			lines.add(new Line(line.toString(), new ObjectBounds(bounds.x, y, real_width, line_height, false), font,
+			lines.add(new Line(line.toString(), new ObjectBounds(bounds.x, cursor.y, real_width, line_height, false), font,
 					space_width));
 
 			// Slide downwards
-			y += line_height;
+			cursor.y += line_height;
 		}
 		// Return what we've done
 		return (Line[]) lines.toArray(new Line[0]);

@@ -51,6 +51,8 @@ public class GLFont {
 	 * 
 	 * @param trace
 	 *            The debugging tracer object
+	 * @param px
+	 *            The font pixel size
 	 * @param ttf
 	 *            The TTF file
 	 * @return The GLFont result
@@ -58,7 +60,7 @@ public class GLFont {
 	 *             Any exception which occurs when reading the TTF file, brewing
 	 *             the buffer or creating the final font.
 	 */
-	public static GLFont fromTTF(ITracer trace, ResourceLocation ttf) throws FontException {
+	public static GLFont fromTTF(ITracer trace, float px, ResourceLocation ttf) throws FontException {
 		if (trace == null)
 			throw new IllegalArgumentException("trace may not be null");
 		if (ttf == null)
@@ -71,7 +73,7 @@ public class GLFont {
 			Font sysfont = Font.createFont(Font.TRUETYPE_FONT, stream);
 			if (trace != null)
 				trace.trace("GLFont.fromTTF", sysfont.getName());
-			return fromFont(trace, sysfont.deriveFont(16.0f));
+			return fromFont(trace, sysfont.deriveFont(px));
 		} catch (IOException ioex) {
 			trace.trace("GLFont.fromTTF", ioex);
 			throw new FontException("Can't perform I/O operation!", ioex);

@@ -77,8 +77,8 @@ public class Line extends Element {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureId());
 
 		GL11.glPushMatrix();
-		GL11.glTranslatef(mx, my, 0);
 		GL11.glScalef(font.getScale(), font.getScale(), 1.0f);
+		GL11.glTranslatef(bounds().x, bounds().y, 0);
 
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);

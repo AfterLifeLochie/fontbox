@@ -14,9 +14,9 @@ public class FontboxClient extends FontboxServer {
 		super.init(e);
 		try {
 			Fontbox.setTracer(new PrintOutputTracer());
-			GLFont.fromTTF(Fontbox.tracer(), new ResourceLocation("fontbox", "fonts/daniel.ttf"));
-			GLFont.fromTTF(Fontbox.tracer(), new ResourceLocation("fontbox", "fonts/notethis.ttf"));
-			GLFont.fromTTF(Fontbox.tracer(), new ResourceLocation("fontbox", "fonts/ampersand.ttf"));
+			GLFont.fromTTF(Fontbox.tracer(), 22.0f, new ResourceLocation("fontbox", "fonts/daniel.ttf"));
+			GLFont.fromTTF(Fontbox.tracer(), 22.0f, new ResourceLocation("fontbox", "fonts/notethis.ttf"));
+			GLFont.fromTTF(Fontbox.tracer(), 22.0f, new ResourceLocation("fontbox", "fonts/ampersand.ttf"));
 		} catch (FontException f0) {
 			f0.printStackTrace();
 		}

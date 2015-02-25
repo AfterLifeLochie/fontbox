@@ -32,7 +32,7 @@ import net.minecraft.util.ResourceLocation;
 public class GuiDemoBook extends BookGUI {
 
 	public GuiDemoBook() {
-		super(UpMode.TWOUP, new Layout[] { new Layout(0, 0), new Layout(200, 0) });
+		super(UpMode.TWOUP, new Layout[] { new Layout(0, 0), new Layout(180, 0) });
 
 		try {
 			/* Load the fable book */
@@ -49,11 +49,11 @@ public class GuiDemoBook extends BookGUI {
 
 			/* Get some initial fonts */
 			GLFont daniel = Fontbox.fromName("Daniel");
-			GLFont ampersand = Fontbox.fromName("Ampersand");
+			GLFont ampersand = Fontbox.fromName("Note this");
 
 			/* Build some document properties */
-			PageProperties properties = new PageProperties(350, 450, daniel);
-			properties.headingFont(ampersand).bodyFont(daniel);
+			PageProperties properties = new PageProperties(320, 450, daniel);
+			properties.headingFont(ampersand).bodyFont(ampersand);
 			properties.bothMargin(2).lineheightSize(1).spaceSize(10);
 
 			/* Build the document */
@@ -78,13 +78,19 @@ public class GuiDemoBook extends BookGUI {
 	}
 
 	@Override
-	public void drawScreen(int par1, int par2, float par3) {
-		super.drawScreen(par1, par2, par3);
+	public void drawBackground(int mx, int my, float frame) {
 		GL11.glPushMatrix();
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		GL11.glTranslatef(width / 2 - 200, height / 2 - 110, 0.0f);
 		GLUtils.useFontboxTexture("noteback");
 		GLUtils.drawTexturedRectUV(0, 0, 400, 220, 0, 0, 1083.0f / 1111.0f, 847.0f / 1024.0f, zLevel);
+		GL11.glPopMatrix();
+		GL11.glPushMatrix();
+		GL11.glTranslatef(width / 2 - 180, height / 2 - 100, 0.0f);
+	}
+
+	@Override
+	public void drawForeground(int mx, int my, float frame) {
 		GL11.glPopMatrix();
 	}
 
