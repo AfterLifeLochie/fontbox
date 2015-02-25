@@ -32,7 +32,7 @@ import net.minecraft.util.ResourceLocation;
 public class GuiDemoBook extends BookGUI {
 
 	public GuiDemoBook() {
-		super(null, null);
+		super(UpMode.TWOUP, new Layout[] { new Layout(0, 0), new Layout(200, 0) });
 
 		try {
 			/* Load the fable book */
