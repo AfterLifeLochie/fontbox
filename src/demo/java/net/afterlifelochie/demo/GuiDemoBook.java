@@ -55,7 +55,7 @@ public class GuiDemoBook extends BookGUI {
 			/* Build some document properties */
 			PageProperties properties = new PageProperties(400, 450, daniel);
 			properties.headingFont(ampersand).bodyFont(notethis);
-			properties.bothMargin(2).lineheightSize(8).spaceSize(4);
+			properties.bothMargin(2).lineheightSize(8).spaceSize(4).densitiy(0.66f);
 
 			/* Build the document */
 			Document document = new Document();

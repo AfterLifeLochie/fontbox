@@ -355,9 +355,12 @@ public abstract class Element {
 			case CENTER:
 				break;
 			case JUSTIFY:
-				int extra_px_per_space = (int) Math.floor(space_remain / words.size());
-				if (extra_px_per_space > page.properties.min_space_size)
-					space_width = extra_px_per_space;
+				float density = (float) width_new_line / (float) bounds.width;
+				if (density >= page.properties.min_line_density) {
+					int extra_px_per_space = (int) Math.floor(space_remain / words.size());
+					if (extra_px_per_space > page.properties.min_space_size)
+						space_width = extra_px_per_space;
+				}
 				break;
 			case LEFT:
 				break;
