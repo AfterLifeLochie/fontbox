@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.PageWriter;
+import net.afterlifelochie.fontbox.layout.PageWriterCursor;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 
@@ -22,6 +23,8 @@ public class Heading extends Element {
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		Page page = writer.current();
 		boxText(trace, writer, page.properties.headingFont, text);
+		PageWriterCursor cursor = writer.cursor();
+		cursor.y += 10;
 	}
 
 	@Override
