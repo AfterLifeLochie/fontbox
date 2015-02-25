@@ -32,7 +32,7 @@ import net.minecraft.util.ResourceLocation;
 public class GuiDemoBook extends BookGUI {
 
 	public GuiDemoBook() {
-		super(UpMode.TWOUP, new Layout[] { new Layout(0, 0), new Layout(180, 0) });
+		super(UpMode.TWOUP, new Layout[] { new Layout(0, 15), new Layout(180, 15) });
 
 		try {
 			/* Load the fable book */
@@ -53,7 +53,7 @@ public class GuiDemoBook extends BookGUI {
 			GLFont ampersand = Fontbox.fromName("Ampersand");
 
 			/* Build some document properties */
-			PageProperties properties = new PageProperties(320, 450, daniel);
+			PageProperties properties = new PageProperties(400, 450, daniel);
 			properties.headingFont(ampersand).bodyFont(notethis);
 			properties.bothMargin(2).lineheightSize(8).spaceSize(4);
 

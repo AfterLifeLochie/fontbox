@@ -7,6 +7,7 @@ import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.font.GLFontMetrics;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.PageWriter;
+import net.afterlifelochie.fontbox.layout.PageWriterCursor;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 
@@ -27,7 +28,9 @@ public class Paragraph extends Element {
 	@Override
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		Page page = writer.current();
-		boxText(trace, writer, page.properties.bodyFont, text);
+		boxText(trace, writer, page.properties.bodyFont, text, AlignmentMode.JUSTIFY);
+		PageWriterCursor cursor = writer.cursor();
+		cursor.y += 10;
 	}
 
 	@Override

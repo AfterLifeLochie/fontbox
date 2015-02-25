@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.afterlifelochie.fontbox.api.ITracer;
+import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.font.GLFontMetrics;
 import net.afterlifelochie.fontbox.font.GLGlyphMetric;
@@ -144,21 +145,23 @@ public abstract class Element {
 	 *            The font to write with
 	 * @param what
 	 *            The text to write
+	 * @param alignment
+	 *            The text alignment mode
 	 * @throws IOException
 	 *             Any exception which occurs when reading from the text stream
 	 * @throws LayoutException
 	 *             Any layout problem which prevents the text from being laid
 	 *             out correctly
 	 */
-	protected void boxText(ITracer trace, PageWriter writer, GLFont font, String what) throws IOException,
-			LayoutException {
+	protected void boxText(ITracer trace, PageWriter writer, GLFont font, String what, AlignmentMode alignment)
+			throws IOException, LayoutException {
 		StackedPushbackStringReader reader = new StackedPushbackStringReader(what);
 		while (reader.available() > 0) {
 			Page current = writer.current();
 			PageWriterCursor cursor = writer.cursor();
 			ObjectBounds bounds = new ObjectBounds(cursor.x, cursor.y, current.properties.width - cursor.x,
 					current.properties.height - cursor.y, false);
-			Line[] blobs = boxText(trace, writer, bounds, font, reader);
+			Line[] blobs = boxText(trace, writer, bounds, font, reader, alignment);
 			for (int i = 0; i < blobs.length; i++)
 				current.elements.add(blobs[i]);
 			trace.trace("Element.boxText", "streamRemain", reader.available());
@@ -193,6 +196,8 @@ public abstract class Element {
 	 *            The font to write with
 	 * @param text
 	 *            The text stream to read from
+	 * @param alignment
+	 *            The text alignment mode
 	 * @throws IOException
 	 *             Any exception which occurs when reading from the text stream
 	 * @throws LayoutException
@@ -201,7 +206,7 @@ public abstract class Element {
 	 * @return The list of lines written to the page inside the bounding box
 	 */
 	protected Line[] boxText(ITracer trace, PageWriter writer, ObjectBounds bounds, GLFont font,
-			StackedPushbackStringReader text) throws IOException, LayoutException {
+			StackedPushbackStringReader text, AlignmentMode alignment) throws IOException, LayoutException {
 		Page page = writer.current();
 		PageWriterCursor cursor = writer.cursor();
 		GLFontMetrics metric = font.getMetric();
@@ -341,13 +346,27 @@ public abstract class Element {
 			int space_remain = bounds.width - width_new_line;
 			int space_width = page.properties.min_space_size;
 
-			// If the line is not blank, then...
-			if (words.size() > 0) {
+			// If the line is blank, then...
+			if (words.size() == 0)
+				height_new_line = 2 * page.properties.lineheight_size;
+
+			// Apply the alignment:
+			switch (alignment) {
+			case CENTER:
+				break;
+			case JUSTIFY:
 				int extra_px_per_space = (int) Math.floor(space_remain / words.size());
 				if (extra_px_per_space > page.properties.min_space_size)
 					space_width = extra_px_per_space;
-			} else
-				height_new_line = 2 * page.properties.lineheight_size;
+				break;
+			case LEFT:
+				break;
+			case RIGHT:
+				break;
+			default:
+				break;
+
+			}
 
 			// Make the line height fit exactly 1 or more line units
 			int line_height = height_new_line;
