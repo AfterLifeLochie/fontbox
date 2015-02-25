@@ -5,23 +5,25 @@ import java.util.ArrayList;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import net.afterlifelochie.demo.FontboxClient;
-import net.afterlifelochie.demo.FontboxDemoMod;
-import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.document.Element;
-import net.afterlifelochie.fontbox.font.FontException;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
-import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.ResourceLocation;
 
 public class BookGUI extends GuiScreen {
 
+	/**
+	 * The page-up mode.
+	 * 
+	 * @author AfterLifeLochie
+	 */
 	public static enum UpMode {
-		ONEUP(1), TWOUP(2);
+		/** One-up (one page) mode */
+		ONEUP(1),
+		/** Two-up (two page) mode */
+		TWOUP(2);
 
+		/** The number of pages in this mode */
 		public final int pages;
 
 		UpMode(int pages) {
@@ -29,21 +31,53 @@ public class BookGUI extends GuiScreen {
 		}
 	}
 
+	/**
+	 * Page layout container
+	 * 
+	 * @author AfterLifeLochie
+	 *
+	 */
 	public static class Layout {
 		public int x, y;
 
+		/**
+		 * Create a new Layout container for rendering the page on screen.
+		 * 
+		 * @param x
+		 *            The x-coordinate to render at
+		 * @param y
+		 *            The y-coordinate to render at
+		 */
 		public Layout(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}
 	}
 
+	/** The renderer's UpMode */
 	protected final UpMode mode;
+	/** The page layout grid */
 	protected final Layout[] layout;
 
+	/** The list of pages */
 	protected ArrayList<Page> pages;
+	/** The current page pointer */
 	protected int ptr = 0;
 
+	/**
+	 * <p>
+	 * Create a new Book rendering context on top of the existing Minecraft GUI
+	 * system. The book rendering properties are set through the constructor and
+	 * control how many and where pages are rendered.
+	 * </p>
+	 * 
+	 * @param mode
+	 *            The page mode, usually ONEUP or TWOUP.
+	 * @param layout
+	 *            The layout array which specifies where the pages should be
+	 *            rendered. The number of elements in the array must match the
+	 *            number of pages required by the UpMode specified.
+	 */
 	public BookGUI(UpMode mode, Layout[] layout) {
 		if (layout == null)
 			throw new IllegalArgumentException("Layout cannot be null!");
@@ -53,6 +87,25 @@ public class BookGUI extends GuiScreen {
 			throw new IllegalArgumentException("Expected " + mode.pages + " pages for mode " + mode);
 		this.mode = mode;
 		this.layout = layout;
+	}
+
+	/**
+	 * <p>
+	 * Updates the pages currently being rendered.
+	 * </p>
+	 * <p>
+	 * If the page read pointer is currently beyond the end of the new page
+	 * count (ie, the number of pages has reduced), the pointer will be reset to
+	 * the beginning of the book.
+	 * </p>
+	 * 
+	 * @param pages
+	 *            The new list of pages
+	 */
+	public void changePages(ArrayList<Page> pages) {
+		if (ptr >= pages.size())
+			ptr = 0;
+		this.pages = pages;
 	}
 
 	@Override
@@ -137,7 +190,5 @@ public class BookGUI extends GuiScreen {
 		}
 		GL11.glPopMatrix();
 	}
-
-	
 
 }
