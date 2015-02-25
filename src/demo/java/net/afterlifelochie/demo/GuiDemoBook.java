@@ -4,12 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.document.Document;
+import net.afterlifelochie.fontbox.document.Heading;
+import net.afterlifelochie.fontbox.document.Paragraph;
 import net.afterlifelochie.fontbox.font.FontException;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
@@ -30,24 +33,43 @@ public class GuiDemoBook extends BookGUI {
 
 	public GuiDemoBook() {
 		super(null, null);
-		StringBuffer fileData = new StringBuffer();
+
 		try {
+			/* Load the fable book */
+			StringBuffer fable = new StringBuffer();
 			IResource resource = Minecraft.getMinecraft().getResourceManager()
-					.getResource(new ResourceLocation("fontbox", "books/lipsum.book"));
+					.getResource(new ResourceLocation("fontbox", "books/fable.book"));
 			InputStream stream = resource.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			char[] buf = new char[1024];
 			int len = 0;
 			while ((len = reader.read(buf)) != -1)
-				fileData.append(buf, 0, len);
+				fable.append(buf, 0, len);
 			reader.close();
 
-			FontboxClient client = (FontboxClient) FontboxDemoMod.proxy;
+			/* Get some initial fonts */
 			GLFont daniel = Fontbox.fromName("Daniel");
+			GLFont ampersand = Fontbox.fromName("Ampersand");
+
+			/* Build some document properties */
 			PageProperties properties = new PageProperties(350, 450, daniel);
+			properties.headingFont(ampersand).bodyFont(daniel);
 			properties.bothMargin(2).lineheightSize(1).spaceSize(10);
-			Document doc = new Document();
-			pages = DocumentProcessor.generatePages(Fontbox.tracer(), doc, properties);
+
+			/* Build the document */
+			Document document = new Document();
+			document.push(new Heading("title", "The Tortoise and the Hare"));
+			document.push(new Heading("author", "Aesop"));
+
+			String[] lines = fable.toString().split("\n");
+			for (String para : lines)
+				if (para.trim().length() > 0)
+					document.push(new Paragraph(para.trim()));
+
+			/* Actually generate some pages */
+			ArrayList<Page> pages = DocumentProcessor.generatePages(Fontbox.tracer(), document, properties);
+			/* Set the pages */
+			changePages(pages);
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
 		} catch (LayoutException layout) {
