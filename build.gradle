@@ -32,8 +32,8 @@ minecraft {
 jar.version = "${minecraft.version}"
 jar.classifier = "${project.ext.build}"
 
-sourceSets.main.java.srcDir("./src/tests/java")
-sourceSets.main.resources.srcDir("./src/tests/resources")
+sourceSets.main.java.srcDir("./src/demo/java")
+sourceSets.main.resources.srcDir("./src/demo/resources")
 
 processResources {
 	from(sourceSets.main.resources.srcDirs) {
