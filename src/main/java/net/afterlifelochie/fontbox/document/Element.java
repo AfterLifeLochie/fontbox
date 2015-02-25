@@ -236,7 +236,8 @@ public abstract class Element {
 					// Push a whole word if one exists
 					if (chars.size() > 0) {
 						// Find out if there is enough space to push this word
-						int new_width_nl = width_new_line + width_new_word + page.properties.min_space_size;
+						int new_width_nl = (width_new_line + ((words.size() - 1) * page.properties.min_space_size))
+								+ width_new_word + page.properties.min_space_size;
 						/*
 						 * FIXME: This needs to be done in a better way. We need
 						 * to check to see if this object intersects ANY object,
@@ -245,7 +246,7 @@ public abstract class Element {
 						 * because more complex Containers would rely on this
 						 * behaviour (text boxes anyone?).
 						 */
-						if (bounds.width >= new_width_nl) {
+						if (bounds.width > new_width_nl) {
 							// Yes, there is enough space, add the word
 							width_new_line += width_new_word;
 							StringBuilder builder = new StringBuilder();
@@ -343,25 +344,30 @@ public abstract class Element {
 			// If the line is not blank, then...
 			if (words.size() > 0) {
 				int extra_px_per_space = (int) Math.floor(space_remain / words.size());
-				if (width_new_line > extra_px_per_space)
-					space_width = page.properties.min_space_size + extra_px_per_space;
+				if (extra_px_per_space > page.properties.min_space_size)
+					space_width = extra_px_per_space;
 			} else
 				height_new_line = 2 * page.properties.lineheight_size;
 
 			// Make the line height fit exactly 1 or more line units
 			int line_height = height_new_line;
-			if (line_height % page.properties.lineheight_size != 0) {
+			if (line_height % page.properties.lineheight_size != 0)
 				line_height += line_height % page.properties.lineheight_size;
-				// line_height += page.lineheight_size;
-			}
 
 			// Really compute the width of the line
 			int real_width = width_new_line + (space_width * (words.size() - 1));
 
+			if (real_width > bounds.width) {
+				trace.warn("LayoutCalculator.boxLine", "overflow_line_not_allowed", real_width, bounds.width,
+						width_new_line, space_width);
+				throw new LayoutException("Produced invalid line configuration: " + real_width + " > " + bounds.width
+						+ "!");
+			}
+
 			// Create the linebox
 			trace.trace("LayoutCalculator.boxLine", "pushLine", line.toString(), space_width, line_height);
-			lines.add(new Line(line.toString(), new ObjectBounds(bounds.x, cursor.y, real_width, line_height, false), font,
-					space_width));
+			lines.add(new Line(line.toString(), new ObjectBounds(bounds.x, cursor.y, real_width, line_height, false),
+					font, space_width));
 
 			// Slide downwards
 			cursor.y += line_height;
