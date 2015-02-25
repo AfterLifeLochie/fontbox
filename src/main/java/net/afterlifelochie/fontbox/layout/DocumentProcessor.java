@@ -60,6 +60,32 @@ public class DocumentProcessor {
 		return null;
 	}
 
+	/**
+	 * <p>
+	 * Generate a list of formatted Pages from a Document and a Page layout
+	 * configuration. The Document must contain at least one Element in the
+	 * list. After processing, the Elements inside the Document are written to
+	 * the pages.
+	 * </p>
+	 * <p>
+	 * The Elements in the Document list are modified so that they contain
+	 * rendering properties and other pre-computed parameters.
+	 * </p>
+	 * 
+	 * @param trace
+	 *            The debugger
+	 * @param doc
+	 *            The Document to transform
+	 * @param layout
+	 *            The page layout
+	 * @return The list of generated Pages
+	 * @throws IOException
+	 *             Any I/O exception which occurs when reading from nested
+	 *             streams or when writing to the Page output stream
+	 * @throws LayoutException
+	 *             Any layout exception which occurs when attempting to place an
+	 *             element on a Page
+	 */
 	public static ArrayList<Page> generatePages(ITracer trace, Document doc, PageProperties layout) throws IOException,
 			LayoutException {
 		PageWriter writer = new PageWriter(layout);
