@@ -3,10 +3,7 @@ package net.afterlifelochie.fontbox.document;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.print.attribute.standard.PageRanges;
-
 import net.afterlifelochie.fontbox.api.ITracer;
-import net.afterlifelochie.fontbox.font.FontException;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.font.GLFontMetrics;
 import net.afterlifelochie.fontbox.font.GLGlyphMetric;
@@ -19,30 +16,117 @@ import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 import net.afterlifelochie.fontbox.render.RenderException;
 import net.afterlifelochie.io.StackedPushbackStringReader;
-import net.minecraft.client.gui.Gui;
 
+/**
+ * <p>
+ * Document element class. Elements are used to in a Document to construct a
+ * linked list of objects which are subsequently paginated and rendered.
+ * </p>
+ * 
+ * @author AfterLifeLochie
+ *
+ */
 public abstract class Element {
 
 	private ObjectBounds bounds;
 
+	/**
+	 * Get the bounds of the object
+	 * 
+	 * @return The bounds of the object
+	 */
 	public ObjectBounds bounds() {
 		return this.bounds;
 	}
 
+	/**
+	 * Set the bounds of the object
+	 * 
+	 * @param bb
+	 *            The new bounds of the object
+	 */
 	public void setBounds(ObjectBounds bb) {
 		this.bounds = bb;
 	}
 
+	/**
+	 * <p>
+	 * Called by the document generator to request this element fill in it's
+	 * rendering-based properties. The element should place itself on the
+	 * current page and update the writing cursor if required.
+	 * </p>
+	 * 
+	 * @param trace
+	 *            The debugging tracer object
+	 * @param writer
+	 *            The current page writer
+	 * @throws IOException
+	 *             Any I/O exception which occurs when writing to the stream
+	 * @throws LayoutException
+	 *             Any exception which prevents the element from being written
+	 *             to the writing stream
+	 */
 	public abstract void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException;
 
+	/**
+	 * Called to determine if this element requires explicit update ticks.
+	 * 
+	 * @return If the element requires update ticks
+	 */
 	public abstract boolean canUpdate();
 
+	/**
+	 * Called to update the interface
+	 */
 	public abstract void update();
 
+	/**
+	 * <p>
+	 * Called to render the element on the page. You should use the pre-computed
+	 * rendering properties generated through the call to
+	 * {@link Element#layout(ITracer, PageWriter)}.
+	 * </p>
+	 * 
+	 * @param gui
+	 *            The GUI rendering on
+	 * @param mx
+	 *            The mouse x-coordinate
+	 * @param my
+	 *            The mouse y-coordinate
+	 * @param frame
+	 *            The current partial frame
+	 * @throws RenderException
+	 *             Any rendering exception which prevents the element from being
+	 *             rendered on the page
+	 */
 	public abstract void render(BookGUI gui, int mx, int my, float frame) throws RenderException;
 
+	/**
+	 * <p>
+	 * Called by the container controller when a click occurs on the element.
+	 * </p>
+	 * 
+	 * @param gui
+	 *            The GUI being clicked
+	 * @param mx
+	 *            The mouse x-coordinate
+	 * @param my
+	 *            The mouse y-coordinate
+	 */
 	public abstract void clicked(BookGUI gui, int mx, int my);
 
+	/**
+	 * <p>
+	 * Called by the container when a key press occurs.
+	 * </p>
+	 * 
+	 * @param gui
+	 *            The GUI being typed into
+	 * @param val
+	 *            The character value
+	 * @param code
+	 *            The key code
+	 */
 	public abstract void typed(BookGUI gui, char val, int code);
 
 	/**
