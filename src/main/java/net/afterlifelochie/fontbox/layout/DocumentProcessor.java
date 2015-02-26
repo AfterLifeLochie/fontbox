@@ -9,8 +9,7 @@ import net.afterlifelochie.fontbox.document.Document;
 import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.document.Heading;
 import net.afterlifelochie.fontbox.document.Image;
-import net.afterlifelochie.fontbox.document.ImageBlock;
-import net.afterlifelochie.fontbox.document.ImageItem;
+import net.afterlifelochie.fontbox.document.ImageItemStack;
 import net.afterlifelochie.fontbox.document.Paragraph;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.font.GLGlyphMetric;
@@ -103,12 +102,9 @@ public class DocumentProcessor {
 			heading.layout(trace, writer);
 		} else if (element instanceof Image) {
 			Image image = (Image) element;
-			if (image instanceof ImageBlock) {
-				ImageBlock blockIconImg = (ImageBlock) image;
+			if (image instanceof ImageItemStack) {
+				ImageItemStack blockIconImg = (ImageItemStack) image;
 				blockIconImg.layout(trace, writer);
-			} else if (image instanceof ImageItem) {
-				ImageItem itemIconImg = (ImageItem) image;
-				itemIconImg.layout(trace, writer);
 			} else {
 				image.layout(trace, writer);
 			}

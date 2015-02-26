@@ -6,16 +6,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.document.Document;
 import net.afterlifelochie.fontbox.document.Heading;
 import net.afterlifelochie.fontbox.document.Image;
+import net.afterlifelochie.fontbox.document.ImageItemStack;
 import net.afterlifelochie.fontbox.document.Paragraph;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
-import net.afterlifelochie.fontbox.font.FontException;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
 import net.afterlifelochie.fontbox.layout.LayoutException;
@@ -30,6 +29,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiDemoBook extends BookGUI {
@@ -64,22 +66,29 @@ public class GuiDemoBook extends BookGUI {
 			Document document = new Document();
 			document.push(new Heading("title", "The Tortoise and the Hare"));
 			document.push(new Heading("author", "Written by Aesop"));
-			document.push(new Image(new ResourceLocation("fontbox", "textures/books/tortoise-rocket.png"), 300, 205, AlignmentMode.JUSTIFY));
-			
+			document.push(new Image(new ResourceLocation("fontbox", "textures/books/tortoise-rocket.png"), 300, 205,
+					AlignmentMode.JUSTIFY));
 
 			String[] lines = fable.toString().split("\n");
+			ArrayList<String> reallines = new ArrayList<String>();
 			for (String para : lines)
 				if (para.trim().length() > 0)
-					document.push(new Paragraph(para.trim()));
+					reallines.add(para.trim());
+
+			document.push(new Paragraph(reallines.get(0)));
+			document.push(new ImageItemStack(new ItemStack(Blocks.anvil, 1), 32, 32, AlignmentMode.CENTER));
+			document.push(new Paragraph(reallines.get(1)));
+			document.push(new ImageItemStack(new ItemStack(Items.apple, 1), 32, 32, AlignmentMode.CENTER));
+			document.push(new Paragraph(reallines.get(2)));
 
 			/* Actually generate some pages */
 			PageWriter writer = new PageWriter(properties);
 			DocumentProcessor.generatePages(Fontbox.tracer(), document, writer);
 			writer.close();
-			
+
 			/* Set the pages */
 			changePages(writer.pages());
-			changeCursors(writer.cursors());
+			//changeCursors(writer.cursors());
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
 		} catch (LayoutException layout) {
