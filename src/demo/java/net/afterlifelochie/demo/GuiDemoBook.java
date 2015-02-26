@@ -64,7 +64,7 @@ public class GuiDemoBook extends BookGUI {
 			Document document = new Document();
 			document.push(new Heading("title", "The Tortoise and the Hare"));
 			document.push(new Heading("author", "Written by Aesop"));
-			document.push(new Image(new ResourceLocation("fontbox", "textures/books/tortoise-rocket.png"), 300, 205, AlignmentMode.CENTER));
+			document.push(new Image(new ResourceLocation("fontbox", "textures/books/tortoise-rocket.png"), 300, 205, AlignmentMode.JUSTIFY));
 			
 
 			String[] lines = fable.toString().split("\n");

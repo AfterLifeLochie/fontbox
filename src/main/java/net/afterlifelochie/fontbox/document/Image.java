@@ -51,7 +51,26 @@ public class Image extends Element {
 			current = writer.next();
 			cursor = writer.cursor();
 		}
-		x = cursor.x;
+
+		switch (align) {
+		case CENTER:
+			float qt = current.properties.width - width;
+			x = (int) Math.floor(qt / 2.0f);
+			break;
+		case JUSTIFY:
+			float srh = (float) height / (float) width;
+			width = current.properties.width - cursor.x;
+			height = (int) Math.ceil(width * srh);
+			x = cursor.x;
+			break;
+		case LEFT:
+			x = cursor.x;
+			break;
+		case RIGHT:
+			x = current.properties.width - width;
+			break;
+		}
+
 		y = cursor.y;
 		setBounds(new ObjectBounds(x, y, width, height, false));
 		current.elements.add(this);
