@@ -24,7 +24,7 @@ public class Image extends Element {
 	public AlignmentMode align;
 	public FloatMode floating;
 
-	private int x, y;
+	protected int x, y;
 
 	public Image(ResourceLocation source, int width, int height, AlignmentMode align) {
 		this(source, width, height, align, FloatMode.NONE);

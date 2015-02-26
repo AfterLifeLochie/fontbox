@@ -3,25 +3,30 @@ package net.afterlifelochie.fontbox.document;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.render.BookGUI;
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 
-public class ImageItem extends Image {
+public class ImageItemStack extends Image {
 
-	public ItemStack stack;
+	private static RenderItem renderer = new RenderItem();
 
-	public ImageItem(ItemStack source, int width, int height, AlignmentMode align) {
+	public ItemStack block;
+
+	public ImageItemStack(ItemStack source, int width, int height, AlignmentMode align) {
 		this(source, width, height, align, FloatMode.NONE);
 	}
 
-	public ImageItem(ItemStack source, int width, int height, FloatMode floating) {
+	public ImageItemStack(ItemStack source, int width, int height, FloatMode floating) {
 		this(source, width, height, AlignmentMode.JUSTIFY, floating);
 	}
 
-	public ImageItem(ItemStack source, int width, int height, AlignmentMode align, FloatMode floating) {
+	public ImageItemStack(ItemStack source, int width, int height, AlignmentMode align, FloatMode floating) {
 		super(null, width, height, align, floating);
-		this.stack = source;
+		this.block = source;
 	}
-	
+
 	@Override
 	public boolean canUpdate() {
 		return true;
@@ -30,24 +35,24 @@ public class ImageItem extends Image {
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void render(BookGUI gui, int mx, int my, float frame) {
-		// TODO Auto-generated method stub
-		
+		renderer.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft()
+				.getTextureManager(), block, x, y);
 	}
 
 	@Override
 	public void clicked(BookGUI gui, int mx, int my) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void typed(BookGUI gui, char val, int code) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
