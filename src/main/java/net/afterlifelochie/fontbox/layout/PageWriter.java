@@ -18,7 +18,6 @@ public class PageWriter {
 	public PageWriter(PageProperties attributes) {
 		this.attributes = attributes;
 	}
-	
 
 	public void close() {
 		synchronized (lock) {
@@ -83,6 +82,14 @@ public class PageWriter {
 			if (!closed)
 				return (ArrayList<Page>) pages.clone();
 			return pages;
+		}
+	}
+
+	public ArrayList<PageWriterCursor> cursors() {
+		synchronized (lock) {
+			if (!closed)
+				return (ArrayList<PageWriterCursor>) cursors.clone();
+			return cursors;
 		}
 	}
 }
