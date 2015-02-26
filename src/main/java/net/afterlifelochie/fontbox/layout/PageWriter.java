@@ -9,7 +9,7 @@ import net.afterlifelochie.fontbox.layout.components.PageProperties;
 public class PageWriter {
 
 	private ArrayList<Page> pages = new ArrayList<Page>();
-	private ArrayList<PageWriterCursor> cursors = new ArrayList<PageWriterCursor>();
+	private ArrayList<PageCursor> cursors = new ArrayList<PageCursor>();
 	private PageProperties attributes;
 	private Object lock = new Object();
 	private boolean closed = false;
@@ -56,7 +56,7 @@ public class PageWriter {
 		}
 	}
 
-	public PageWriterCursor cursor() throws IOException {
+	public PageCursor cursor() throws IOException {
 		synchronized (lock) {
 			checkOpen();
 			return cursors.get(ptr);
@@ -72,7 +72,7 @@ public class PageWriter {
 				ptr = pages.size();
 			if (ptr == pages.size()) {
 				pages.add(new Page(attributes.copy()));
-				cursors.add(new PageWriterCursor());
+				cursors.add(new PageCursor());
 			}
 		}
 	}
@@ -85,10 +85,10 @@ public class PageWriter {
 		}
 	}
 
-	public ArrayList<PageWriterCursor> cursors() {
+	public ArrayList<PageCursor> cursors() {
 		synchronized (lock) {
 			if (!closed)
-				return (ArrayList<PageWriterCursor>) cursors.clone();
+				return (ArrayList<PageCursor>) cursors.clone();
 			return cursors;
 		}
 	}

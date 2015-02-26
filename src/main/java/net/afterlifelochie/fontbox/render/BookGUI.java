@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
+import net.afterlifelochie.fontbox.layout.PageCursor;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -61,6 +62,8 @@ public abstract class BookGUI extends GuiScreen {
 
 	/** The list of pages */
 	protected ArrayList<Page> pages;
+	/** The list of cursors */
+	protected ArrayList<PageCursor> cursors;
 	/** The current page pointer */
 	protected int ptr = 0;
 
@@ -106,6 +109,21 @@ public abstract class BookGUI extends GuiScreen {
 		if (ptr >= pages.size())
 			ptr = 0;
 		this.pages = pages;
+	}
+
+	/**
+	 * <p>
+	 * Updates the cursors currently being rendered. Used for debugging only.
+	 * </p>
+	 * <p>
+	 * If the cursor parameter is not null, the matching cursor for each page will
+	 * be displayed. If the cursor parameter is null, no cursors will be rendered
+	 * on the page.
+	 * </p>
+	 * @param cursors The list of cursors, or null if no cursors should be rendered
+	 */
+	public void changeCursors(ArrayList<PageCursor> cursors) {
+		this.cursors = cursors;
 	}
 
 	@Override

@@ -65,7 +65,7 @@ public class DocumentProcessor {
 	 * Generate a list of formatted Pages from a Document and a Page layout
 	 * configuration. The Document must contain at least one Element in the
 	 * list. After processing, the Elements inside the Document are written to
-	 * the pages.
+	 * the pages on the writer stream.
 	 * </p>
 	 * <p>
 	 * The Elements in the Document list are modified so that they contain
@@ -76,9 +76,8 @@ public class DocumentProcessor {
 	 *            The debugger
 	 * @param doc
 	 *            The Document to transform
-	 * @param layout
-	 *            The page layout
-	 * @return The list of generated Pages
+	 * @param writer
+	 *            The page writer
 	 * @throws IOException
 	 *             Any I/O exception which occurs when reading from nested
 	 *             streams or when writing to the Page output stream
@@ -86,15 +85,12 @@ public class DocumentProcessor {
 	 *             Any layout exception which occurs when attempting to place an
 	 *             element on a Page
 	 */
-	public static ArrayList<Page> generatePages(ITracer trace, Document doc, PageProperties layout) throws IOException,
+	public static void generatePages(ITracer trace, Document doc, PageWriter writer) throws IOException,
 			LayoutException {
-		PageWriter writer = new PageWriter(layout);
 		for (int i = 0; i < doc.elements.size(); i++) {
 			Element e0 = doc.elements.get(i);
 			pushElement(trace, writer, e0);
 		}
-		writer.close();
-		return writer.pages();
 	}
 
 	private static void pushElement(ITracer trace, PageWriter writer, Element element) throws IOException,

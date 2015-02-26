@@ -11,7 +11,7 @@ import net.afterlifelochie.fontbox.font.GLGlyphMetric;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.PageWriter;
-import net.afterlifelochie.fontbox.layout.PageWriterCursor;
+import net.afterlifelochie.fontbox.layout.PageCursor;
 import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
@@ -158,7 +158,7 @@ public abstract class Element {
 		StackedPushbackStringReader reader = new StackedPushbackStringReader(what);
 		while (reader.available() > 0) {
 			Page current = writer.current();
-			PageWriterCursor cursor = writer.cursor();
+			PageCursor cursor = writer.cursor();
 			ObjectBounds bounds = new ObjectBounds(cursor.x, cursor.y, current.properties.width - cursor.x,
 					current.properties.height - cursor.y, false);
 			Line[] blobs = boxText(trace, writer, bounds, font, reader, alignment);
@@ -208,7 +208,7 @@ public abstract class Element {
 	protected Line[] boxText(ITracer trace, PageWriter writer, ObjectBounds bounds, GLFont font,
 			StackedPushbackStringReader text, AlignmentMode alignment) throws IOException, LayoutException {
 		Page page = writer.current();
-		PageWriterCursor cursor = writer.cursor();
+		PageCursor cursor = writer.cursor();
 		GLFontMetrics metric = font.getMetric();
 		// The list of lines
 		ArrayList<Line> lines = new ArrayList<Line>();

@@ -1,10 +1,10 @@
 package net.afterlifelochie.fontbox.layout;
 
-public class PageWriterCursor {
+public class PageCursor {
 
 	public int x, y;
 
-	public PageWriterCursor() {
+	public PageCursor() {
 		this.x = 0;
 		this.y = 0;
 	}

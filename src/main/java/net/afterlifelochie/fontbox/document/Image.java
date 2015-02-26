@@ -10,7 +10,7 @@ import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.PageWriter;
-import net.afterlifelochie.fontbox.layout.PageWriterCursor;
+import net.afterlifelochie.fontbox.layout.PageCursor;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 import net.afterlifelochie.fontbox.render.GLUtils;
@@ -45,7 +45,7 @@ public class Image extends Element {
 	@Override
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		Page current = writer.current();
-		PageWriterCursor cursor = writer.cursor();
+		PageCursor cursor = writer.cursor();
 		int yh = cursor.y + height;
 		if (yh > current.properties.height) {
 			current = writer.next();

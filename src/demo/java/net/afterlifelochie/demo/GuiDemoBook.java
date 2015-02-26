@@ -19,6 +19,7 @@ import net.afterlifelochie.fontbox.font.FontException;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
 import net.afterlifelochie.fontbox.layout.LayoutException;
+import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;
@@ -72,9 +73,13 @@ public class GuiDemoBook extends BookGUI {
 					document.push(new Paragraph(para.trim()));
 
 			/* Actually generate some pages */
-			ArrayList<Page> pages = DocumentProcessor.generatePages(Fontbox.tracer(), document, properties);
+			PageWriter writer = new PageWriter(properties);
+			DocumentProcessor.generatePages(Fontbox.tracer(), document, writer);
+			writer.close();
+			
 			/* Set the pages */
-			changePages(pages);
+			changePages(writer.pages());
+			changeCursors(writer.cursors());
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
 		} catch (LayoutException layout) {

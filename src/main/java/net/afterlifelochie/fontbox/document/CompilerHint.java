@@ -7,7 +7,7 @@ import java.util.Iterator;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.PageWriter;
-import net.afterlifelochie.fontbox.layout.PageWriterCursor;
+import net.afterlifelochie.fontbox.layout.PageCursor;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 
@@ -38,7 +38,7 @@ public class CompilerHint extends Element {
 			HintType whatHint = hints.next();
 			switch (whatHint) {
 			case FLOATBREAK:
-				PageWriterCursor cursor = writer.cursor();
+				PageCursor cursor = writer.cursor();
 				Page current = writer.current();
 				Element lowest = null;
 				int dfx = 0;
