@@ -323,17 +323,6 @@ public abstract class Element {
 				}
 			}
 
-			// If the line doesn't fit at all, we can't do anything
-			if (cursor.y + height_new_line >= cursor.y + bounds.height) {
-				trace.trace("Element.boxText", "revertLine", height_new_line, cursor.y + height_new_line, bounds.height);
-				text.popPosition(); // back out
-				break; // break main
-			}
-
-			// Commit our position as we have now read a line and it fits all
-			// current constraints on the page
-			text.commitPosition();
-
 			// Glue the whole line together
 			StringBuilder line = new StringBuilder();
 			for (int i = 0; i < words.size(); i++) {
@@ -376,6 +365,15 @@ public abstract class Element {
 			if (line_height % page.properties.lineheight_size != 0)
 				line_height = (int) Math.ceil(line_height / (float) page.properties.lineheight_size)
 						* page.properties.lineheight_size;
+			
+
+
+			// If the line doesn't fit at all, we can't do anything
+			if (cursor.y + line_height >= bounds.y + bounds.height) {
+				trace.trace("Element.boxText", "revertLine", cursor.y + line_height, cursor.y + bounds.height);
+				text.popPosition(); // back out
+				break; // break main
+			}
 
 			// Really compute the width of the line
 			int real_width = width_new_line + (space_width * (words.size() - 1));
@@ -386,6 +384,10 @@ public abstract class Element {
 				throw new LayoutException("Produced invalid line configuration: " + real_width + " > " + bounds.width
 						+ "!");
 			}
+
+			// Commit our position as we have now read a line and it fits all
+			// current constraints on the page
+			text.commitPosition();
 
 			// Create the linebox
 			trace.trace("LayoutCalculator.boxLine", "pushLine", line.toString(), space_width, line_height);
