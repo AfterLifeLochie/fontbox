@@ -324,7 +324,7 @@ public abstract class Element {
 			}
 
 			// If the line doesn't fit at all, we can't do anything
-			if (cursor.y + height_new_line > bounds.height) {
+			if (cursor.y + height_new_line >= cursor.y + bounds.height) {
 				trace.trace("Element.boxText", "revertLine", height_new_line, cursor.y + height_new_line, bounds.height);
 				text.popPosition(); // back out
 				break; // break main
