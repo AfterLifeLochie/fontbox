@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
+import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.PageCursor;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.minecraft.client.gui.GuiScreen;
@@ -116,11 +117,13 @@ public abstract class BookGUI extends GuiScreen {
 	 * Updates the cursors currently being rendered. Used for debugging only.
 	 * </p>
 	 * <p>
-	 * If the cursor parameter is not null, the matching cursor for each page will
-	 * be displayed. If the cursor parameter is null, no cursors will be rendered
-	 * on the page.
+	 * If the cursor parameter is not null, the matching cursor for each page
+	 * will be displayed. If the cursor parameter is null, no cursors will be
+	 * rendered on the page.
 	 * </p>
-	 * @param cursors The list of cursors, or null if no cursors should be rendered
+	 * 
+	 * @param cursors
+	 *            The list of cursors, or null if no cursors should be rendered
 	 */
 	public void changeCursors(ArrayList<PageCursor> cursors) {
 		this.cursors = cursors;
@@ -154,7 +157,21 @@ public abstract class BookGUI extends GuiScreen {
 						break;
 					Page page = pages.get(ptr + i);
 					GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+					if (this.cursors != null && what < cursors.size()) {
+						PageCursor cursor = cursors.get(what);
+						GL11.glDisable(GL11.GL_TEXTURE_2D);
+						GL11.glEnable(GL11.GL_BLEND);
+						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+						GL11.glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
+						GLUtils.drawDefaultRect(where.x, where.y, page.width * 0.44f, page.height * 0.44f, zLevel);
+						GL11.glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+						GLUtils.drawDefaultRect(where.x + (cursor.x * 0.44f), where.y + (cursor.y * 0.44f), 1.0, 1.0,
+								zLevel);
+						GL11.glDisable(GL11.GL_BLEND);
+						GL11.glEnable(GL11.GL_TEXTURE_2D);
+					}
 					renderPage(page, where.x, where.y, zLevel, mx, my, frames);
+
 				}
 			}
 		} catch (RenderException err) {
@@ -244,6 +261,21 @@ public abstract class BookGUI extends GuiScreen {
 		int count = page.elements.size();
 		for (int i = 0; i < count; i++) {
 			page.elements.get(i).render(this, mx, my, frame);
+			if (this.cursors != null) {
+				ObjectBounds bounds = page.elements.get(i).bounds();
+				if (bounds != null) {
+					GL11.glDisable(GL11.GL_TEXTURE_2D);
+					GL11.glEnable(GL11.GL_BLEND);
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					GL11.glColor4f(0.0f, 0.0f, 1.0f, 0.5f);
+					GL11.glPushMatrix();
+					GL11.glTranslatef(bounds.x * 0.44f, bounds.y * 0.44f, 0);
+					GLUtils.drawDefaultRect(0, 0, bounds.width * 0.44f, bounds.height * 0.44f, zLevel);
+					GL11.glPopMatrix();
+					GL11.glDisable(GL11.GL_BLEND);
+					GL11.glEnable(GL11.GL_TEXTURE_2D);
+				}
+			}
 		}
 		GL11.glPopMatrix();
 	}
