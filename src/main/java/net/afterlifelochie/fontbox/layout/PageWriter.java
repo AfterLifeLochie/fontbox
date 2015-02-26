@@ -18,12 +18,11 @@ public class PageWriter {
 	public PageWriter(PageProperties attributes) {
 		this.attributes = attributes;
 	}
+	
 
 	public void close() {
 		synchronized (lock) {
 			closed = true;
-			cursors.clear();
-			cursors = null;
 		}
 	}
 
