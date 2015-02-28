@@ -1,6 +1,7 @@
 package net.afterlifelochie.fontbox.document;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Document class. Used to contain an ordered list of Elements which are later
@@ -37,6 +38,25 @@ public class Document {
 		if (elements.contains(element))
 			throw new IllegalArgumentException("Element already exists in tree!");
 		elements.add(element);
+	}
+
+	/**
+	 * <p>
+	 * Pushes a list of elements onto the end of the document.
+	 * </p>
+	 * <p>
+	 * Each element must not already exist in the document. If an element
+	 * already exists in the document, an {@link IllegalArgumentException} will
+	 * be thrown.
+	 * </p>
+	 * 
+	 * @param elements
+	 *            The elements to add
+	 */
+	public void pushAll(List<Element> elements) {
+		for (Element ez : elements)
+			if (ez != null)
+				push(ez);
 	}
 
 	/**
