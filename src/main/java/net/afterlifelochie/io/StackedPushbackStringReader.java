@@ -154,8 +154,6 @@ public class StackedPushbackStringReader {
 	public void skip(long ns) throws IOException {
 		synchronized (lock) {
 			ensureOpen();
-			if (next >= str.size())
-				return;
 			next += ns;
 			if (0 > next)
 				next = 0;
@@ -176,8 +174,6 @@ public class StackedPushbackStringReader {
 	public void rewind(long ns) throws IOException {
 		synchronized (lock) {
 			ensureOpen();
-			if (next >= str.size())
-				return;
 			next -= ns;
 			if (0 > next)
 				next = 0;

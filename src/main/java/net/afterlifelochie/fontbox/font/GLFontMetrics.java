@@ -1,6 +1,7 @@
-package net.afterlifelochie.fontbox;
+package net.afterlifelochie.fontbox.font;
 
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
@@ -76,11 +77,14 @@ public class GLFontMetrics {
 			int y = (off / charsPerRow) * (fontImageWidth / charsPerRow);
 
 			float cy = (float) rect.getHeight();
+			Rectangle rect0 = layout.getPixelBounds(null, 100, 100);
+			float cx = (float) -(rect0.x - 100);
 
-			int u = (int) Math.ceil(rect.getWidth());
+			int u = (int) Math.ceil(rect.getWidth() + cx);
 			int v = (int) Math.ceil(layout.getAscent() + layout.getDescent());
-			trace.trace("GLFontMetrics.fromFontMetrics", "placeGlyph", k, u, v, x, y - cy);
-			metric.glyphs.put((int) k, new GLGlyphMetric(u, v, (int) layout.getAscent(), x, (int) (y - cy)));
+			trace.trace("GLFontMetrics.fromFontMetrics", "placeGlyph", k, u, v, x - cx, y - cy);
+			metric.glyphs.put((int) k, new GLGlyphMetric(u, v, (int) layout.getAscent(), (int) (x - cx),
+					(int) (y - cy)));
 		}
 		trace.trace("GLFontMetrics.fromFontMetrics", metric);
 		return metric;

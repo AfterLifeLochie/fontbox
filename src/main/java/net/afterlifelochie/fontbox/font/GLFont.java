@@ -1,4 +1,4 @@
-package net.afterlifelochie.fontbox;
+package net.afterlifelochie.fontbox.font;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -29,6 +29,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
@@ -50,6 +51,8 @@ public class GLFont {
 	 * 
 	 * @param trace
 	 *            The debugging tracer object
+	 * @param px
+	 *            The font pixel size
 	 * @param ttf
 	 *            The TTF file
 	 * @return The GLFont result
@@ -57,7 +60,7 @@ public class GLFont {
 	 *             Any exception which occurs when reading the TTF file, brewing
 	 *             the buffer or creating the final font.
 	 */
-	public static GLFont fromTTF(ITracer trace, ResourceLocation ttf) throws FontException {
+	public static GLFont fromTTF(ITracer trace, float px, ResourceLocation ttf) throws FontException {
 		if (trace == null)
 			throw new IllegalArgumentException("trace may not be null");
 		if (ttf == null)
@@ -70,7 +73,7 @@ public class GLFont {
 			Font sysfont = Font.createFont(Font.TRUETYPE_FONT, stream);
 			if (trace != null)
 				trace.trace("GLFont.fromTTF", sysfont.getName());
-			return fromFont(trace, sysfont.deriveFont(16.0f));
+			return fromFont(trace, sysfont.deriveFont(px));
 		} catch (IOException ioex) {
 			trace.trace("GLFont.fromTTF", ioex);
 			throw new FontException("Can't perform I/O operation!", ioex);
@@ -219,8 +222,8 @@ public class GLFont {
 		GL11.glGenTextures(tmp);
 		tmp.rewind();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, tmp.get(0));
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,
 				buffer);
 		tmp.rewind();
