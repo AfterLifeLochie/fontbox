@@ -31,7 +31,7 @@ public class Image extends Element {
 	}
 
 	public Image(ResourceLocation source, int width, int height, FloatMode floating) {
-		this(source, width, height, AlignmentMode.JUSTIFY, floating);
+		this(source, width, height, AlignmentMode.LEFT, floating);
 	}
 
 	public Image(ResourceLocation source, int width, int height, AlignmentMode align, FloatMode floating) {
@@ -64,17 +64,34 @@ public class Image extends Element {
 			x = cursor.x;
 			break;
 		case LEFT:
+		default:
 			x = cursor.x;
 			break;
 		case RIGHT:
 			x = current.properties.width - width;
 			break;
 		}
+		
+		if (floating == FloatMode.RIGHT)
+			x = current.properties.width - width;
 
 		y = cursor.y;
 		setBounds(new ObjectBounds(x, y, width, height, false));
 		current.elements.add(this);
-		cursor.y += height;
+		
+		switch (floating) {
+		case LEFT:
+			cursor.x += width;
+			break;
+		case RIGHT:
+			/* do nothing */
+			break;
+		case NONE:
+		default:
+			cursor.y += height;
+			break;
+		
+		}
 	}
 
 	@Override

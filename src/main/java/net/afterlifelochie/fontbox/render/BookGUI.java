@@ -181,6 +181,16 @@ public abstract class BookGUI extends GuiScreen {
 	}
 
 	/**
+	 * Called when the current page is changed
+	 * 
+	 * @param gui
+	 *            The current GUI
+	 * @param whatPtr
+	 *            The new page pointer value
+	 */
+	public abstract void onPageChanged(BookGUI gui, int whatPtr);
+
+	/**
 	 * <p>
 	 * Draw the background layer of the interface. You must leave the opengl
 	 * state such that the layout (0, 0) will be drawn in the current place.

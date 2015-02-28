@@ -23,7 +23,7 @@ public class ImageItemStack extends Image {
 	}
 
 	public ImageItemStack(ItemStack source, int width, int height, FloatMode floating) {
-		this(source, width, height, AlignmentMode.JUSTIFY, floating);
+		this(source, width, height, AlignmentMode.LEFT, floating);
 	}
 
 	public ImageItemStack(ItemStack source, int width, int height, AlignmentMode align, FloatMode floating) {

@@ -9,25 +9,23 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.Fontbox;
+import net.afterlifelochie.fontbox.document.CompilerHint;
+import net.afterlifelochie.fontbox.document.CompilerHint.HintType;
 import net.afterlifelochie.fontbox.document.Document;
 import net.afterlifelochie.fontbox.document.Heading;
 import net.afterlifelochie.fontbox.document.Image;
 import net.afterlifelochie.fontbox.document.ImageItemStack;
 import net.afterlifelochie.fontbox.document.Paragraph;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
+import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.PageWriter;
-import net.afterlifelochie.fontbox.layout.components.Line;
-import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;
 import net.afterlifelochie.fontbox.render.BookGUI;
 import net.afterlifelochie.fontbox.render.GLUtils;
-import net.afterlifelochie.fontbox.render.RenderException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -68,6 +66,8 @@ public class GuiDemoBook extends BookGUI {
 			document.push(new Heading("author", "Written by Aesop"));
 			document.push(new Image(new ResourceLocation("fontbox", "textures/books/tortoise-rocket.png"), 300, 205,
 					AlignmentMode.JUSTIFY));
+			
+			document.push(new CompilerHint(HintType.PAGEBREAK));
 
 			String[] lines = fable.toString().split("\n");
 			ArrayList<String> reallines = new ArrayList<String>();
@@ -75,10 +75,12 @@ public class GuiDemoBook extends BookGUI {
 				if (para.trim().length() > 0)
 					reallines.add(para.trim());
 
+
+			document.push(new ImageItemStack(new ItemStack(Blocks.anvil, 1), 32, 32, FloatMode.LEFT));
 			document.push(new Paragraph(reallines.get(0)));
-			document.push(new ImageItemStack(new ItemStack(Blocks.anvil, 1), 32, 32, AlignmentMode.CENTER));
+			document.push(new ImageItemStack(new ItemStack(Items.apple, 1), 32, 32, FloatMode.RIGHT));
 			document.push(new Paragraph(reallines.get(1)));
-			document.push(new ImageItemStack(new ItemStack(Items.apple, 1), 32, 32, AlignmentMode.CENTER));
+			document.push(new ImageItemStack(new ItemStack(Items.diamond, 1), 32, 32, AlignmentMode.CENTER));
 			document.push(new Paragraph(reallines.get(2)));
 
 			/* Actually generate some pages */
@@ -88,7 +90,6 @@ public class GuiDemoBook extends BookGUI {
 
 			/* Set the pages */
 			changePages(writer.pages());
-			//changeCursors(writer.cursors());
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
 		} catch (LayoutException layout) {
@@ -111,6 +112,12 @@ public class GuiDemoBook extends BookGUI {
 	@Override
 	public void drawForeground(int mx, int my, float frame) {
 		GL11.glPopMatrix();
+	}
+
+	@Override
+	public void onPageChanged(BookGUI gui, int whatPtr) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
