@@ -107,8 +107,10 @@ public abstract class BookGUI extends GuiScreen {
 	 *            The new list of pages
 	 */
 	public void changePages(ArrayList<Page> pages) {
-		if (ptr >= pages.size())
+		if (ptr >= pages.size()) {
 			ptr = 0;
+			onPageChanged(this, ptr);
+		}
 		this.pages = pages;
 	}
 
@@ -221,15 +223,47 @@ public abstract class BookGUI extends GuiScreen {
 	 */
 	public abstract void drawForeground(int mx, int my, float frame);
 
+	/**
+	 * Advance to the next page
+	 */
+	protected void next() {
+		if (ptr + mode.pages < pages.size()) {
+			ptr += mode.pages;
+			onPageChanged(this, ptr);
+		}
+	}
+
+	/**
+	 * Go to a page
+	 * 
+	 * @param where
+	 *            The page pointer
+	 */
+	protected void go(int where) {
+		where = where - (where % mode.pages);
+		if (ptr != where && 0 <= where - mode.pages && where + mode.pages < pages.size()) {
+			ptr = where;
+			onPageChanged(this, ptr);
+		}
+	}
+
+	/**
+	 * Reverse to the previous page
+	 */
+	protected void previous() {
+		if (0 <= ptr - mode.pages) {
+			ptr -= mode.pages;
+			onPageChanged(this, ptr);
+		}
+	}
+
 	@Override
 	protected void keyTyped(char val, int code) {
 		super.keyTyped(val, code);
 		if (code == Keyboard.KEY_LEFT)
-			if (0 <= ptr - mode.pages)
-				ptr -= mode.pages;
+			previous();
 		if (code == Keyboard.KEY_RIGHT)
-			if (ptr + mode.pages < pages.size())
-				ptr += mode.pages;
+			next();
 	}
 
 	@Override
