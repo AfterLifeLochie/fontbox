@@ -19,13 +19,27 @@ public class CompilerHint extends Element {
 
 	public EnumSet<HintType> types;
 
+	/**
+	 * Constructs a new compiler hint rule with one hint type.
+	 * 
+	 * @param type
+	 *            The type of hint. May not be null.
+	 */
 	public CompilerHint(HintType type) {
 		if (type == null)
 			throw new IllegalArgumentException("Hint type cannot be null");
 		this.types = EnumSet.of(type);
 	}
 
+	/**
+	 * Constructs a new compiler hint rule with a set of hint types.
+	 * 
+	 * @param types
+	 *            The list of hints. May not be null, may not be empty.
+	 */
 	public CompilerHint(EnumSet<HintType> types) {
+		if (types == null)
+			throw new IllegalArgumentException("Hint types cannot be null");
 		if (types.size() == 0)
 			throw new IllegalArgumentException("Hint list must include 1 or more hints");
 		this.types = types;

@@ -16,10 +16,25 @@ public class Paragraph extends Element {
 	public String text;
 	public AlignmentMode align;
 
+	/**
+	 * Create a new paragraph with a specified text and the default alignment
+	 * (justified).
+	 * 
+	 * @param text
+	 *            The text
+	 */
 	public Paragraph(String text) {
 		this(text, AlignmentMode.JUSTIFY);
 	}
 
+	/**
+	 * Create a new paragraph with the specified properties.
+	 * 
+	 * @param text
+	 *            The text
+	 * @param align
+	 *            The alignment mode
+	 */
 	public Paragraph(String text, AlignmentMode align) {
 		this.text = text;
 		this.align = align;

@@ -26,14 +26,52 @@ public class Image extends Element {
 
 	protected int x, y;
 
+	/**
+	 * Creates a new inline image with the properties specified.
+	 * 
+	 * @param source
+	 *            The image source location, may not be null.
+	 * @param width
+	 *            The width of the image.
+	 * @param height
+	 *            The height of the image.
+	 * @param align
+	 *            The alignment of the image.
+	 */
 	public Image(ResourceLocation source, int width, int height, AlignmentMode align) {
 		this(source, width, height, align, FloatMode.NONE);
 	}
 
+	/**
+	 * Creates a new floating image with the properties specified.
+	 * 
+	 * @param source
+	 *            The image source location, may not be null.
+	 * @param width
+	 *            The width of the image.
+	 * @param height
+	 *            The height of the image.
+	 * @param floating
+	 *            The floating mode.
+	 */
 	public Image(ResourceLocation source, int width, int height, FloatMode floating) {
 		this(source, width, height, AlignmentMode.LEFT, floating);
 	}
 
+	/**
+	 * Creates a new image with the properties specified.
+	 * 
+	 * @param source
+	 *            The image source location, may not be null.
+	 * @param width
+	 *            The width of the image.
+	 * @param height
+	 *            The height of the image.
+	 * @param align
+	 *            The alignment of the image.
+	 * @param floating
+	 *            The floating mode.
+	 */
 	public Image(ResourceLocation source, int width, int height, AlignmentMode align, FloatMode floating) {
 		this.source = source;
 		this.width = width;
@@ -71,14 +109,14 @@ public class Image extends Element {
 			x = current.properties.width - width;
 			break;
 		}
-		
+
 		if (floating == FloatMode.RIGHT)
 			x = current.properties.width - width;
 
 		y = cursor.y;
 		setBounds(new ObjectBounds(x, y, width, height, false));
 		current.elements.add(this);
-		
+
 		switch (floating) {
 		case LEFT:
 			cursor.x += width;
@@ -90,7 +128,7 @@ public class Image extends Element {
 		default:
 			cursor.y += height;
 			break;
-		
+
 		}
 	}
 

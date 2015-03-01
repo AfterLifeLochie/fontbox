@@ -18,14 +18,52 @@ public class ImageItemStack extends Image {
 
 	public ItemStack block;
 
+	/**
+	 * Creates a new inline item-stack image with the properties specified.
+	 * 
+	 * @param source
+	 *            The item stack, may not be null.
+	 * @param width
+	 *            The width of the image.
+	 * @param height
+	 *            The height of the image.
+	 * @param align
+	 *            The alignment of the image.
+	 */
 	public ImageItemStack(ItemStack source, int width, int height, AlignmentMode align) {
 		this(source, width, height, align, FloatMode.NONE);
 	}
 
+	/**
+	 * Creates a new floating item-stack image with the properties specified.
+	 * 
+	 * @param source
+	 *            The item stack, may not be null.
+	 * @param width
+	 *            The width of the image.
+	 * @param height
+	 *            The height of the image.
+	 * @param floating
+	 *            The floating mode.
+	 */
 	public ImageItemStack(ItemStack source, int width, int height, FloatMode floating) {
 		this(source, width, height, AlignmentMode.LEFT, floating);
 	}
 
+	/**
+	 * Creates a new item-stack image with the properties specified.
+	 * 
+	 * @param source
+	 *            The image source location, may not be null.
+	 * @param width
+	 *            The width of the image.
+	 * @param height
+	 *            The height of the image.
+	 * @param align
+	 *            The alignment of the image.
+	 * @param floating
+	 *            The floating mode.
+	 */
 	public ImageItemStack(ItemStack source, int width, int height, AlignmentMode align, FloatMode floating) {
 		super(null, width, height, align, floating);
 		this.block = source;

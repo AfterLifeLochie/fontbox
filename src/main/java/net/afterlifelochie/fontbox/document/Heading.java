@@ -15,6 +15,14 @@ public class Heading extends Element {
 	public String id;
 	public String text;
 
+	/**
+	 * Creates a new Heading element
+	 * 
+	 * @param id
+	 *            The heading's unique identifier
+	 * @param text
+	 *            The heading's text value
+	 */
 	public Heading(String id, String text) {
 		this.id = id;
 		this.text = text;
