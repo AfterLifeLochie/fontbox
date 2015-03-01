@@ -84,7 +84,7 @@ public class Image extends Element {
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		Page current = writer.current();
 		PageCursor cursor = writer.cursor();
-		int yh = cursor.y + height;
+		int yh = cursor.y() + height;
 		if (yh > current.properties.height) {
 			current = writer.next();
 			cursor = writer.cursor();
@@ -97,13 +97,13 @@ public class Image extends Element {
 			break;
 		case JUSTIFY:
 			float srh = (float) height / (float) width;
-			width = current.properties.width - cursor.x;
+			width = current.properties.width - cursor.x();
 			height = (int) Math.ceil(width * srh);
-			x = cursor.x;
+			x = cursor.x();
 			break;
 		case LEFT:
 		default:
-			x = cursor.x;
+			x = cursor.x();
 			break;
 		case RIGHT:
 			x = current.properties.width - width;
@@ -113,20 +113,20 @@ public class Image extends Element {
 		if (floating == FloatMode.RIGHT)
 			x = current.properties.width - width;
 
-		y = cursor.y;
+		y = cursor.y();
 		setBounds(new ObjectBounds(x, y, width, height, false));
 		current.elements.add(this);
 
 		switch (floating) {
 		case LEFT:
-			cursor.x += width;
+			cursor.pushLeft(width);
 			break;
 		case RIGHT:
 			/* do nothing */
 			break;
 		case NONE:
 		default:
-			cursor.y += height;
+			cursor.pushDown(height);
 			break;
 
 		}

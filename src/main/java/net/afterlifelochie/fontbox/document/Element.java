@@ -159,8 +159,8 @@ public abstract class Element {
 		while (reader.available() > 0) {
 			Page current = writer.current();
 			PageCursor cursor = writer.cursor();
-			ObjectBounds bounds = new ObjectBounds(cursor.x, cursor.y, current.properties.width - cursor.x,
-					current.properties.height - cursor.y, false);
+			ObjectBounds bounds = new ObjectBounds(cursor.x(), cursor.y(), current.properties.width - cursor.x(),
+					current.properties.height - cursor.y(), false);
 			Line[] blobs = boxText(trace, writer, bounds, font, reader, alignment);
 			for (int i = 0; i < blobs.length; i++)
 				current.elements.add(blobs[i]);
@@ -369,8 +369,8 @@ public abstract class Element {
 
 
 			// If the line doesn't fit at all, we can't do anything
-			if (cursor.y + line_height >= bounds.y + bounds.height) {
-				trace.trace("Element.boxText", "revertLine", cursor.y + line_height, cursor.y + bounds.height);
+			if (cursor.y() + line_height >= bounds.y + bounds.height) {
+				trace.trace("Element.boxText", "revertLine", cursor.y() + line_height, cursor.y() + bounds.height);
 				text.popPosition(); // back out
 				break; // break main
 			}
@@ -391,11 +391,11 @@ public abstract class Element {
 
 			// Create the linebox
 			trace.trace("LayoutCalculator.boxLine", "pushLine", line.toString(), space_width, line_height);
-			lines.add(new Line(line.toString(), new ObjectBounds(bounds.x, cursor.y, real_width, line_height, false),
+			lines.add(new Line(line.toString(), new ObjectBounds(bounds.x, cursor.y(), real_width, line_height, false),
 					font, space_width));
 
 			// Slide downwards
-			cursor.y += line_height;
+			cursor.pushDown(line_height);
 		}
 		// Return what we've done
 		return (Line[]) lines.toArray(new Line[0]);

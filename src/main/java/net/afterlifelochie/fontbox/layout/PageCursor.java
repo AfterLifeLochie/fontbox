@@ -2,7 +2,7 @@ package net.afterlifelochie.fontbox.layout;
 
 public class PageCursor {
 
-	public int x, y;
+	private int x, y;
 
 	public PageCursor() {
 		this.x = 0;

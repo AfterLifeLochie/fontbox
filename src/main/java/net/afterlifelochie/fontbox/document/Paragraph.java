@@ -44,8 +44,7 @@ public class Paragraph extends Element {
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		Page page = writer.current();
 		boxText(trace, writer, page.properties.bodyFont, text, AlignmentMode.JUSTIFY);
-		PageCursor cursor = writer.cursor();
-		cursor.y += 10;
+		writer.cursor().pushDown(10);
 	}
 
 	@Override

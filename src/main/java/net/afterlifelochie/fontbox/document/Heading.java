@@ -32,8 +32,7 @@ public class Heading extends Element {
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		Page page = writer.current();
 		boxText(trace, writer, page.properties.headingFont, text, AlignmentMode.LEFT);
-		PageCursor cursor = writer.cursor();
-		cursor.y += 10;
+		writer.cursor().pushDown(10);
 	}
 
 	@Override
