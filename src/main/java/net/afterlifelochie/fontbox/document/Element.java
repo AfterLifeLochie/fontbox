@@ -279,6 +279,21 @@ public abstract class Element {
 						width_new_word += mx.width;
 						// Push the character on the stack
 						chars.add(c);
+                        
+                        // Find out if the word is bigger then the line
+                        if (words.size() == 0 && bounds.width < width_new_word)
+                        {
+                            c = text.next();
+                            // See if end of word or end of buffer
+                            if (c == ' ' || c == '\r' || c == '\n' || c == 0)
+                            {
+                                words.add("[I was to big]"); // TODO: Proper handling
+                                trace.trace("Element.boxText", "wordBiggerThenLine", chars.toString());
+                                chars.clear();
+                                break; // hard EOL
+                            }
+                            text.rewind(1);
+                        }
 					} else {
 						trace.trace("Element.boxText", "badChar", c);
 						throw new LayoutException("Unable to configure glyph " + c);
