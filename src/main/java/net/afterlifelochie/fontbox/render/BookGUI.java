@@ -272,7 +272,7 @@ public abstract class BookGUI extends GuiScreen {
 		for (int i = 0; i < mode.pages; i++) {
 			Layout where = layout[i];
 			int which = ptr + i;
-			if (pages.size() <= which)
+			if (pages == null || pages.size() <= which)
 				break;
 			Page page = pages.get(ptr + i);
 			int mouseX = mx - where.x, mouseY = my - where.y;
