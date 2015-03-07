@@ -64,9 +64,9 @@ public class GuiDemoBook extends BookGUI {
 			Document document = new Document();
 			document.push(new Heading("title", "The Tortoise and the Hare"));
 			document.push(new Heading("author", "Written by Aesop"));
-			document.push(new Image(new ResourceLocation("fontbox", "textures/books/tortoise-rocket.png"), 300, 205,
-					AlignmentMode.JUSTIFY));
-			
+			document.push(new Image(new ResourceLocation("fontbox", "textures/books/afterlifelochie.png"), 128, 128,
+					AlignmentMode.CENTER));
+
 			document.push(new CompilerHint(HintType.PAGEBREAK));
 
 			String[] lines = fable.toString().split("\n");
@@ -74,7 +74,6 @@ public class GuiDemoBook extends BookGUI {
 			for (String para : lines)
 				if (para.trim().length() > 0)
 					reallines.add(para.trim());
-
 
 			document.push(new ImageItemStack(new ItemStack(Blocks.anvil, 1), 32, 32, FloatMode.LEFT));
 			document.push(new Paragraph(reallines.get(0)));
@@ -117,7 +116,7 @@ public class GuiDemoBook extends BookGUI {
 	@Override
 	public void onPageChanged(BookGUI gui, int whatPtr) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

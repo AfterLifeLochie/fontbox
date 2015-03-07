@@ -148,8 +148,11 @@ public class Image extends Element {
 		GL11.glPushMatrix();
 		GLUtils.useSystemTexture(source);
 		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		GLUtils.drawTexturedRectUV(x * 0.44f, y * 0.44f, width * 0.44f, height * 0.44f, 0, 0, 1, 1, 1);
 		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 	}
 
