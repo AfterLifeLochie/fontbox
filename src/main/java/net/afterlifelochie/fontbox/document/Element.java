@@ -67,7 +67,8 @@ public abstract class Element {
 	 *             Any exception which prevents the element from being written
 	 *             to the writing stream
 	 */
-	public abstract void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException;
+	public abstract void layout(ITracer trace, PageWriter writer)
+			throws IOException, LayoutException;
 
 	/**
 	 * Called to determine if this element requires explicit update ticks.
@@ -100,7 +101,8 @@ public abstract class Element {
 	 *             Any rendering exception which prevents the element from being
 	 *             rendered on the page
 	 */
-	public abstract void render(BookGUI gui, int mx, int my, float frame) throws RenderException;
+	public abstract void render(BookGUI gui, int mx, int my, float frame)
+			throws RenderException;
 
 	/**
 	 * <p>
@@ -153,15 +155,19 @@ public abstract class Element {
 	 *             Any layout problem which prevents the text from being laid
 	 *             out correctly
 	 */
-	protected void boxText(ITracer trace, PageWriter writer, GLFont font, String what, AlignmentMode alignment)
-			throws IOException, LayoutException {
-		StackedPushbackStringReader reader = new StackedPushbackStringReader(what);
+	protected void boxText(ITracer trace, PageWriter writer, GLFont font,
+			String what, AlignmentMode alignment) throws IOException,
+			LayoutException {
+		StackedPushbackStringReader reader = new StackedPushbackStringReader(
+				what);
 		while (reader.available() > 0) {
 			Page current = writer.current();
 			PageCursor cursor = writer.cursor();
-			ObjectBounds bounds = new ObjectBounds(cursor.x(), cursor.y(), current.properties.width - cursor.x(),
+			ObjectBounds bounds = new ObjectBounds(cursor.x(), cursor.y(),
+					current.properties.width - cursor.x(),
 					current.properties.height - cursor.y(), false);
-			Line[] blobs = boxText(trace, writer, bounds, font, reader, alignment);
+			Line[] blobs = boxText(trace, writer, bounds, font, reader,
+					alignment);
 			for (int i = 0; i < blobs.length; i++)
 				current.elements.add(blobs[i]);
 			trace.trace("Element.boxText", "streamRemain", reader.available());
@@ -185,6 +191,14 @@ public abstract class Element {
 	 * written onto the region specified.</li>
 	 * </ul>
 	 * </p>
+	 * 
+	 * <p>
+	 * TODO: The majority of this method needs to be replaced with new code to
+	 * operate the LineWriter unit instead of doing the math itself. We can use
+	 * LineWriter to determine if elements intersect in a faster way than we can
+	 * by computing properties manually each time. It also means we can reduce
+	 * the overall cost associated with boxing long or complicated sentences.
+	 * </p>
 	 *
 	 * @param trace
 	 *            The debugging tracer object
@@ -205,8 +219,9 @@ public abstract class Element {
 	 *             out correctly
 	 * @return The list of lines written to the page inside the bounding box
 	 */
-	protected Line[] boxText(ITracer trace, PageWriter writer, ObjectBounds bounds, GLFont font,
-			StackedPushbackStringReader text, AlignmentMode alignment) throws IOException, LayoutException {
+	protected Line[] boxText(ITracer trace, PageWriter writer,
+			ObjectBounds bounds, GLFont font, StackedPushbackStringReader text,
+			AlignmentMode alignment) throws IOException, LayoutException {
 		Page page = writer.current();
 		PageCursor cursor = writer.cursor();
 		GLFontMetrics metric = font.getMetric();
@@ -242,7 +257,8 @@ public abstract class Element {
 					if (chars.size() > 0) {
 						// Find out if there is enough space to push this word
 						int new_width_nl = (width_new_line + ((words.size() - 1) * page.properties.min_space_size))
-								+ width_new_word + page.properties.min_space_size;
+								+ width_new_word
+								+ page.properties.min_space_size;
 						/*
 						 * FIXME: This needs to be done in a better way. We need
 						 * to check to see if this object intersects ANY object,
@@ -258,13 +274,15 @@ public abstract class Element {
 							for (char c1 : chars)
 								builder.append(c1);
 							words.add(builder.toString());
-							trace.trace("Element.boxText", "pushWord", builder.toString());
+							trace.trace("Element.boxText", "pushWord",
+									builder.toString());
 							// Clear the character buffers
 							chars.clear();
 							width_new_word = 0;
 						} else {
 							// No, the word doesn't fit, back it up
-							trace.trace("Element.boxText", "revertWord", width_new_word);
+							trace.trace("Element.boxText", "revertWord",
+									width_new_word);
 							text.rewind(chars.size() + 1);
 							chars.clear();
 							width_new_word = 0;
@@ -281,7 +299,8 @@ public abstract class Element {
 						chars.add(c);
 					} else {
 						trace.trace("Element.boxText", "badChar", c);
-						throw new LayoutException("Unable to configure glyph " + c);
+						throw new LayoutException("Unable to configure glyph "
+								+ c);
 					}
 				}
 			}
@@ -289,21 +308,24 @@ public abstract class Element {
 			// Anything left on buffer (ie, no trailing space)?
 			if (chars.size() > 0) {
 				// Find out if there is enough space to push this word
-				int new_width_nl = width_new_line + width_new_word + page.properties.min_space_size;
+				int new_width_nl = width_new_line + width_new_word
+						+ page.properties.min_space_size;
 				if (bounds.width >= new_width_nl) {
 					// Yes, there is enough space, add the word
 					width_new_line += width_new_word;
 					StringBuilder builder = new StringBuilder();
 					for (char c1 : chars)
 						builder.append(c1);
-					trace.trace("Element.boxText", "pushOverflow", builder.toString());
+					trace.trace("Element.boxText", "pushOverflow",
+							builder.toString());
 					words.add(builder.toString());
 					// Clear the character buffers
 					chars.clear();
 					width_new_word = 0;
 				} else {
 					// No, the word doesn't fit, back it up
-					trace.trace("Element.boxText", "clearOverflow", chars.toString(), width_new_word, chars.size());
+					trace.trace("Element.boxText", "clearOverflow",
+							chars.toString(), width_new_word, chars.size());
 					text.rewind(chars.size() + 1);
 					chars.clear();
 					width_new_word = 0;
@@ -346,7 +368,8 @@ public abstract class Element {
 			case JUSTIFY:
 				float density = (float) width_new_line / (float) bounds.width;
 				if (density >= page.properties.min_line_density) {
-					int extra_px_per_space = (int) Math.floor(space_remain / words.size());
+					int extra_px_per_space = (int) Math.floor(space_remain
+							/ words.size());
 					if (extra_px_per_space > page.properties.min_space_size)
 						space_width = extra_px_per_space;
 				}
@@ -363,26 +386,29 @@ public abstract class Element {
 			// Make the line height fit exactly 1 or more line units
 			int line_height = height_new_line;
 			if (line_height % page.properties.lineheight_size != 0)
-				line_height = (int) Math.ceil(line_height / (float) page.properties.lineheight_size)
+				line_height = (int) Math.ceil(line_height
+						/ (float) page.properties.lineheight_size)
 						* page.properties.lineheight_size;
-			
-
 
 			// If the line doesn't fit at all, we can't do anything
 			if (cursor.y() + line_height >= bounds.y + bounds.height) {
-				trace.trace("Element.boxText", "revertLine", cursor.y() + line_height, cursor.y() + bounds.height);
+				trace.trace("Element.boxText", "revertLine", cursor.y()
+						+ line_height, cursor.y() + bounds.height);
 				text.popPosition(); // back out
 				break; // break main
 			}
 
 			// Really compute the width of the line
-			int real_width = width_new_line + (space_width * (words.size() - 1));
+			int real_width = width_new_line
+					+ (space_width * (words.size() - 1));
 
 			if (real_width > bounds.width) {
-				trace.warn("LayoutCalculator.boxLine", "overflow_line_not_allowed", real_width, bounds.width,
+				trace.warn("LayoutCalculator.boxLine",
+						"overflow_line_not_allowed", real_width, bounds.width,
 						width_new_line, space_width);
-				throw new LayoutException("Produced invalid line configuration: " + real_width + " > " + bounds.width
-						+ "!");
+				throw new LayoutException(
+						"Produced invalid line configuration: " + real_width
+								+ " > " + bounds.width + "!");
 			}
 
 			// Commit our position as we have now read a line and it fits all
@@ -390,9 +416,11 @@ public abstract class Element {
 			text.commitPosition();
 
 			// Create the linebox
-			trace.trace("LayoutCalculator.boxLine", "pushLine", line.toString(), space_width, line_height);
-			lines.add(new Line(line.toString(), new ObjectBounds(bounds.x, cursor.y(), real_width, line_height, false),
-					font, space_width));
+			trace.trace("LayoutCalculator.boxLine", "pushLine",
+					line.toString(), space_width, line_height);
+			lines.add(new Line(line.toString(), new ObjectBounds(bounds.x,
+					cursor.y(), real_width, line_height, false), font,
+					space_width));
 
 			// Slide downwards
 			cursor.pushDown(line_height);

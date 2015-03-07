@@ -43,9 +43,11 @@ import net.minecraft.util.ResourceLocation;
  */
 public class GLFont {
 
-	private static char MIN_CH = '\u0000';
+	private static final char MIN_CH = '\u0000';
 	private static final char MAX_CH = '\u00ff';
 
+	private static final int RASTER_DIM = 512;
+	
 	/**
 	 * Create a GLFont from a TTF file
 	 * 
@@ -146,8 +148,7 @@ public class GLFont {
 			throw new IllegalArgumentException("trace may not be null");
 		if (font == null)
 			throw new IllegalArgumentException("font may not be null");
-		int uDim = 512;
-		BufferedImage buffer = new BufferedImage(uDim, uDim, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage buffer = new BufferedImage(RASTER_DIM, RASTER_DIM, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = (Graphics2D) buffer.getGraphics();
 		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		int off = 0;
@@ -155,18 +156,18 @@ public class GLFont {
 		for (char k = MIN_CH; k <= MAX_CH; k++, off++) {
 			TextLayout layout = new TextLayout(String.valueOf(k), font, graphics.getFontRenderContext());
 			Rectangle2D rect = layout.getBounds();
-			int x = (off % charsPerRow) * (uDim / charsPerRow);
-			int y = (off / charsPerRow) * (uDim / charsPerRow);
+			int x = (off % charsPerRow) * (RASTER_DIM / charsPerRow);
+			int y = (off / charsPerRow) * (RASTER_DIM / charsPerRow);
 			float cy = (float) rect.getHeight();
 			graphics.setColor(Color.WHITE);
 			trace.trace("GLFont.fromFont", "placeGlyph", k, x, y - cy);
 			layout.draw(graphics, x, y - cy);
 		}
 
-		GLFontMetrics metric = GLFontMetrics.fromFontMetrics(trace, font, graphics.getFontRenderContext(), uDim, uDim,
+		GLFontMetrics metric = GLFontMetrics.fromFontMetrics(trace, font, graphics.getFontRenderContext(), RASTER_DIM, RASTER_DIM,
 				charsPerRow, MIN_CH, MAX_CH);
 		trace.trace("GLFont.fromFont", "fromMetric", metric);
-		GLFont f0 = fromBuffer(trace, font.getFontName(), buffer, uDim, uDim, metric);
+		GLFont f0 = fromBuffer(trace, font.getFontName(), buffer, RASTER_DIM, RASTER_DIM, metric);
 		trace.trace("GLFont.fromFont", f0);
 		return f0;
 	}
