@@ -380,7 +380,6 @@ public abstract class Element {
 				break;
 			default:
 				break;
-
 			}
 
 			// Make the line height fit exactly 1 or more line units
