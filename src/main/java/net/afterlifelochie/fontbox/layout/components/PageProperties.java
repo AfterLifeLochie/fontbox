@@ -26,6 +26,8 @@ public class PageProperties {
 	public float min_line_density;
 	/** The default line-height size */
 	public int lineheight_size = 0;
+	/** The size of non-breaking tabs */
+	public int tab_size = 8;
 
 	/** The font to use when rendering headings */
 	public GLFont headingFont;
@@ -65,6 +67,10 @@ public class PageProperties {
 	 *            The minimum spacing between words
 	 * @param min_lhs
 	 *            The default line-height size
+	 * @param line_density
+	 *            The JUSTIFY line density threshold
+	 * @param tab
+	 *            The tab size
 	 * @param head
 	 *            The heading font to use
 	 * @param body
@@ -73,8 +79,8 @@ public class PageProperties {
 	 *            The link font to use
 	 * 
 	 */
-	public PageProperties(int w, int h, int ml, int mr, int min_sp, int min_lhs, float line_density, GLFont head,
-			GLFont body, GLFont link) {
+	public PageProperties(int w, int h, int ml, int mr, int min_sp, int min_lhs, float line_density, int tab,
+			GLFont head, GLFont body, GLFont link) {
 		width = w;
 		height = h;
 		margin_left = ml;
@@ -82,6 +88,7 @@ public class PageProperties {
 		min_space_size = min_sp;
 		lineheight_size = min_lhs;
 		min_line_density = line_density;
+		tab_size = tab;
 		headingFont = head;
 		bodyFont = body;
 		linkFont = link;
@@ -164,6 +171,18 @@ public class PageProperties {
 	}
 
 	/**
+	 * Set the default tab wid1th for fixed-width tabs
+	 * 
+	 * @param sz
+	 *            The new value
+	 * @return The self object
+	 */
+	public PageProperties tabSize(int sz) {
+		tab_size = sz;
+		return this;
+	}
+
+	/**
 	 * Set the headings font
 	 * 
 	 * @param font
@@ -208,7 +227,7 @@ public class PageProperties {
 	 */
 	public PageProperties copy() {
 		return new PageProperties(width, height, margin_left, margin_right, min_space_size, lineheight_size,
-				min_line_density, headingFont, bodyFont, linkFont);
+				min_line_density, tab_size, headingFont, bodyFont, linkFont);
 	}
 
 }
