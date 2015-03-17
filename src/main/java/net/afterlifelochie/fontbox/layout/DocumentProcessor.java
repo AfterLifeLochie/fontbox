@@ -20,7 +20,7 @@ import net.afterlifelochie.fontbox.layout.components.PageProperties;
 public class DocumentProcessor {
 
 	public static Element getElementAt(Page page, int x, int y) {
-		for (Element element : page.elements)
+		for (Element element : page.elements())
 			if (element.bounds().encloses(x, y))
 				return element;
 		return null;

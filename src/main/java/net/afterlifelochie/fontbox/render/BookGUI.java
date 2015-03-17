@@ -167,8 +167,8 @@ public abstract class BookGUI extends GuiScreen {
 						GL11.glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
 						GLUtils.drawDefaultRect(where.x, where.y, page.width * 0.44f, page.height * 0.44f, zLevel);
 						GL11.glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-						GLUtils.drawDefaultRect(where.x + (cursor.x() * 0.44f), where.y + (cursor.y() * 0.44f), 1.0, 1.0,
-								zLevel);
+						GLUtils.drawDefaultRect(where.x + (cursor.x() * 0.44f), where.y + (cursor.y() * 0.44f), 1.0,
+								1.0, zLevel);
 						GL11.glDisable(GL11.GL_BLEND);
 						GL11.glEnable(GL11.GL_TEXTURE_2D);
 					}
@@ -302,11 +302,11 @@ public abstract class BookGUI extends GuiScreen {
 		 * on. This saves us recomputing a lot of values per frame and thus
 		 * prevents avoidable performance reductions.
 		 */
-		int count = page.elements.size();
+		int count = page.elements().size();
 		for (int i = 0; i < count; i++) {
-			page.elements.get(i).render(this, mx, my, frame);
+			page.elements().get(i).render(this, mx, my, frame);
 			if (this.cursors != null) {
-				ObjectBounds bounds = page.elements.get(i).bounds();
+				ObjectBounds bounds = page.elements().get(i).bounds();
 				if (bounds != null) {
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
 					GL11.glEnable(GL11.GL_BLEND);

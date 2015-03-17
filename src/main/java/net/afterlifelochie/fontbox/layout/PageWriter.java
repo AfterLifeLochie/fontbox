@@ -3,6 +3,7 @@ package net.afterlifelochie.fontbox.layout;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;
 
@@ -53,6 +54,20 @@ public class PageWriter {
 			checkOpen();
 			seek(0);
 			return pages.get(ptr);
+		}
+	}
+
+	public boolean write(Element element) throws IOException {
+		synchronized (lock) {
+			checkOpen();
+			Page what = current();
+			if (element.bounds() == null)
+				throw new IOException("Cannot write unbounded object to page.");
+			assert what.insidePage(element.bounds()) : "Element outside page boundary.";
+			assert !what.intersectsElement(element.bounds()) : "Element intersects existing element.";
+			what.push(element);
+			/* TODO: Update page cursor */
+			return true;
 		}
 	}
 

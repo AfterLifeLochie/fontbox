@@ -17,7 +17,7 @@ public class Page extends Container {
 	public PageProperties properties;
 
 	/** The list of elements on the page */
-	public ArrayList<Element> elements = new ArrayList<Element>();
+	private ArrayList<Element> elements = new ArrayList<Element>();
 
 	/**
 	 * Initialize a new Page with a specified set of page layout properties.
@@ -28,6 +28,25 @@ public class Page extends Container {
 	public Page(PageProperties properties) {
 		super(properties.width, properties.height);
 		this.properties = properties;
+	}
+
+	/**
+	 * Get a list of all elements on the page
+	 * 
+	 * @return The list of elements on the page
+	 */
+	public ArrayList<Element> elements() {
+		return elements;
+	}
+
+	/**
+	 * Push an element onto the page, unchecked.
+	 * 
+	 * @param element
+	 *            The element to push
+	 */
+	public void push(Element element) {
+		elements.add(element);
 	}
 
 	/**

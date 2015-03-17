@@ -35,13 +35,13 @@ public class LineWriter {
 	 *            The underlying stream to operate on.
 	 * @param font
 	 *            The font to write with.
-	 * @param algnment
+	 * @param alignment
 	 *            The alignment to paginate in.
 	 */
-	public LineWriter(PageWriter writer, GLFont font, AlignmentMode algnment) {
+	public LineWriter(PageWriter writer, GLFont font, AlignmentMode alignment) {
 		this.writer = writer;
 		this.font = font;
-		this.alignment = algnment;
+		this.alignment = alignment;
 		words = new ArrayList<String>();
 	}
 
@@ -113,6 +113,15 @@ public class LineWriter {
 		spaceSize = 0;
 		this.words.clear();
 		return what;
+	}
+
+	/**
+	 * Get the current pending bounding box of the words on the writer.
+	 * 
+	 * @return The pending bounding box of the words on the writer.
+	 */
+	public ObjectBounds pendingBounds() {
+		return bounds;
 	}
 
 	/**
