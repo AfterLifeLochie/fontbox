@@ -56,7 +56,7 @@ public class CompilerHint extends Element {
 				Page current = writer.current();
 				Element lowest = null;
 				int dfx = 0;
-				for (Element elem : current.elements) {
+				for (Element elem : current.elements()) {
 					int dux = elem.bounds().y + elem.bounds().height;
 					if (dux > dfx) {
 						dfx = dux;

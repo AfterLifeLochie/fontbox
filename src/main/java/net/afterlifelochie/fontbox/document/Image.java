@@ -113,23 +113,8 @@ public class Image extends Element {
 		if (floating == FloatMode.RIGHT)
 			x = current.properties.width - width;
 
-		y = cursor.y();
-		setBounds(new ObjectBounds(x, y, width, height, false));
-		current.elements.add(this);
-
-		switch (floating) {
-		case LEFT:
-			cursor.pushLeft(width);
-			break;
-		case RIGHT:
-			/* do nothing */
-			break;
-		case NONE:
-		default:
-			cursor.pushDown(height);
-			break;
-
-		}
+		setBounds(new ObjectBounds(x, cursor.y(), width, height, false));
+		writer.write(this);
 	}
 
 	@Override
