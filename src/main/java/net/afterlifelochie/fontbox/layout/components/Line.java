@@ -74,6 +74,8 @@ public class Line extends Element {
 		GLFontMetrics metric = font.getMetric();
 		if (metric == null)
 			throw new RenderException("Font object not loaded!");
+		if (line.length() == 0)
+			return;
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureId());
 
 		GL11.glPushMatrix();
@@ -88,10 +90,9 @@ public class Line extends Element {
 		 * TODO: Does margin get stored in drawcoords, or do we externalize this
 		 * in a property??
 		 */
-		// GL11.glTranslatef(page.properties.margin_left, 0.0f, 0.0f);
-
+		//GL11.glTranslatef(page.properties.margin_left, 0.0f, 0.0f);
+		
 		// Start drawing
-
 		for (int i = 0; i < line.length(); i++) {
 			char c = line.charAt(i);
 			if (c == ' ') { // is a space?
@@ -108,6 +109,8 @@ public class Line extends Element {
 			double v = (glyph.vy - glyph.ascent) / metric.fontImageHeight;
 			double wz = glyph.width / metric.fontImageWidth;
 			double hz = glyph.height / metric.fontImageHeight;
+			GL11.glColor3f(1.0f, 0.0f, 0.0f);
+			GLUtils.drawDefaultRect(x, y, glyph.width, glyph.height, 1.0);
 			GLUtils.drawTexturedRectUV(x, y, glyph.width, glyph.height, u, v, wz, hz, 1.0);
 			x += glyph.width; // shunt by glpyh size
 		}

@@ -33,4 +33,9 @@ public class PageCursor {
 		y += dy;
 	}
 
+	@Override
+	public String toString() {
+		return "C>{" + x + ", " + y + "}";
+	}
+
 }

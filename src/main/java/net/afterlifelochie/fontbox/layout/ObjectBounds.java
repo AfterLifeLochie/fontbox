@@ -1,12 +1,14 @@
 package net.afterlifelochie.fontbox.layout;
 
+import net.afterlifelochie.fontbox.document.property.FloatMode;
+
 public class ObjectBounds {
 
 	public int x, y;
 	public int width, height;
-	public boolean floating;
+	public FloatMode floating;
 
-	public ObjectBounds(int x, int y, int width, int height, boolean floating) {
+	public ObjectBounds(int x, int y, int width, int height, FloatMode floating) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -15,6 +17,10 @@ public class ObjectBounds {
 	}
 
 	public boolean floating() {
+		return floating != FloatMode.NONE;
+	}
+
+	public FloatMode floatMode() {
 		return floating;
 	}
 
@@ -28,5 +34,10 @@ public class ObjectBounds {
 		boolean flag0 = (this.x < x && this.x + this.width > x);
 		boolean flag1 = (this.y < y && this.y + this.height > y);
 		return flag0 && flag1;
+	}
+
+	@Override
+	public String toString() {
+		return "[" + x + ", " + y + "] => [" + width + " x " + height + "]";
 	}
 }

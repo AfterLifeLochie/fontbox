@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 
+import sun.java2d.windows.GDIRenderer.Tracer;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.document.property.FloatMode;
@@ -23,8 +24,6 @@ public class Image extends Element {
 
 	public AlignmentMode align;
 	public FloatMode floating;
-
-	protected int x, y;
 
 	/**
 	 * Creates a new inline image with the properties specified.
@@ -90,6 +89,8 @@ public class Image extends Element {
 			cursor = writer.cursor();
 		}
 
+		int x, y;
+
 		switch (align) {
 		case CENTER:
 			float qt = current.properties.width - width;
@@ -113,7 +114,8 @@ public class Image extends Element {
 		if (floating == FloatMode.RIGHT)
 			x = current.properties.width - width;
 
-		setBounds(new ObjectBounds(x, cursor.y(), width, height, false));
+		trace.trace("Image.layout", "finalize", x, cursor.y(), width, height, floating != FloatMode.NONE);
+		setBounds(new ObjectBounds(x, cursor.y(), width, height, floating));
 		writer.write(this);
 	}
 
@@ -135,7 +137,8 @@ public class Image extends Element {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		GLUtils.drawTexturedRectUV(x * 0.44f, y * 0.44f, width * 0.44f, height * 0.44f, 0, 0, 1, 1, 1);
+		GLUtils.drawTexturedRectUV(bounds().x * 0.44f, bounds().y * 0.44f, bounds().width * 0.44f,
+				bounds().height * 0.44f, 0, 0, 1, 1, 1);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();

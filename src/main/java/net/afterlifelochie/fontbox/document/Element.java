@@ -3,8 +3,10 @@ package net.afterlifelochie.fontbox.document;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
+import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.font.GLFontMetrics;
 import net.afterlifelochie.fontbox.font.GLGlyphMetric;
@@ -157,17 +159,19 @@ public abstract class Element {
 	protected void boxText(ITracer trace, PageWriter writer, GLFont font, String what, AlignmentMode alignment)
 			throws IOException, LayoutException {
 		StackedPushbackStringReader reader = new StackedPushbackStringReader(what);
+		trace.trace("Element.boxText", "startBox");
 		while (reader.available() > 0) {
 			Page current = writer.current();
 			PageCursor cursor = writer.cursor();
 			ObjectBounds bounds = new ObjectBounds(cursor.x(), cursor.y(), current.properties.width - cursor.x(),
-					current.properties.height - cursor.y(), false);
+					current.properties.height - cursor.y(), FloatMode.NONE);
 
 			boxText(trace, writer, bounds, font, reader, alignment);
 			trace.trace("Element.boxText", "streamRemain", reader.available());
 			if (reader.available() > 0)
 				writer.next();
 		}
+		trace.trace("Element.boxText", "endBox");
 	}
 
 	/**
@@ -210,7 +214,7 @@ public abstract class Element {
 		PageCursor cursor = writer.cursor();
 		LineWriter stream = new LineWriter(writer, font, alignment);
 
-		while (text.available() > 0) {
+		main: while (text.available() > 0) {
 			// Put some words on the writer:
 			while (true) {
 				// Push the writer so we can back out
@@ -224,37 +228,54 @@ public abstract class Element {
 					// Skip spaces or tabs;
 					if (cz != 0 && cz != ' ' && cz != '\t')
 						inWord.append(cz); // push
-					else
+					else if (inWord.length() > 0)
 						break; // okay, consider now
+					else if (cz == 0)
+						break; // okay, end of stream
 				}
 
+				if (inWord.toString().trim().length() == 0)
+					break;
+
 				// Consider the word:
+				trace.trace("Element.boxText", "considerWord", inWord.toString());
 				stream.push(inWord.toString());
 				ObjectBounds future = stream.pendingBounds();
 				Page current = writer.current();
+				trace.trace("Element.boxText", "considerCursor", writer.cursor());
 
 				// If we overflow the page, back out last change to fit:
 				if (!current.insidePage(future)) {
+					trace.trace("Element.boxText", "overflowPage");
 					stream.pop();
 					text.popPosition();
 					// If there are now no words on the writer, then
 					if (stream.size() == 0)
-						break; // nothing fits; break the loop
-				} else if (current.intersectsElement(future)) {
+						break main; // nothing fits; break the loop
+					else
+						break; // break the local loop
+				} else if (current.intersectsElement(future) != null) {
 					// We hit another object, so let's undo
+					trace.trace("Element.boxText", "collideElement", stream.size());
+					Element e0 = current.intersectsElement(future);
+					trace.trace("Element.boxText", "collideHit", e0.bounds().toString(), future.toString());
 					stream.pop();
 					text.popPosition();
 					if (stream.size() == 0)
-						break; // Nothing fits at all where we are; break
+						break main; // Nothing fits at all where we are; break
+					else
+						break; // break the local loop
+				} else {
+					// Store our work
+					trace.trace("Element.boxText", "commitWord");
+					text.commitPosition();
 				}
-
-				// Store our work
-				text.commitPosition();
 			}
 
 			// Writer now contains a list of words which fit, so do something
 			// useful with that line
 			Line line = stream.emit();
+			trace.trace("Element.boxText", "emitLine", line.line);
 			writer.write(line);
 		}
 	}

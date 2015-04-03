@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
+import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.font.GLFontMetrics;
 import net.afterlifelochie.fontbox.font.GLGlyphMetric;
@@ -66,7 +67,7 @@ public class LineWriter {
 
 		int blankWidth = page.width - page.properties.margin_left - page.properties.margin_right - wordsWidth;
 		spaceSize = page.properties.min_space_size;
-		int x = 0, y = 0;
+		int x = writer.cursor().x(), y = writer.cursor().y();
 
 		switch (alignment) {
 		case CENTER:
@@ -74,7 +75,7 @@ public class LineWriter {
 			x += (int) Math.floor(halfBlank);
 			break;
 		case JUSTIFY:
-			float density = (float) wordsWidth / (float) bounds.width;
+			float density = (float) wordsWidth / (float) page.width;
 			if (density >= page.properties.min_line_density) {
 				int extra_px_per_space = (int) Math.floor(blankWidth / words.size());
 				if (extra_px_per_space > page.properties.min_space_size)
@@ -90,7 +91,7 @@ public class LineWriter {
 		}
 
 		width = wordsWidth + Math.max(words.size() - 2, 0) * spaceSize;
-		bounds = new ObjectBounds(x, y, width, height, false);
+		bounds = new ObjectBounds(x, y, width, height, FloatMode.NONE);
 	}
 
 	/**
@@ -102,7 +103,7 @@ public class LineWriter {
 	 */
 	public Line emit() {
 		StringBuilder words = new StringBuilder();
-		for (int i = 0; i < words.length(); i++) {
+		for (int i = 0; i < this.words.size(); i++) {
 			String what = this.words.get(i);
 			words.append(what);
 			if (i < words.length() - 1)

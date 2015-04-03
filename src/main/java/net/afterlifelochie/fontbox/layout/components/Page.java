@@ -58,12 +58,11 @@ public class Page extends Container {
 	 *            The bounding box to check
 	 * @return If an intersection occurs
 	 */
-	public boolean intersectsElement(ObjectBounds bounds) {
+	public Element intersectsElement(ObjectBounds bounds) {
 		for (Element element : elements)
-			if (element.bounds() != null)
-				if (element.bounds().intersects(bounds))
-					return true;
-		return false;
+			if (element.bounds() != null && element.bounds().intersects(bounds))
+				return element;
+		return null;
 	}
 
 	/**
