@@ -55,16 +55,16 @@ public class LineWriter {
 		for (String word : words) {
 			char[] chars = word.toCharArray();
 			for (char cz : chars) {
-				GLGlyphMetric cm = metric.glyphs.get(cz);
+				GLGlyphMetric cm = metric.glyphs.get((int) cz);
 				if (cm == null)
-					throw new LayoutException(String.format("Cannot paginate illegal glyph %s", cz));
+					throw new LayoutException(String.format("Glyph %s not supported by this font.", cz));
 				wordsWidth += cm.width;
 				if (cm.ascent > height)
 					height = cm.ascent;
 			}
 		}
 
-		int blankWidth = bounds.width - wordsWidth;
+		int blankWidth = page.width - page.properties.margin_left - page.properties.margin_right - wordsWidth;
 		spaceSize = page.properties.min_space_size;
 		int x = 0, y = 0;
 
