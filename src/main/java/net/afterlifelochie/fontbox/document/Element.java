@@ -222,7 +222,7 @@ public abstract class Element {
 				while (true) {
 					cz = text.next();
 					// Skip spaces or tabs;
-					if (cz != ' ' && cz != '\t')
+					if (cz != 0 && cz != ' ' && cz != '\t')
 						inWord.append(cz); // push
 					else
 						break; // okay, consider now
