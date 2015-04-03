@@ -26,4 +26,9 @@ public class VoidTracer implements ITracer {
 		System.out.println("Fontbox warning: " + r0.substring(0, r0.length() - 2));
 	}
 
+	@Override
+	public boolean enableAssertion() {
+		return false;
+	}
+
 }

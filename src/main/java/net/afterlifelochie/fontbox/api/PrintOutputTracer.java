@@ -32,4 +32,9 @@ public class PrintOutputTracer implements ITracer {
 		System.out.println("PrintOutputTracer.warn: " + r0.substring(0, r0.length() - 2));
 	}
 
+	@Override
+	public boolean enableAssertion() {
+		return true;
+	}
+
 }

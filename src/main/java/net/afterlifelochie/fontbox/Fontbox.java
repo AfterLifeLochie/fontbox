@@ -29,6 +29,19 @@ public class Fontbox {
 	}
 
 	/**
+	 * Perform a protected assertion
+	 * 
+	 * @param condition
+	 *            The condition
+	 * @param reason
+	 *            The error message to raise if the condition is not true
+	 */
+	public static void doAssert(boolean condition, String reason) {
+		if (!condition && (instance().tracer == null || instance().tracer.enableAssertion()))
+			throw new AssertionError(reason);
+	}
+
+	/**
 	 * Get the current system tracer.
 	 * 
 	 * @return The current system tracer

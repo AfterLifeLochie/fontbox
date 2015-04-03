@@ -51,4 +51,13 @@ public interface ITracer {
 	 */
 	public void warn(Object... params);
 
+	/**
+	 * <p>
+	 * Called by Fontbox to ask if Fontbox assertions are enabled.
+	 * </p>
+	 * 
+	 * @return If Fontbox internal assertions are enabled
+	 */
+	public boolean enableAssertion();
+
 }
