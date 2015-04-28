@@ -62,11 +62,14 @@ public class GuiDemoBook extends BookGUI {
 
 			/* Build the document */
 			Document document = new Document();
+			document.push(new Image(new ResourceLocation("fontbox", "textures/books/afterlifelochie.png"), 128, 128,
+					FloatMode.LEFT));
 			document.push(new Heading("title", "The Tortoise and the Hare"));
 			document.push(new Heading("author", "Written by Aesop"));
-			document.push(new Image(new ResourceLocation("fontbox", "textures/books/afterlifelochie.png"), 128, 128,
-					AlignmentMode.CENTER));
 
+			document.push(new CompilerHint(HintType.FLOATBREAK));
+			document.push(new ImageItemStack(new ItemStack(Items.diamond, 1), 32, 32, AlignmentMode.CENTER));
+			document.push(new Paragraph("The classic fable demonstration book thingy."));
 			document.push(new CompilerHint(HintType.PAGEBREAK));
 
 			String[] lines = fable.toString().split("\n");
@@ -77,9 +80,11 @@ public class GuiDemoBook extends BookGUI {
 
 			document.push(new ImageItemStack(new ItemStack(Blocks.anvil, 1), 32, 32, FloatMode.LEFT));
 			document.push(new Paragraph(reallines.get(0)));
-			document.push(new ImageItemStack(new ItemStack(Items.apple, 1), 32, 32, FloatMode.RIGHT));
+			document.push(new ImageItemStack(new ItemStack(Items.diamond, 1), 32, 32, AlignmentMode.CENTER));
+			document.push(new ImageItemStack(new ItemStack(Items.apple, 1), 32, 32, FloatMode.LEFT));
 			document.push(new Paragraph(reallines.get(1)));
 			document.push(new ImageItemStack(new ItemStack(Items.diamond, 1), 32, 32, AlignmentMode.CENTER));
+			document.push(new ImageItemStack(new ItemStack(Items.gold_ingot, 1), 32, 32, FloatMode.LEFT));
 			document.push(new Paragraph(reallines.get(2)));
 
 			/* Actually generate some pages */

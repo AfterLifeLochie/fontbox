@@ -5,8 +5,10 @@ import java.util.ArrayList;
 
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.document.Element;
+import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;
+import net.afterlifelochie.io.IntegerExclusionStream;
 
 public class PageWriter {
 
@@ -76,16 +78,18 @@ public class PageWriter {
 				if (e.bounds().floating())
 					continue;
 				ObjectBounds bb = e.bounds();
-				if (bb.y + bb.height > current.y())
-					current.top(bb.y + bb.height);
+				if (bb.y + bb.height + 1 > current.y())
+					current.top(bb.y + bb.height + 1);
 			}
+
+			IntegerExclusionStream window = new IntegerExclusionStream(0, what.width);
 			for (Element e : what.elements()) {
 				ObjectBounds bb = e.bounds();
-				if (bb.y >= current.y() && current.y() >= bb.y + bb.height)
-					if (bb.floating()) {
-						
-					}
+				if (current.y() >= bb.y && bb.y + bb.height >= current.y())
+					window.excludeRange(0, bb.x + bb.width);
 			}
+			current.left(window.largest());
+
 			Fontbox.tracer().trace("PageWriter.write", "pushCursor", current);
 
 			return true;

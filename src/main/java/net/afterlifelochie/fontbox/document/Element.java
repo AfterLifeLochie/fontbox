@@ -210,10 +210,7 @@ public abstract class Element {
 	 */
 	protected void boxText(ITracer trace, PageWriter writer, ObjectBounds bounds, GLFont font,
 			StackedPushbackStringReader text, AlignmentMode alignment) throws IOException, LayoutException {
-
-		PageCursor cursor = writer.cursor();
 		LineWriter stream = new LineWriter(writer, font, alignment);
-
 		main: while (text.available() > 0) {
 			// Put some words on the writer:
 			while (true) {
@@ -246,7 +243,7 @@ public abstract class Element {
 
 				// If we overflow the page, back out last change to fit:
 				if (!current.insidePage(future)) {
-					trace.trace("Element.boxText", "overflowPage");
+					trace.trace("Element.boxText", "overflowPage", current.width, current.height, future, stream.size());
 					stream.pop();
 					text.popPosition();
 					// If there are now no words on the writer, then

@@ -31,13 +31,17 @@ public class ObjectBounds {
 	}
 
 	public boolean encloses(int x, int y) {
-		boolean flag0 = (this.x < x && this.x + this.width > x);
-		boolean flag1 = (this.y < y && this.y + this.height > y);
+		boolean flag0 = (this.x <= x && this.x + this.width >= x);
+		boolean flag1 = (this.y <= y && this.y + this.height >= y);
 		return flag0 && flag1;
 	}
 
 	@Override
 	public String toString() {
 		return "[" + x + ", " + y + "] => [" + width + " x " + height + "]";
+	}
+
+	public boolean inside(ObjectBounds bounds) {
+		return bounds.encloses(x, y) && bounds.encloses(x + width, y + height);
 	}
 }

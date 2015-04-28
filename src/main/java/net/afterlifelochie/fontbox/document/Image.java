@@ -89,7 +89,7 @@ public class Image extends Element {
 			cursor = writer.cursor();
 		}
 
-		int x, y;
+		int x;
 
 		switch (align) {
 		case CENTER:
@@ -103,6 +103,8 @@ public class Image extends Element {
 			x = cursor.x();
 			break;
 		case LEFT:
+			x = 0;
+			break;
 		default:
 			x = cursor.x();
 			break;
