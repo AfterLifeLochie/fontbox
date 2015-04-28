@@ -98,10 +98,13 @@ public class LineWriter {
 	 * Called to emit the stack's contents to a Line element. The contents of
 	 * the stack are automatically cleared and zerored on invocation.
 	 * 
+	 * @param uid
+	 *            The line's ID, if any
+	 * 
 	 * @return The formatted line. The stack, properties and other values
 	 *         associated with generating the line are reset on the self object.
 	 */
-	public Line emit() {
+	public Line emit(String uid) {
 		StringBuilder words = new StringBuilder();
 		for (int i = 0; i < this.words.size(); i++) {
 			String what = this.words.get(i);
@@ -109,7 +112,7 @@ public class LineWriter {
 			if (i < words.length() - 1)
 				words.append(" ");
 		}
-		Line what = new Line(words.toString(), bounds, font, spaceSize);
+		Line what = new Line(words.toString(), uid, bounds, font, spaceSize);
 		bounds = null;
 		spaceSize = 0;
 		this.words.clear();

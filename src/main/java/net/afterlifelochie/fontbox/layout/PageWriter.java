@@ -73,6 +73,7 @@ public class PageWriter {
 			Fontbox.doAssert(intersect == null, "Element intersects existing element " + intersect + ": box "
 					+ ((intersect != null && intersect.bounds() != null) ? intersect.bounds() : "<null>") + " and "
 					+ element.bounds() + "!");
+
 			if (element.identifier() != null)
 				index.push(element.identifier(), ptr);
 

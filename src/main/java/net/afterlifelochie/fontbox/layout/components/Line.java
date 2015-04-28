@@ -24,6 +24,8 @@ import net.afterlifelochie.fontbox.render.RenderException;
 public class Line extends Element {
 	/** The real text */
 	public final String line;
+	/** The line's ID */
+	public String id;
 	/** The size of the spacing between words */
 	public final int space_size;
 	/** The font to render the line in */
@@ -45,7 +47,27 @@ public class Line extends Element {
 		this.setBounds(bounds);
 		this.line = line;
 		this.font = font;
+		this.id = null;
 		this.space_size = space_size;
+	}
+
+	/**
+	 * Create a new line with an ID
+	 * 
+	 * @param line
+	 *            The line's text
+	 * @param uid
+	 *            The line's ID
+	 * @param bounds
+	 *            The location of the line
+	 * @param font
+	 *            The font to draw with
+	 * @param space_size
+	 *            The size of the spacing between words
+	 */
+	public Line(String line, String uid, ObjectBounds bounds, GLFont font, int space_size) {
+		this(line, bounds, font, space_size);
+		this.id = uid;
 	}
 
 	@Override
@@ -90,8 +112,8 @@ public class Line extends Element {
 		 * TODO: Does margin get stored in drawcoords, or do we externalize this
 		 * in a property??
 		 */
-		//GL11.glTranslatef(page.properties.margin_left, 0.0f, 0.0f);
-		
+		// GL11.glTranslatef(page.properties.margin_left, 0.0f, 0.0f);
+
 		// Start drawing
 		for (int i = 0; i < line.length(); i++) {
 			char c = line.charAt(i);
@@ -129,5 +151,10 @@ public class Line extends Element {
 	public void typed(BookGUI gui, char val, int code) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public String identifier() {
+		return id;
 	}
 }

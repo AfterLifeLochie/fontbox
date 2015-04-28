@@ -161,6 +161,8 @@ public abstract class Element {
 	 *            The font to write with
 	 * @param what
 	 *            The text to write
+	 * @param uid
+	 *            The ID of the text block
 	 * @param alignment
 	 *            The text alignment mode
 	 * @throws IOException
@@ -169,8 +171,8 @@ public abstract class Element {
 	 *             Any layout problem which prevents the text from being laid
 	 *             out correctly
 	 */
-	protected void boxText(ITracer trace, PageWriter writer, GLFont font, String what, AlignmentMode alignment)
-			throws IOException, LayoutException {
+	protected void boxText(ITracer trace, PageWriter writer, GLFont font, String what, String uid,
+			AlignmentMode alignment) throws IOException, LayoutException {
 		StackedPushbackStringReader reader = new StackedPushbackStringReader(what);
 		trace.trace("Element.boxText", "startBox");
 		while (reader.available() > 0) {
@@ -179,7 +181,7 @@ public abstract class Element {
 			ObjectBounds bounds = new ObjectBounds(cursor.x(), cursor.y(), current.properties.width - cursor.x(),
 					current.properties.height - cursor.y(), FloatMode.NONE);
 
-			boxText(trace, writer, bounds, font, reader, alignment);
+			boxText(trace, writer, bounds, font, reader, uid, alignment);
 			trace.trace("Element.boxText", "streamRemain", reader.available());
 			if (reader.available() > 0)
 				writer.next();
@@ -213,6 +215,8 @@ public abstract class Element {
 	 *            The font to write with
 	 * @param text
 	 *            The text stream to read from
+	 * @param uid
+	 *            The text object ID
 	 * @param alignment
 	 *            The text alignment mode
 	 * @throws IOException
@@ -222,7 +226,7 @@ public abstract class Element {
 	 *             out correctly
 	 */
 	protected void boxText(ITracer trace, PageWriter writer, ObjectBounds bounds, GLFont font,
-			StackedPushbackStringReader text, AlignmentMode alignment) throws IOException, LayoutException {
+			StackedPushbackStringReader text, String uid, AlignmentMode alignment) throws IOException, LayoutException {
 		LineWriter stream = new LineWriter(writer, font, alignment);
 		main: while (text.available() > 0) {
 			// Put some words on the writer:
@@ -284,7 +288,7 @@ public abstract class Element {
 
 			// Writer now contains a list of words which fit, so do something
 			// useful with that line
-			Line line = stream.emit();
+			Line line = stream.emit(uid);
 			trace.trace("Element.boxText", "emitLine", line.line);
 			writer.write(line);
 		}

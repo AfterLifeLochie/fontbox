@@ -43,7 +43,7 @@ public class Paragraph extends Element {
 	@Override
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		Page page = writer.current();
-		boxText(trace, writer, page.properties.bodyFont, text, AlignmentMode.JUSTIFY);
+		boxText(trace, writer, page.properties.bodyFont, text, null, AlignmentMode.JUSTIFY);
 		writer.cursor().pushDown(10);
 	}
 

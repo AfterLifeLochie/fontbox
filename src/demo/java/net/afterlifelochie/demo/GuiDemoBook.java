@@ -21,6 +21,7 @@ import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
 import net.afterlifelochie.fontbox.layout.LayoutException;
+import net.afterlifelochie.fontbox.layout.PageIndex;
 import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;
 import net.afterlifelochie.fontbox.render.BookGUI;
@@ -83,6 +84,9 @@ public class GuiDemoBook extends BookGUI {
 			document.push(new ImageItemStack(new ItemStack(Items.diamond, 1), 32, 32, AlignmentMode.CENTER));
 			document.push(new ImageItemStack(new ItemStack(Items.apple, 1), 32, 32, FloatMode.LEFT));
 			document.push(new Paragraph(reallines.get(1)));
+			document.push(new CompilerHint(HintType.PAGEBREAK));
+
+			document.push(new Heading("ending", "The Finish"));
 			document.push(new ImageItemStack(new ItemStack(Items.diamond, 1), 32, 32, AlignmentMode.CENTER));
 			document.push(new ImageItemStack(new ItemStack(Items.gold_ingot, 1), 32, 32, FloatMode.LEFT));
 			document.push(new Paragraph(reallines.get(2)));
@@ -94,6 +98,11 @@ public class GuiDemoBook extends BookGUI {
 
 			/* Set the pages */
 			changePages(writer.pages());
+
+			/* Get the index */
+			PageIndex index = writer.index();
+			System.out.println("Ending is on page " + index.find("ending"));
+
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
 		} catch (LayoutException layout) {
