@@ -9,6 +9,7 @@ import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.PageCursor;
+import net.afterlifelochie.fontbox.layout.PageIndex;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -65,6 +66,8 @@ public abstract class BookGUI extends GuiScreen {
 	protected ArrayList<Page> pages;
 	/** The list of cursors */
 	protected ArrayList<PageCursor> cursors;
+	/** The data index */
+	protected PageIndex index;
 	/** The current page pointer */
 	protected int ptr = 0;
 
@@ -105,13 +108,16 @@ public abstract class BookGUI extends GuiScreen {
 	 * 
 	 * @param pages
 	 *            The new list of pages
+	 * @param index
+	 *            The new page index
 	 */
-	public void changePages(ArrayList<Page> pages) {
+	public void changePages(ArrayList<Page> pages, PageIndex index) {
 		if (ptr >= pages.size()) {
 			ptr = 0;
 			onPageChanged(this, ptr);
 		}
 		this.pages = pages;
+		this.index = index;
 	}
 
 	/**
@@ -231,6 +237,19 @@ public abstract class BookGUI extends GuiScreen {
 			ptr += mode.pages;
 			onPageChanged(this, ptr);
 		}
+	}
+
+	/**
+	 * Go to a page in the index; if the item doesn't exist, no navigation
+	 * occurs
+	 * 
+	 * @param id
+	 *            The ID of the anchor to go to
+	 */
+	protected void go(String id) {
+		int where = index.find(id);
+		if (where != -1)
+			go(where);
 	}
 
 	/**

@@ -97,11 +97,7 @@ public class GuiDemoBook extends BookGUI {
 			writer.close();
 
 			/* Set the pages */
-			changePages(writer.pages());
-
-			/* Get the index */
-			PageIndex index = writer.index();
-			System.out.println("Ending is on page " + index.find("ending"));
+			changePages(writer.pages(), writer.index());
 
 		} catch (IOException ioex) {
 			ioex.printStackTrace();
