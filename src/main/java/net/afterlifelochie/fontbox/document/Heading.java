@@ -64,4 +64,9 @@ public class Heading extends Element {
 
 	}
 
+	@Override
+	public String identifier() {
+		return id;
+	}
+
 }

@@ -135,6 +135,19 @@ public abstract class Element {
 
 	/**
 	 * <p>
+	 * Called by the generator to ask for unique ID for this element. If the
+	 * object does not need to be indexed, this method should return null and
+	 * not be overridden; else, you should return a unique identifier.
+	 * </p>
+	 * 
+	 * @return The unique identifier for this element
+	 */
+	public String identifier() {
+		return null;
+	}
+
+	/**
+	 * <p>
 	 * Attempt to box text from a string onto as many pages as is required. The
 	 * text provided will be added to the tail of the current page and will
 	 * overflow onto any subsequent pages as is required.

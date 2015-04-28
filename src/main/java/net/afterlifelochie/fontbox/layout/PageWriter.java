@@ -15,12 +15,14 @@ public class PageWriter {
 	private ArrayList<Page> pages = new ArrayList<Page>();
 	private ArrayList<PageCursor> cursors = new ArrayList<PageCursor>();
 	private PageProperties attributes;
+	private PageIndex index;
 	private Object lock = new Object();
 	private boolean closed = false;
 	private int ptr = 0;
 
 	public PageWriter(PageProperties attributes) {
 		this.attributes = attributes;
+		this.index = new PageIndex();
 	}
 
 	public void close() {
@@ -71,6 +73,9 @@ public class PageWriter {
 			Fontbox.doAssert(intersect == null, "Element intersects existing element " + intersect + ": box "
 					+ ((intersect != null && intersect.bounds() != null) ? intersect.bounds() : "<null>") + " and "
 					+ element.bounds() + "!");
+			if (element.identifier() != null)
+				index.push(element.identifier(), ptr);
+			
 			what.push(element);
 
 			PageCursor current = cursor();
