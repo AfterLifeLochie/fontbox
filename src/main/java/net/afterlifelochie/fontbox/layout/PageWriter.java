@@ -75,7 +75,7 @@ public class PageWriter {
 					+ element.bounds() + "!");
 			if (element.identifier() != null)
 				index.push(element.identifier(), ptr);
-			
+
 			what.push(element);
 
 			PageCursor current = cursor();
@@ -127,6 +127,14 @@ public class PageWriter {
 			if (!closed)
 				return (ArrayList<Page>) pages.clone();
 			return pages;
+		}
+	}
+
+	public PageIndex index() throws IOException {
+		synchronized (lock) {
+			if (!closed)
+				throw new IOException("Writing not finished!");
+			return index;
 		}
 	}
 
