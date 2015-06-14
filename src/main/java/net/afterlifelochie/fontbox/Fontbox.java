@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.api.VoidTracer;
+import net.afterlifelochie.fontbox.font.GLFont;
 
 /**
  * Fontbox main registry.
@@ -25,6 +26,19 @@ public class Fontbox {
 		if (Fontbox.inst == null)
 			Fontbox.inst = new Fontbox();
 		return Fontbox.inst;
+	}
+
+	/**
+	 * Perform a protected assertion
+	 * 
+	 * @param condition
+	 *            The condition
+	 * @param reason
+	 *            The error message to raise if the condition is not true
+	 */
+	public static void doAssert(boolean condition, String reason) {
+		if (!condition && (instance().tracer == null || instance().tracer.enableAssertion()))
+			throw new AssertionError(reason);
 	}
 
 	/**

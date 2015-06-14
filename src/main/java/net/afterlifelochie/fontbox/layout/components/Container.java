@@ -1,4 +1,4 @@
-package net.afterlifelochie.fontbox.layout;
+package net.afterlifelochie.fontbox.layout.components;
 
 /**
  * Layout container object. Containers have properties such as a width and a
