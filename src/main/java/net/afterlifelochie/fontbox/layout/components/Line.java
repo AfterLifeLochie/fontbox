@@ -131,7 +131,6 @@ public class Line extends Element {
 			double v = (glyph.vy - glyph.ascent) / metric.fontImageHeight;
 			double wz = glyph.width / metric.fontImageWidth;
 			double hz = glyph.height / metric.fontImageHeight;
-			GL11.glColor3f(1.0f, 0.0f, 0.0f);
 			GLUtils.drawDefaultRect(x, y, glyph.width, glyph.height, 1.0);
 			GLUtils.drawTexturedRectUV(x, y, glyph.width, glyph.height, u, v, wz, hz, 1.0);
 			x += glyph.width; // shunt by glpyh size
