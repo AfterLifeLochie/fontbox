@@ -125,8 +125,7 @@ public class GuiDemoBook extends BookGUI {
 
 	@Override
 	public void onPageChanged(BookGUI gui, int whatPtr) {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 }

@@ -4,10 +4,8 @@ import java.io.IOException;
 
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
-import net.afterlifelochie.fontbox.font.GLFontMetrics;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.PageWriter;
-import net.afterlifelochie.fontbox.layout.PageCursor;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 
@@ -54,26 +52,22 @@ public class Paragraph extends Element {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 	@Override
 	public void render(BookGUI gui, int mx, int my, float frame) {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 	@Override
 	public void clicked(BookGUI gui, int mx, int my) {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 	@Override
 	public void typed(BookGUI gui, char val, int code) {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 }

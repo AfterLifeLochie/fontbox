@@ -76,8 +76,7 @@ public class ImageItemStack extends Image {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 	@Override
@@ -102,13 +101,11 @@ public class ImageItemStack extends Image {
 
 	@Override
 	public void clicked(BookGUI gui, int mx, int my) {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 	@Override
 	public void typed(BookGUI gui, char val, int code) {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 }

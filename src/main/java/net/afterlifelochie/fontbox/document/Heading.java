@@ -42,26 +42,22 @@ public class Heading extends Element {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 	@Override
 	public void render(BookGUI gui, int mx, int my, float frame) {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 	@Override
 	public void clicked(BookGUI gui, int mx, int my) {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 	@Override
 	public void typed(BookGUI gui, char val, int code) {
-		// TODO Auto-generated method stub
-
+		/* No action required */
 	}
 
 	@Override
