@@ -20,7 +20,8 @@ public class ItemDemoBook extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		Minecraft.getMinecraft().displayGuiScreen(new GuiDemoBook());
+		if (par2World.isRemote)
+			Minecraft.getMinecraft().displayGuiScreen(new GuiDemoBook());
 		return par1ItemStack;
 	}
 }

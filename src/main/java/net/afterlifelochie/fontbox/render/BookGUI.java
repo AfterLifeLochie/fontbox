@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.OpenGLException;
+import org.lwjgl.opengl.Util;
 
+import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
@@ -71,6 +74,13 @@ public abstract class BookGUI extends GuiScreen {
 	/** The current page pointer */
 	protected int ptr = 0;
 
+	/** The current opengl display list state */
+	protected boolean useDisplayList = false;
+	/** The current opengl buffer list */
+	protected int[] glDisplayLists;
+	/** The current buffer dirty state */
+	protected boolean glBufferDirty[];
+
 	/**
 	 * <p>
 	 * Create a new Book rendering context on top of the existing Minecraft GUI
@@ -94,6 +104,7 @@ public abstract class BookGUI extends GuiScreen {
 			throw new IllegalArgumentException("Expected " + mode.pages + " pages for mode " + mode);
 		this.mode = mode;
 		this.layout = layout;
+		prepareGraphics();
 	}
 
 	/**
@@ -114,7 +125,7 @@ public abstract class BookGUI extends GuiScreen {
 	public void changePages(ArrayList<Page> pages, PageIndex index) {
 		if (ptr >= pages.size()) {
 			ptr = 0;
-			onPageChanged(this, ptr);
+			internalOnPageChanged(this, ptr);
 		}
 		this.pages = pages;
 		this.index = index;
@@ -165,6 +176,7 @@ public abstract class BookGUI extends GuiScreen {
 						break;
 					Page page = pages.get(ptr + i);
 					GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
 					if (this.cursors != null && what < cursors.size()) {
 						PageCursor cursor = cursors.get(what);
 						GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -178,7 +190,7 @@ public abstract class BookGUI extends GuiScreen {
 						GL11.glDisable(GL11.GL_BLEND);
 						GL11.glEnable(GL11.GL_TEXTURE_2D);
 					}
-					renderPage(page, where.x, where.y, zLevel, mx, my, frames);
+					renderPage(i, page, where.x, where.y, zLevel, mx, my, frames);
 
 				}
 			}
@@ -230,12 +242,64 @@ public abstract class BookGUI extends GuiScreen {
 	public abstract void drawForeground(int mx, int my, float frame);
 
 	/**
+	 * Called internally when the page is changed. Don't override this, use
+	 * {@link #onPageChanged(BookGUI, int)} instead.
+	 * 
+	 * @param gui
+	 *            The book GUI
+	 * @param whatPtr
+	 *            The new page pointer
+	 */
+	protected void internalOnPageChanged(BookGUI gui, int whatPtr) {
+		for (int i = 0; i < mode.pages; i++) {
+			glBufferDirty[i] = true;
+		}
+		onPageChanged(gui, whatPtr);
+	}
+
+	/**
+	 * Called internally to set up the display lists.
+	 */
+	protected void prepareGraphics() {
+		try {
+			Util.checkGLError();
+		} catch (OpenGLException glex) {
+			Fontbox.tracer().warn("BookGUI.prepareGraphics", "Bad OpenGL operation detected, check GL history!");
+			glex.printStackTrace();
+			return;
+		}
+		glDisplayLists = new int[this.mode.pages];
+		glBufferDirty = new boolean[this.mode.pages];
+		int glList = GL11.glGenLists(glDisplayLists.length);
+
+		try {
+			Util.checkGLError();
+		} catch (OpenGLException glex) {
+			Fontbox.tracer().warn("BookGUI.prepareGraphics",
+					"Unable to allocate display-list buffers, using immediate mode.");
+			return;
+		}
+
+		if (glList <= 0)
+			Fontbox.tracer().warn("BookGUI.prepareGraphics", "No display-lists available, using immediate mode.");
+		else {
+			for (int i = 0; i < this.glDisplayLists.length; i++) {
+				glDisplayLists[i] = glList + i;
+				glBufferDirty[i] = true;
+			}
+			Fontbox.tracer()
+					.trace("BookGUI.prepareGraphics", "Displaylist initialized.", glList, glDisplayLists.length);
+			useDisplayList = true;
+		}
+	}
+
+	/**
 	 * Advance to the next page
 	 */
 	protected void next() {
 		if (ptr + mode.pages < pages.size()) {
 			ptr += mode.pages;
-			onPageChanged(this, ptr);
+			internalOnPageChanged(this, ptr);
 		}
 	}
 
@@ -262,7 +326,7 @@ public abstract class BookGUI extends GuiScreen {
 		where = where - (where % mode.pages);
 		if (ptr != where && 0 <= where - mode.pages && where + mode.pages < pages.size()) {
 			ptr = where;
-			onPageChanged(this, ptr);
+			internalOnPageChanged(this, ptr);
 		}
 	}
 
@@ -272,7 +336,7 @@ public abstract class BookGUI extends GuiScreen {
 	protected void previous() {
 		if (0 <= ptr - mode.pages) {
 			ptr -= mode.pages;
-			onPageChanged(this, ptr);
+			internalOnPageChanged(this, ptr);
 		}
 	}
 
@@ -313,14 +377,25 @@ public abstract class BookGUI extends GuiScreen {
 		super.mouseClickMove(mx, my, button, ticks);
 	}
 
-	private void renderPage(Page page, float x, float y, float z, int mx, int my, float frame) throws RenderException {
+	private void renderPage(int index, Page page, float x, float y, float z, int mx, int my, float frame)
+			throws RenderException {
+		if (!useDisplayList) {
+			renderPageImmediate(page, x, y, z, mx, my, frame);
+		} else {
+			if (glBufferDirty[index]) {
+				GL11.glNewList(glDisplayLists[index], GL11.GL_COMPILE);
+				renderPageImmediate(page, x, y, z, mx, my, frame);
+				GL11.glEndList();
+				glBufferDirty[index] = false;
+			}
+			GL11.glCallList(glDisplayLists[index]);
+		}
+	}
+
+	private void renderPageImmediate(Page page, float x, float y, float z, int mx, int my, float frame)
+			throws RenderException {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, z);
-		/*
-		 * TODO: Draw this to a displaylist, then recall the displaylist later
-		 * on. This saves us recomputing a lot of values per frame and thus
-		 * prevents avoidable performance reductions.
-		 */
 		int count = page.elements().size();
 		for (int i = 0; i < count; i++) {
 			page.elements().get(i).render(this, mx, my, frame);
