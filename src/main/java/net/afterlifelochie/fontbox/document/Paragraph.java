@@ -11,6 +11,7 @@ import net.afterlifelochie.fontbox.render.BookGUI;
 
 public class Paragraph extends Element {
 
+	/** @deprecated To be replaced with a mixed-type stream */
 	public String text;
 	public AlignmentMode align;
 
@@ -18,6 +19,7 @@ public class Paragraph extends Element {
 	 * Create a new paragraph with a specified text and the default alignment
 	 * (justified).
 	 * 
+	 * @deprecated To be replaced with a mixed-type stream
 	 * @param text
 	 *            The text
 	 */
@@ -28,6 +30,7 @@ public class Paragraph extends Element {
 	/**
 	 * Create a new paragraph with the specified properties.
 	 * 
+	 * @deprecated To be replaced with a mixed-type stream
 	 * @param text
 	 *            The text
 	 * @param align
