@@ -6,7 +6,6 @@ import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.PageWriter;
-import net.afterlifelochie.fontbox.layout.PageCursor;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 
@@ -17,7 +16,7 @@ public class Heading extends Element {
 
 	/**
 	 * Creates a new Heading element
-	 * 
+	 *
 	 * @param id
 	 *            The heading's unique identifier
 	 * @param text

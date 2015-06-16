@@ -1,16 +1,15 @@
 package net.afterlifelochie.fontbox.document;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.render.BookGUI;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class ImageItemStack extends Image {
 
@@ -20,7 +19,7 @@ public class ImageItemStack extends Image {
 
 	/**
 	 * Creates a new inline item-stack image with the properties specified.
-	 * 
+	 *
 	 * @param source
 	 *            The item stack, may not be null.
 	 * @param width
@@ -36,7 +35,7 @@ public class ImageItemStack extends Image {
 
 	/**
 	 * Creates a new floating item-stack image with the properties specified.
-	 * 
+	 *
 	 * @param source
 	 *            The item stack, may not be null.
 	 * @param width
@@ -52,7 +51,7 @@ public class ImageItemStack extends Image {
 
 	/**
 	 * Creates a new item-stack image with the properties specified.
-	 * 
+	 *
 	 * @param source
 	 *            The image source location, may not be null.
 	 * @param width
@@ -66,7 +65,7 @@ public class ImageItemStack extends Image {
 	 */
 	public ImageItemStack(ItemStack source, int width, int height, AlignmentMode align, FloatMode floating) {
 		super(null, width, height, align, floating);
-		this.block = source;
+		block = source;
 	}
 
 	@Override

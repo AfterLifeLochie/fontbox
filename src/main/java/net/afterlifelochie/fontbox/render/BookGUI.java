@@ -2,11 +2,6 @@ package net.afterlifelochie.fontbox.render;
 
 import java.util.ArrayList;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.OpenGLException;
-import org.lwjgl.opengl.Util;
-
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
@@ -16,11 +11,16 @@ import net.afterlifelochie.fontbox.layout.PageIndex;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.minecraft.client.gui.GuiScreen;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.OpenGLException;
+import org.lwjgl.opengl.Util;
+
 public abstract class BookGUI extends GuiScreen {
 
 	/**
 	 * The page-up mode.
-	 * 
+	 *
 	 * @author AfterLifeLochie
 	 */
 	public static enum UpMode {
@@ -39,7 +39,7 @@ public abstract class BookGUI extends GuiScreen {
 
 	/**
 	 * Page layout container
-	 * 
+	 *
 	 * @author AfterLifeLochie
 	 *
 	 */
@@ -48,7 +48,7 @@ public abstract class BookGUI extends GuiScreen {
 
 		/**
 		 * Create a new Layout container for rendering the page on screen.
-		 * 
+		 *
 		 * @param x
 		 *            The x-coordinate to render at
 		 * @param y
@@ -87,7 +87,7 @@ public abstract class BookGUI extends GuiScreen {
 	 * system. The book rendering properties are set through the constructor and
 	 * control how many and where pages are rendered.
 	 * </p>
-	 * 
+	 *
 	 * @param mode
 	 *            The page mode, usually ONEUP or TWOUP.
 	 * @param layout
@@ -116,7 +116,7 @@ public abstract class BookGUI extends GuiScreen {
 	 * count (ie, the number of pages has reduced), the pointer will be reset to
 	 * the beginning of the book.
 	 * </p>
-	 * 
+	 *
 	 * @param pages
 	 *            The new list of pages
 	 * @param index
@@ -140,7 +140,7 @@ public abstract class BookGUI extends GuiScreen {
 	 * will be displayed. If the cursor parameter is null, no cursors will be
 	 * rendered on the page.
 	 * </p>
-	 * 
+	 *
 	 * @param cursors
 	 *            The list of cursors, or null if no cursors should be rendered
 	 */
@@ -178,7 +178,7 @@ public abstract class BookGUI extends GuiScreen {
 		super.drawScreen(mx, my, frames);
 		drawBackground(mx, my, frames);
 		try {
-			if (this.pages != null) {
+			if (pages != null)
 				for (int i = 0; i < mode.pages; i++) {
 					Layout where = layout[i];
 					int what = ptr + i;
@@ -187,7 +187,7 @@ public abstract class BookGUI extends GuiScreen {
 					Page page = pages.get(ptr + i);
 					GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-					if (this.cursors != null && what < cursors.size()) {
+					if (cursors != null && what < cursors.size()) {
 						PageCursor cursor = cursors.get(what);
 						GL11.glDisable(GL11.GL_TEXTURE_2D);
 						GL11.glEnable(GL11.GL_BLEND);
@@ -203,7 +203,6 @@ public abstract class BookGUI extends GuiScreen {
 					renderPage(i, page, where.x, where.y, zLevel, mx, my, frames);
 
 				}
-			}
 		} catch (RenderException err) {
 			err.printStackTrace();
 		}
@@ -212,7 +211,7 @@ public abstract class BookGUI extends GuiScreen {
 
 	/**
 	 * Called when the current page is changed
-	 * 
+	 *
 	 * @param gui
 	 *            The current GUI
 	 * @param whatPtr
@@ -225,7 +224,7 @@ public abstract class BookGUI extends GuiScreen {
 	 * Draw the background layer of the interface. You must leave the opengl
 	 * state such that the layout (0, 0) will be drawn in the current place.
 	 * </p>
-	 * 
+	 *
 	 * @param mx
 	 *            The mouse x-coordinate
 	 * @param my
@@ -241,7 +240,7 @@ public abstract class BookGUI extends GuiScreen {
 	 * the layout coordinates (0, 0) are in the top-left corner of the written
 	 * text.
 	 * </p>
-	 * 
+	 *
 	 * @param mx
 	 *            The mouse x-coordinate
 	 * @param my
@@ -254,16 +253,15 @@ public abstract class BookGUI extends GuiScreen {
 	/**
 	 * Called internally when the page is changed. Don't override this, use
 	 * {@link #onPageChanged(BookGUI, int)} instead.
-	 * 
+	 *
 	 * @param gui
 	 *            The book GUI
 	 * @param whatPtr
 	 *            The new page pointer
 	 */
 	protected void internalOnPageChanged(BookGUI gui, int whatPtr) {
-		for (int i = 0; i < mode.pages; i++) {
+		for (int i = 0; i < mode.pages; i++)
 			glBufferDirty[i] = true;
-		}
 		onPageChanged(gui, whatPtr);
 	}
 
@@ -278,8 +276,8 @@ public abstract class BookGUI extends GuiScreen {
 			glex.printStackTrace();
 			return;
 		}
-		glDisplayLists = new int[this.mode.pages];
-		glBufferDirty = new boolean[this.mode.pages];
+		glDisplayLists = new int[mode.pages];
+		glBufferDirty = new boolean[mode.pages];
 		int glList = GL11.glGenLists(glDisplayLists.length);
 
 		try {
@@ -293,12 +291,12 @@ public abstract class BookGUI extends GuiScreen {
 		if (glList <= 0)
 			Fontbox.tracer().warn("BookGUI.prepareGraphics", "No display-lists available, using immediate mode.");
 		else {
-			for (int i = 0; i < this.glDisplayLists.length; i++) {
+			for (int i = 0; i < glDisplayLists.length; i++) {
 				glDisplayLists[i] = glList + i;
 				glBufferDirty[i] = true;
 			}
 			Fontbox.tracer()
-					.trace("BookGUI.prepareGraphics", "Displaylist initialized.", glList, glDisplayLists.length);
+			.trace("BookGUI.prepareGraphics", "Displaylist initialized.", glList, glDisplayLists.length);
 			useDisplayList = true;
 		}
 	}
@@ -316,7 +314,7 @@ public abstract class BookGUI extends GuiScreen {
 	/**
 	 * Go to a page in the index; if the item doesn't exist, no navigation
 	 * occurs
-	 * 
+	 *
 	 * @param id
 	 *            The ID of the anchor to go to
 	 */
@@ -328,7 +326,7 @@ public abstract class BookGUI extends GuiScreen {
 
 	/**
 	 * Go to a page
-	 * 
+	 *
 	 * @param where
 	 *            The page pointer
 	 */
@@ -389,9 +387,9 @@ public abstract class BookGUI extends GuiScreen {
 
 	private void renderPage(int index, Page page, float x, float y, float z, int mx, int my, float frame)
 			throws RenderException {
-		if (!useDisplayList) {
+		if (!useDisplayList)
 			renderPageImmediate(page, x, y, z, mx, my, frame);
-		} else {
+		else {
 			if (glBufferDirty[index]) {
 				GL11.glNewList(glDisplayLists[index], GL11.GL_COMPILE);
 				renderPageImmediate(page, x, y, z, mx, my, frame);
@@ -409,7 +407,7 @@ public abstract class BookGUI extends GuiScreen {
 		int count = page.elements().size();
 		for (int i = 0; i < count; i++) {
 			page.elements().get(i).render(this, mx, my, frame);
-			if (this.cursors != null) {
+			if (cursors != null) {
 				ObjectBounds bounds = page.elements().get(i).bounds();
 				if (bounds != null) {
 					GL11.glDisable(GL11.GL_TEXTURE_2D);

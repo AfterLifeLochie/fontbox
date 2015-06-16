@@ -2,8 +2,6 @@ package net.afterlifelochie.fontbox.layout.components;
 
 import java.io.IOException;
 
-import org.lwjgl.opengl.GL11;
-
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.font.GLFont;
@@ -16,9 +14,11 @@ import net.afterlifelochie.fontbox.render.BookGUI;
 import net.afterlifelochie.fontbox.render.GLUtils;
 import net.afterlifelochie.fontbox.render.RenderException;
 
+import org.lwjgl.opengl.GL11;
+
 /**
  * One formatted line with a spacing and line-height
- * 
+ *
  * @author AfterLifeLochie
  */
 public class Line extends Element {
@@ -33,7 +33,7 @@ public class Line extends Element {
 
 	/**
 	 * Create a new line
-	 * 
+	 *
 	 * @param line
 	 *            The line's text
 	 * @param bounds
@@ -44,16 +44,16 @@ public class Line extends Element {
 	 *            The size of the spacing between words
 	 */
 	public Line(String line, ObjectBounds bounds, GLFont font, int space_size) {
-		this.setBounds(bounds);
+		setBounds(bounds);
 		this.line = line;
 		this.font = font;
-		this.id = null;
+		id = null;
 		this.space_size = space_size;
 	}
 
 	/**
 	 * Create a new line with an ID
-	 * 
+	 *
 	 * @param line
 	 *            The line's text
 	 * @param uid
@@ -67,7 +67,7 @@ public class Line extends Element {
 	 */
 	public Line(String line, String uid, ObjectBounds bounds, GLFont font, int space_size) {
 		this(line, bounds, font, space_size);
-		this.id = uid;
+		id = uid;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package net.afterlifelochie.fontbox.layout;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.CompilerHint;
@@ -11,11 +10,9 @@ import net.afterlifelochie.fontbox.document.Heading;
 import net.afterlifelochie.fontbox.document.Image;
 import net.afterlifelochie.fontbox.document.ImageItemStack;
 import net.afterlifelochie.fontbox.document.Paragraph;
-import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.font.GLGlyphMetric;
 import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.Page;
-import net.afterlifelochie.fontbox.layout.components.PageProperties;
 
 public class DocumentProcessor {
 
@@ -70,7 +67,7 @@ public class DocumentProcessor {
 	 * The Elements in the Document list are modified so that they contain
 	 * rendering properties and other pre-computed parameters.
 	 * </p>
-	 * 
+	 *
 	 * @param trace
 	 *            The debugger
 	 * @param doc
@@ -85,7 +82,7 @@ public class DocumentProcessor {
 	 *             element on a Page
 	 */
 	public static void generatePages(ITracer trace, Document doc, PageWriter writer) throws IOException,
-			LayoutException {
+	LayoutException {
 		for (int i = 0; i < doc.elements.size(); i++) {
 			Element e0 = doc.elements.get(i);
 			pushElement(trace, writer, e0);
@@ -93,7 +90,7 @@ public class DocumentProcessor {
 	}
 
 	private static void pushElement(ITracer trace, PageWriter writer, Element element) throws IOException,
-			LayoutException {
+	LayoutException {
 		if (element instanceof CompilerHint) {
 			CompilerHint hint = (CompilerHint) element;
 			hint.layout(trace, writer);
@@ -105,9 +102,8 @@ public class DocumentProcessor {
 			if (image instanceof ImageItemStack) {
 				ImageItemStack blockIconImg = (ImageItemStack) image;
 				blockIconImg.layout(trace, writer);
-			} else {
+			} else
 				image.layout(trace, writer);
-			}
 		} else if (element instanceof Paragraph) {
 			Paragraph paragraph = (Paragraph) element;
 			paragraph.layout(trace, writer);

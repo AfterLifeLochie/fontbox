@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.document.Element;
-import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;
 import net.afterlifelochie.io.IntegerExclusionStream;
@@ -22,7 +21,7 @@ public class PageWriter {
 
 	public PageWriter(PageProperties attributes) {
 		this.attributes = attributes;
-		this.index = new PageIndex();
+		index = new PageIndex();
 	}
 
 	public void close() {

@@ -26,18 +26,18 @@ import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+
 /**
  * Represents a Font object for OpenGL.
- * 
+ *
  * @author AfterLifeLochie
  *
  */
@@ -47,10 +47,10 @@ public class GLFont {
 	private static final char MAX_CH = '\u00ff';
 
 	private static final int RASTER_DIM = 512;
-	
+
 	/**
 	 * Create a GLFont from a TTF file
-	 * 
+	 *
 	 * @param trace
 	 *            The debugging tracer object
 	 * @param px
@@ -87,7 +87,7 @@ public class GLFont {
 
 	/**
 	 * Create a GLFont from a spritefont and XML descriptor
-	 * 
+	 *
 	 * @param trace
 	 *            The debugging tracer object
 	 * @param name
@@ -133,7 +133,7 @@ public class GLFont {
 
 	/**
 	 * Create a GLFont from a Java Font object
-	 * 
+	 *
 	 * @param trace
 	 *            The debugging tracer object
 	 * @param font
@@ -164,8 +164,8 @@ public class GLFont {
 			layout.draw(graphics, x, y - cy);
 		}
 
-		GLFontMetrics metric = GLFontMetrics.fromFontMetrics(trace, font, graphics.getFontRenderContext(), RASTER_DIM, RASTER_DIM,
-				charsPerRow, MIN_CH, MAX_CH);
+		GLFontMetrics metric = GLFontMetrics.fromFontMetrics(trace, font, graphics.getFontRenderContext(), RASTER_DIM,
+				RASTER_DIM, charsPerRow, MIN_CH, MAX_CH);
 		trace.trace("GLFont.fromFont", "fromMetric", metric);
 		GLFont f0 = fromBuffer(trace, font.getFontName(), buffer, RASTER_DIM, RASTER_DIM, metric);
 		trace.trace("GLFont.fromFont", f0);
@@ -175,7 +175,7 @@ public class GLFont {
 	/**
 	 * Create a GLFont from an image buffer of a specified size with a specified
 	 * metric map.
-	 * 
+	 *
 	 * @param trace
 	 *            The debugging tracer object
 	 * @param name
@@ -204,7 +204,7 @@ public class GLFont {
 		if (metric == null)
 			throw new IllegalArgumentException("metric may not be null");
 		ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {
-				8, 8, 8, 8 }, true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
+			8, 8, 8, 8 }, true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
 		WritableRaster raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, width, height, 4, null);
 		BufferedImage texImage = new BufferedImage(glAlphaColorModel, raster, true, new Hashtable<Object, Object>());
 		Graphics g = texImage.getGraphics();
@@ -250,7 +250,7 @@ public class GLFont {
 
 	/**
 	 * Get the name of the font.
-	 * 
+	 *
 	 * @return The name of the font
 	 */
 	public String getName() {
@@ -259,7 +259,7 @@ public class GLFont {
 
 	/**
 	 * Get the OpenGL texture ID for this font.
-	 * 
+	 *
 	 * @return The 2D texture ID for the font
 	 */
 	public int getTextureId() {
@@ -268,7 +268,7 @@ public class GLFont {
 
 	/**
 	 * Get the OpenGL font scale for this font.
-	 * 
+	 *
 	 * @return The 2D font scaling ratio
 	 */
 	public float getScale() {
@@ -277,7 +277,7 @@ public class GLFont {
 
 	/**
 	 * Get the font metric map associated with this font.
-	 * 
+	 *
 	 * @return The metric map
 	 */
 	public GLFontMetrics getMetric() {

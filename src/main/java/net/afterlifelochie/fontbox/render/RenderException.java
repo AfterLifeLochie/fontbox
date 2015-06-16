@@ -3,7 +3,7 @@ package net.afterlifelochie.fontbox.render;
 /**
  * Rendering exception class. Used when an Element cannot be rendered or some
  * other condition prevents the rendering from occurring.
- * 
+ *
  * @author AfterLifeLochie
  *
  */
@@ -16,7 +16,7 @@ public class RenderException extends Exception {
 
 	/**
 	 * Initializes the rendering exception
-	 * 
+	 *
 	 * @param reason
 	 *            The reason for the exception
 	 */
@@ -26,7 +26,7 @@ public class RenderException extends Exception {
 
 	/**
 	 * Initializes the rendering exception
-	 * 
+	 *
 	 * @param reason
 	 *            The reason for the exception
 	 * @param cause

@@ -17,7 +17,7 @@ public class Paragraph extends Element {
 	/**
 	 * Create a new paragraph with a specified text and the default alignment
 	 * (justified).
-	 * 
+	 *
 	 * @param text
 	 *            The text
 	 */
@@ -27,7 +27,7 @@ public class Paragraph extends Element {
 
 	/**
 	 * Create a new paragraph with the specified properties.
-	 * 
+	 *
 	 * @param text
 	 *            The text
 	 * @param align

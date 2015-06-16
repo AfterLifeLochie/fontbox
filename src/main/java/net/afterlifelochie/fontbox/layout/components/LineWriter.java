@@ -31,7 +31,7 @@ public class LineWriter {
 	/**
 	 * Construct a new line writing utility. The underlying stream and the
 	 * writing font must be specified and cannot be null.
-	 * 
+	 *
 	 * @param writer
 	 *            The underlying stream to operate on.
 	 * @param font
@@ -71,7 +71,7 @@ public class LineWriter {
 
 		switch (alignment) {
 		case CENTER:
-			float halfBlank = (float) blankWidth / 2.0f;
+			float halfBlank = blankWidth / 2.0f;
 			x += (int) Math.floor(halfBlank);
 			break;
 		case JUSTIFY:
@@ -97,10 +97,10 @@ public class LineWriter {
 	/**
 	 * Called to emit the stack's contents to a Line element. The contents of
 	 * the stack are automatically cleared and zerored on invocation.
-	 * 
+	 *
 	 * @param uid
 	 *            The line's ID, if any
-	 * 
+	 *
 	 * @return The formatted line. The stack, properties and other values
 	 *         associated with generating the line are reset on the self object.
 	 */
@@ -121,7 +121,7 @@ public class LineWriter {
 
 	/**
 	 * Get the current pending bounding box of the words on the writer.
-	 * 
+	 *
 	 * @return The pending bounding box of the words on the writer.
 	 */
 	public ObjectBounds pendingBounds() {
@@ -131,7 +131,7 @@ public class LineWriter {
 	/**
 	 * Pushes the word onto the writer stack. The word is placed on the end of
 	 * the stack and the dimensions of the stack are recomputed automatically.
-	 * 
+	 *
 	 * @param word
 	 *            The word to place on the end of the stack
 	 * @throws IOException
@@ -149,7 +149,7 @@ public class LineWriter {
 	/**
 	 * Removes the word from the end of the writer stack. The word removed is
 	 * returned and then dimensions of the stack are recomputed automatically.
-	 * 
+	 *
 	 * @return The word which was removed from the end of the stack
 	 * @throws IOException
 	 *             Any exception which occurs when reading from the page writing
@@ -166,7 +166,7 @@ public class LineWriter {
 
 	/**
 	 * Get the size (number of elements) on the stack at the current time.
-	 * 
+	 *
 	 * @return The number of elements currently on the writer stack at the time
 	 *         of invocation.
 	 */

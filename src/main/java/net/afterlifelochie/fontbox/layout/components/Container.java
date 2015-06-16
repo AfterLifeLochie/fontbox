@@ -3,7 +3,7 @@ package net.afterlifelochie.fontbox.layout.components;
 /**
  * Layout container object. Containers have properties such as a width and a
  * height, and can contain child Container elements.
- * 
+ *
  * @author AfterLifeLochie
  *
  */
@@ -16,7 +16,7 @@ public abstract class Container {
 
 	/**
 	 * Initialize a new container
-	 * 
+	 *
 	 * @param width
 	 *            The desired width
 	 * @param height
