@@ -159,6 +159,16 @@ public abstract class BookGUI extends GuiScreen {
 	}
 
 	@Override
+	public void onGuiClosed() {
+		if (useDisplayList) {
+			useDisplayList = false;
+			GL11.glDeleteLists(glDisplayLists[0], glDisplayLists.length);
+			for (int i = 0; i < glDisplayLists.length; i++)
+				glDisplayLists[i] = -1;
+		}
+	}
+
+	@Override
 	public void updateScreen() {
 		super.updateScreen();
 	}
