@@ -19,6 +19,7 @@ import net.afterlifelochie.fontbox.layout.components.LineWriter;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 import net.afterlifelochie.fontbox.render.RenderException;
+import net.afterlifelochie.io.MixedObjectInputStream;
 import net.afterlifelochie.io.StackedPushbackStringReader;
 
 /**
@@ -28,7 +29,7 @@ import net.afterlifelochie.io.StackedPushbackStringReader;
  * </p>
  * 
  * @author AfterLifeLochie
- *
+ * 
  */
 public abstract class Element {
 
@@ -70,7 +71,8 @@ public abstract class Element {
 	 *             Any exception which prevents the element from being written
 	 *             to the writing stream
 	 */
-	public abstract void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException;
+	public abstract void layout(ITracer trace, PageWriter writer)
+			throws IOException, LayoutException;
 
 	/**
 	 * Called to determine if this element requires explicit update ticks.
@@ -103,7 +105,8 @@ public abstract class Element {
 	 *             Any rendering exception which prevents the element from being
 	 *             rendered on the page
 	 */
-	public abstract void render(BookGUI gui, int mx, int my, float frame) throws RenderException;
+	public abstract void render(BookGUI gui, int mx, int my, float frame)
+			throws RenderException;
 
 	/**
 	 * <p>
@@ -171,19 +174,20 @@ public abstract class Element {
 	 *             Any layout problem which prevents the text from being laid
 	 *             out correctly
 	 */
-	protected void boxText(ITracer trace, PageWriter writer, GLFont font, String what, String uid,
-			AlignmentMode alignment) throws IOException, LayoutException {
-		StackedPushbackStringReader reader = new StackedPushbackStringReader(what);
+	protected void boxText(ITracer trace, PageWriter writer, GLFont font,
+			MixedObjectInputStream stream, String uid, AlignmentMode alignment)
+			throws IOException, LayoutException {
 		trace.trace("Element.boxText", "startBox");
-		while (reader.available() > 0) {
+		while (stream.available() > 0) {
 			Page current = writer.current();
 			PageCursor cursor = writer.cursor();
-			ObjectBounds bounds = new ObjectBounds(cursor.x(), cursor.y(), current.properties.width - cursor.x(),
+			ObjectBounds bounds = new ObjectBounds(cursor.x(), cursor.y(),
+					current.properties.width - cursor.x(),
 					current.properties.height - cursor.y(), FloatMode.NONE);
 
-			boxText(trace, writer, bounds, font, reader, uid, alignment);
-			trace.trace("Element.boxText", "streamRemain", reader.available());
-			if (reader.available() > 0)
+			boxText(trace, writer, bounds, font, stream, uid, alignment);
+			trace.trace("Element.boxText", "streamRemain", stream.available());
+			if (stream.available() > 0)
 				writer.next();
 		}
 		trace.trace("Element.boxText", "endBox");
@@ -204,7 +208,7 @@ public abstract class Element {
 	 * written onto the region specified.</li>
 	 * </ul>
 	 * </p>
-	 *
+	 * 
 	 * @param trace
 	 *            The debugging tracer object
 	 * @param writer
@@ -213,8 +217,8 @@ public abstract class Element {
 	 *            The bounding box to write inside
 	 * @param font
 	 *            The font to write with
-	 * @param text
-	 *            The text stream to read from
+	 * @param stream
+	 *            The Object stream to read from
 	 * @param uid
 	 *            The text object ID
 	 * @param alignment
@@ -225,8 +229,11 @@ public abstract class Element {
 	 *             Any layout problem which prevents the text from being laid
 	 *             out correctly
 	 */
-	protected void boxText(ITracer trace, PageWriter writer, ObjectBounds bounds, GLFont font,
-			StackedPushbackStringReader text, String uid, AlignmentMode alignment) throws IOException, LayoutException {
+	protected void boxText(ITracer trace, PageWriter writer,
+			ObjectBounds bounds, GLFont font, MixedObjectInputStream input,
+			String uid, AlignmentMode alignment) throws IOException,
+			LayoutException {
+		StackedPushbackStringReader reader = new StackedPushbackStringReader(what);
 		LineWriter stream = new LineWriter(writer, font, alignment);
 		main: while (text.available() > 0) {
 			// Put some words on the writer:
@@ -252,15 +259,19 @@ public abstract class Element {
 					break;
 
 				// Consider the word:
-				trace.trace("Element.boxText", "considerWord", inWord.toString());
+				trace.trace("Element.boxText", "considerWord",
+						inWord.toString());
 				stream.push(inWord.toString());
 				ObjectBounds future = stream.pendingBounds();
 				Page current = writer.current();
-				trace.trace("Element.boxText", "considerCursor", writer.cursor());
+				trace.trace("Element.boxText", "considerCursor",
+						writer.cursor());
 
 				// If we overflow the page, back out last change to fit:
 				if (!current.insidePage(future)) {
-					trace.trace("Element.boxText", "overflowPage", current.width, current.height, future, stream.size());
+					trace.trace("Element.boxText", "overflowPage",
+							current.width, current.height, future,
+							stream.size());
 					stream.pop();
 					text.popPosition();
 					// If there are now no words on the writer, then
@@ -270,9 +281,11 @@ public abstract class Element {
 						break; // break the local loop
 				} else if (current.intersectsElement(future) != null) {
 					// We hit another object, so let's undo
-					trace.trace("Element.boxText", "collideElement", stream.size());
+					trace.trace("Element.boxText", "collideElement",
+							stream.size());
 					Element e0 = current.intersectsElement(future);
-					trace.trace("Element.boxText", "collideHit", e0.bounds().toString(), future.toString());
+					trace.trace("Element.boxText", "collideHit", e0.bounds()
+							.toString(), future.toString());
 					stream.pop();
 					text.popPosition();
 					if (stream.size() == 0)

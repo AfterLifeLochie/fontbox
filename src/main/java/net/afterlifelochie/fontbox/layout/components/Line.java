@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.Element;
+import net.afterlifelochie.fontbox.document.formatting.TextFormat;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.font.GLFontMetrics;
 import net.afterlifelochie.fontbox.font.GLGlyphMetric;
@@ -22,13 +23,23 @@ import net.afterlifelochie.fontbox.render.RenderException;
  * @author AfterLifeLochie
  */
 public class Line extends Element {
-	/** The real text */
+	/**
+	 * The real text
+	 * 
+	 * @deprecated to be replaced with an object-interpolated version so that
+	 *             formatting data can be streamed to the object and the
+	 *             renderer, rather than using lookup-tables or checking the
+	 *             formatting of each char
+	 */
 	public final String line;
 	/** The line's ID */
 	public String id;
 	/** The size of the spacing between words */
 	public final int space_size;
-	/** The font to render the line in */
+	/** 
+	 * The font to render the line in 
+	 * @deprecated to be obtained using {@link TextFormat} instead
+	 */
 	public GLFont font;
 
 	/**
@@ -65,13 +76,15 @@ public class Line extends Element {
 	 * @param space_size
 	 *            The size of the spacing between words
 	 */
-	public Line(String line, String uid, ObjectBounds bounds, GLFont font, int space_size) {
+	public Line(String line, String uid, ObjectBounds bounds, GLFont font,
+			int space_size) {
 		this(line, bounds, font, space_size);
 		this.id = uid;
 	}
 
 	@Override
-	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
+	public void layout(ITracer trace, PageWriter writer) throws IOException,
+			LayoutException {
 		throw new LayoutException("Cannot layout Line type; Line already laid!");
 	}
 
@@ -86,7 +99,8 @@ public class Line extends Element {
 	}
 
 	@Override
-	public void render(BookGUI gui, int mx, int my, float frame) throws RenderException {
+	public void render(BookGUI gui, int mx, int my, float frame)
+			throws RenderException {
 		if (font == null)
 			throw new IllegalArgumentException("font may not be null");
 		float x = 0, y = 0;
@@ -131,7 +145,8 @@ public class Line extends Element {
 			double wz = glyph.width / metric.fontImageWidth;
 			double hz = glyph.height / metric.fontImageHeight;
 			GLUtils.drawDefaultRect(x, y, glyph.width, glyph.height, 1.0);
-			GLUtils.drawTexturedRectUV(x, y, glyph.width, glyph.height, u, v, wz, hz, 1.0);
+			GLUtils.drawTexturedRectUV(x, y, glyph.width, glyph.height, u, v,
+					wz, hz, 1.0);
 			x += glyph.width; // shunt by glpyh size
 		}
 

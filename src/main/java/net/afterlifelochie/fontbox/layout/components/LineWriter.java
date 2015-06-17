@@ -2,7 +2,9 @@ package net.afterlifelochie.fontbox.layout.components;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import net.afterlifelochie.fontbox.document.formatting.TextFormat;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.font.GLFont;
@@ -22,6 +24,8 @@ public class LineWriter {
 	private final AlignmentMode alignment;
 	/** The list of words on the stack currently */
 	private final ArrayList<String> words;
+	/** The list of formatting tokens on the stack currently */
+	private final HashMap<Integer, TextFormat> format;
 
 	/** The current computed bounds of the stack's words */
 	private ObjectBounds bounds;
@@ -44,6 +48,7 @@ public class LineWriter {
 		this.font = font;
 		this.alignment = alignment;
 		words = new ArrayList<String>();
+		format = new HashMap<Integer, TextFormat>();
 	}
 
 	private void update() throws LayoutException, IOException {
@@ -112,10 +117,12 @@ public class LineWriter {
 			if (i < words.length() - 1)
 				words.append(" ");
 		}
+		// FIXME: Pass the formatting data to the Line!
 		Line what = new Line(words.toString(), uid, bounds, font, spaceSize);
 		bounds = null;
 		spaceSize = 0;
 		this.words.clear();
+		this.format.clear();
 		return what;
 	}
 
