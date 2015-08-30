@@ -89,6 +89,11 @@ public class Line extends Element {
 		/* No action required */
 	}
 
+	@Override
+	public boolean canCompileRender() {
+		return true;
+	}
+
 	private void safeSwitchToFont(GLFont font) throws RenderException {
 		if (font.getTextureId() == -1)
 			throw new RenderException("Font object not loaded!");

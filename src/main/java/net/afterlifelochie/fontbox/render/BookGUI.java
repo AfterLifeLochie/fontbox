@@ -406,11 +406,11 @@ public abstract class BookGUI extends GuiScreen {
 			throws RenderException {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, z);
-		int count = page.elements().size();
+		int count = page.staticElements().size();
 		for (int i = 0; i < count; i++) {
-			page.elements().get(i).render(this, mx, my, frame);
+			page.staticElements().get(i).render(this, mx, my, frame);
 			if (this.cursors != null) {
-				ObjectBounds bounds = page.elements().get(i).bounds();
+				ObjectBounds bounds = page.staticElements().get(i).bounds();
 				if (bounds != null) {
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
 					GL11.glEnable(GL11.GL_BLEND);

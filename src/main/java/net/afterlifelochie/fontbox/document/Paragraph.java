@@ -57,6 +57,11 @@ public class Paragraph extends Element {
 	}
 
 	@Override
+	public boolean canCompileRender() {
+		return true;
+	}
+
+	@Override
 	public void render(BookGUI gui, int mx, int my, float frame) {
 		/* No action required */
 	}

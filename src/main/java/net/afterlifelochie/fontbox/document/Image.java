@@ -132,6 +132,11 @@ public class Image extends Element {
 	}
 
 	@Override
+	public boolean canCompileRender() {
+		return true;
+	}
+
+	@Override
 	public void render(BookGUI gui, int mx, int my, float frame) {
 		GL11.glPushMatrix();
 		GLUtils.useSystemTexture(source);

@@ -56,7 +56,7 @@ public class CompilerHint extends Element {
 				Page current = writer.current();
 				Element lowest = null;
 				int dfx = 0;
-				for (Element elem : current.elements()) {
+				for (Element elem : current.allElements()) {
 					int dux = elem.bounds().y + elem.bounds().height;
 					if (dux > dfx) {
 						dfx = dux;
@@ -78,6 +78,11 @@ public class CompilerHint extends Element {
 						+ ((whatHint == null) ? "<null>" : whatHint.getClass().getName()));
 			}
 		}
+	}
+
+	@Override
+	public boolean canCompileRender() {
+		throw new RuntimeException("Undefined behaviour: CompilerHint in doctree!");
 	}
 
 	@Override

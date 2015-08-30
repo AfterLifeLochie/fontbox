@@ -16,8 +16,10 @@ public class Page extends Container {
 	/** The page layout properties container */
 	public PageProperties properties;
 
-	/** The list of elements on the page */
-	private ArrayList<Element> elements = new ArrayList<Element>();
+	/** The list of static elements on the page */
+	private ArrayList<Element> staticElements = new ArrayList<Element>();
+	/** The list of dynamic elements on the page */
+	private ArrayList<Element> dynamicElements = new ArrayList<Element>();
 
 	/**
 	 * Initialize a new Page with a specified set of page layout properties.
@@ -29,14 +31,30 @@ public class Page extends Container {
 		super(properties.width, properties.height);
 		this.properties = properties;
 	}
+	
+	public ArrayList<Element> allElements() {
+		ArrayList<Element> all = new ArrayList<Element>();
+		all.addAll(staticElements);
+		all.addAll(dynamicElements);
+		return all;
+	}
 
 	/**
-	 * Get a list of all elements on the page
+	 * Get a list of all static elements on the page
 	 * 
-	 * @return The list of elements on the page
+	 * @return The list of static elements on the page
 	 */
-	public ArrayList<Element> elements() {
-		return elements;
+	public ArrayList<Element> staticElements() {
+		return staticElements;
+	}
+
+	/**
+	 * Get a list of all dynamic elements on the page
+	 * 
+	 * @return The list of dynamic elements on the page
+	 */
+	public ArrayList<Element> dynamicElements() {
+		return dynamicElements;
 	}
 
 	/**
@@ -46,7 +64,10 @@ public class Page extends Container {
 	 *            The element to push
 	 */
 	public void push(Element element) {
-		elements.add(element);
+		if (!element.canCompileRender())
+			dynamicElements.add(element);
+		else
+			staticElements.add(element);
 	}
 
 	/**
@@ -59,7 +80,7 @@ public class Page extends Container {
 	 * @return If an intersection occurs
 	 */
 	public Element intersectsElement(ObjectBounds bounds) {
-		for (Element element : elements)
+		for (Element element : staticElements)
 			if (element.bounds() != null && element.bounds().intersects(bounds))
 				return element;
 		return null;

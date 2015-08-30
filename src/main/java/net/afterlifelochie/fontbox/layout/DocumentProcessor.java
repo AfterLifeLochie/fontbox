@@ -15,7 +15,7 @@ import net.afterlifelochie.fontbox.layout.components.Page;
 public class DocumentProcessor {
 
 	public static Element getElementAt(Page page, int x, int y) {
-		for (Element element : page.elements())
+		for (Element element : page.allElements())
 			if (element.bounds().encloses(x, y))
 				return element;
 		return null;

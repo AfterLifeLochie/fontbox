@@ -76,7 +76,9 @@ public abstract class Element {
 	public abstract void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException;
 
 	/**
-	 * Called to determine if this element requires explicit update ticks.
+	 * Called to determine if this element requires explicit update ticks. This
+	 * value is cached; that is, if this method returns <code>false</code>, this
+	 * method will not be queried again to see if updating is required.
 	 * 
 	 * @return If the element requires update ticks
 	 */
@@ -86,6 +88,15 @@ public abstract class Element {
 	 * Called to update the interface
 	 */
 	public abstract void update();
+
+	/**
+	 * Called to determine if this element can be compile-rendered. If an
+	 * element is compiled-rendered, it will be drawn once to a video-buffer;
+	 * else, the element will be redrawn each frame.
+	 * 
+	 * @return If the element can be compile-rendered.
+	 */
+	public abstract boolean canCompileRender();
 
 	/**
 	 * <p>

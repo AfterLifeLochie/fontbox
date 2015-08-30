@@ -80,7 +80,7 @@ public class PageWriter {
 			what.push(element);
 
 			PageCursor current = cursor();
-			for (Element e : what.elements()) {
+			for (Element e : what.allElements()) {
 				if (e.bounds().floating())
 					continue;
 				ObjectBounds bb = e.bounds();
@@ -89,7 +89,7 @@ public class PageWriter {
 			}
 
 			IntegerExclusionStream window = new IntegerExclusionStream(0, what.width);
-			for (Element e : what.elements()) {
+			for (Element e : what.allElements()) {
 				ObjectBounds bb = e.bounds();
 				if (current.y() >= bb.y && bb.y + bb.height >= current.y())
 					window.excludeRange(0, bb.x + bb.width);

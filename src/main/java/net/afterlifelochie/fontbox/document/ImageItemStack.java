@@ -80,6 +80,11 @@ public class ImageItemStack extends Image {
 	}
 
 	@Override
+	public boolean canCompileRender() {
+		return true;
+	}
+
+	@Override
 	public void render(BookGUI gui, int mx, int my, float frame) {
 		GL11.glPushMatrix();
 		RenderHelper.enableGUIStandardItemLighting();
