@@ -38,7 +38,7 @@ public class Fontbox {
 	 */
 	public static void doAssert(boolean condition, String reason) {
 		if (!condition && (instance().tracer == null || instance().tracer.enableAssertion()))
-			throw new AssertionError(reason);
+			throw new Error("Assertion error: " + reason);
 	}
 
 	/**

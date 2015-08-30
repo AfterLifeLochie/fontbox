@@ -1,9 +1,15 @@
 package net.afterlifelochie.fontbox.layout;
 
+/**
+ * Page writing cursor helper.
+ * @author AfterLifeLochie
+ *
+ */
 public class PageCursor {
 
 	private int x, y;
 
+	/** Default constructor */
 	public PageCursor() {
 		x = 0;
 		y = 0;
