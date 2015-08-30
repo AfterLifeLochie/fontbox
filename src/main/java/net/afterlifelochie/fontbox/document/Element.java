@@ -2,9 +2,12 @@ package net.afterlifelochie.fontbox.document;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.api.ITracer;
+import net.afterlifelochie.fontbox.data.FormattedString;
+import net.afterlifelochie.fontbox.document.formatting.TextFormat;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.font.GLFont;
@@ -157,8 +160,8 @@ public abstract class Element {
 	 *            The debugging tracer object
 	 * @param writer
 	 *            The page writer
-	 * @param font
-	 *            The font to write with
+	 * @param format
+	 *            The default format
 	 * @param what
 	 *            The text to write
 	 * @param uid
@@ -171,9 +174,9 @@ public abstract class Element {
 	 *             Any layout problem which prevents the text from being laid
 	 *             out correctly
 	 */
-	protected void boxText(ITracer trace, PageWriter writer, GLFont font, String what, String uid,
+	protected void boxText(ITracer trace, PageWriter writer, TextFormat format, FormattedString what, String uid,
 			AlignmentMode alignment) throws IOException, LayoutException {
-		StackedPushbackStringReader reader = new StackedPushbackStringReader(what);
+		StackedPushbackStringReader reader = new StackedPushbackStringReader(what.string);
 		trace.trace("Element.boxText", "startBox");
 		while (reader.available() > 0) {
 			Page current = writer.current();
@@ -181,7 +184,7 @@ public abstract class Element {
 			ObjectBounds bounds = new ObjectBounds(cursor.x(), cursor.y(), current.properties.width - cursor.x(),
 					current.properties.height - cursor.y(), FloatMode.NONE);
 
-			boxText(trace, writer, bounds, font, reader, uid, alignment);
+			boxText(trace, writer, bounds, reader, format, what.format, uid, alignment);
 			trace.trace("Element.boxText", "streamRemain", reader.available());
 			if (reader.available() > 0)
 				writer.next();
@@ -211,8 +214,6 @@ public abstract class Element {
 	 *            The underlying stream to write onto
 	 * @param bounds
 	 *            The bounding box to write inside
-	 * @param font
-	 *            The font to write with
 	 * @param text
 	 *            The text stream to read from
 	 * @param uid
@@ -225,9 +226,10 @@ public abstract class Element {
 	 *             Any layout problem which prevents the text from being laid
 	 *             out correctly
 	 */
-	protected void boxText(ITracer trace, PageWriter writer, ObjectBounds bounds, GLFont font,
-			StackedPushbackStringReader text, String uid, AlignmentMode alignment) throws IOException, LayoutException {
-		LineWriter stream = new LineWriter(writer, font, alignment);
+	protected void boxText(ITracer trace, PageWriter writer, ObjectBounds bounds, StackedPushbackStringReader text,
+			TextFormat defaultFormat, TextFormat[] format, String uid, AlignmentMode alignment) throws IOException,
+			LayoutException {
+		LineWriter stream = new LineWriter(writer, defaultFormat, alignment);
 		main: while (text.available() > 0) {
 			// Put some words on the writer:
 			while (true) {
@@ -236,16 +238,23 @@ public abstract class Element {
 
 				// Build the word:
 				StringBuilder inWord = new StringBuilder();
+				HashMap<Integer, TextFormat> formatting = new HashMap<Integer, TextFormat>();
+				int offset = text.getPosition();
 				char cz;
 				while (true) {
+					int u = text.getPosition();
 					cz = text.next();
+					if (cz == 0)
+						break; // okay, end of stream
+
+					if (format[u] != null)
+						formatting.put(u - offset, format[u]);
+
 					// Skip spaces or tabs;
 					if (cz != 0 && cz != ' ' && cz != '\t')
 						inWord.append(cz); // push
 					else if (inWord.length() > 0)
 						break; // okay, consider now
-					else if (cz == 0)
-						break; // okay, end of stream
 				}
 
 				if (inWord.toString().trim().length() == 0)
@@ -253,7 +262,12 @@ public abstract class Element {
 
 				// Consider the word:
 				trace.trace("Element.boxText", "considerWord", inWord.toString());
-				stream.push(inWord.toString());
+				TextFormat[] fmt = new TextFormat[inWord.toString().length()];
+				if (formatting.size() != 0) {
+					for (int i = 0; i < fmt.length; i++)
+						fmt[i] = formatting.get(i);
+				}
+				stream.push(inWord.toString(), fmt);
 				ObjectBounds future = stream.pendingBounds();
 				Page current = writer.current();
 				trace.trace("Element.boxText", "considerCursor", writer.cursor());

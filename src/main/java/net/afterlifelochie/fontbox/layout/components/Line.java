@@ -4,8 +4,11 @@ import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 
+import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.Element;
+import net.afterlifelochie.fontbox.document.formatting.DecorationStyle;
+import net.afterlifelochie.fontbox.document.formatting.TextFormat;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.font.GLFontMetrics;
 import net.afterlifelochie.fontbox.font.GLGlyphMetric;
@@ -22,31 +25,32 @@ import net.afterlifelochie.fontbox.render.RenderException;
  * @author AfterLifeLochie
  */
 public class Line extends Element {
-	/** The real text */
-	public final String line;
+	/** The characters */
+	public final char[] line;
+	/** The character formats */
+	public final TextFormat[] format;
+
 	/** The line's ID */
 	public String id;
 	/** The size of the spacing between words */
 	public final int space_size;
-	/** The font to render the line in */
-	public GLFont font;
 
 	/**
 	 * Create a new line
 	 * 
 	 * @param line
 	 *            The line's text
+	 * @param format
+	 *            The text format map
 	 * @param bounds
 	 *            The location of the line
-	 * @param font
-	 *            The font to draw with
 	 * @param space_size
 	 *            The size of the spacing between words
 	 */
-	public Line(String line, ObjectBounds bounds, GLFont font, int space_size) {
+	public Line(char[] line, TextFormat[] format, ObjectBounds bounds, int space_size) {
 		this.setBounds(bounds);
 		this.line = line;
-		this.font = font;
+		this.format = format;
 		this.id = null;
 		this.space_size = space_size;
 	}
@@ -56,17 +60,17 @@ public class Line extends Element {
 	 * 
 	 * @param line
 	 *            The line's text
+	 * @param format
+	 *            The text format map
 	 * @param uid
 	 *            The line's ID
 	 * @param bounds
 	 *            The location of the line
-	 * @param font
-	 *            The font to draw with
 	 * @param space_size
 	 *            The size of the spacing between words
 	 */
-	public Line(String line, String uid, ObjectBounds bounds, GLFont font, int space_size) {
-		this(line, bounds, font, space_size);
+	public Line(char[] line, TextFormat[] format, String uid, ObjectBounds bounds, int space_size) {
+		this(line, format, bounds, space_size);
 		this.id = uid;
 	}
 
@@ -85,58 +89,95 @@ public class Line extends Element {
 		/* No action required */
 	}
 
-	@Override
-	public void render(BookGUI gui, int mx, int my, float frame) throws RenderException {
-		if (font == null)
-			throw new IllegalArgumentException("font may not be null");
-		float x = 0, y = 0;
+	private void safeSwitchToFont(GLFont font) throws RenderException {
 		if (font.getTextureId() == -1)
 			throw new RenderException("Font object not loaded!");
 		GLFontMetrics metric = font.getMetric();
 		if (metric == null)
 			throw new RenderException("Font object not loaded!");
-		if (line.length() == 0)
-			return;
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureId());
-
-		GL11.glPushMatrix();
 		GL11.glScalef(font.getScale(), font.getScale(), 1.0f);
-		GL11.glTranslatef(bounds().x, bounds().y, 0);
+	}
 
+	@Override
+	public void render(BookGUI gui, int mx, int my, float frame) throws RenderException {
+		float x = 0, y = 0;
+		if (line.length == 0)
+			return;
+		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		// Translate to the draw dest
-		/*
-		 * TODO: Does margin get stored in drawcoords, or do we externalize this
-		 * in a property??
-		 */
-		// GL11.glTranslatef(page.properties.margin_left, 0.0f, 0.0f);
+		TextFormat decorator = format[0];
+		GL11.glPushMatrix();
+		safeSwitchToFont(decorator.font);
+		GL11.glTranslatef(bounds().x, bounds().y, 0);
 
-		// Start drawing
-		for (int i = 0; i < line.length(); i++) {
-			char c = line.charAt(i);
-			if (c == ' ') { // is a space?
-				x += space_size; // shunt by a space
-				continue;
-			}
+		for (int i = 0; i < line.length; i++) {
+			char c = line[i];
+			if (c != ' ') {
+				TextFormat aDecorator = format[i];
+				if (aDecorator != null && !aDecorator.equals(decorator)) {
+					if (aDecorator.font != decorator.font) {
+						GL11.glPopMatrix();
+						GL11.glPushMatrix();
+						safeSwitchToFont(aDecorator.font);
+						GL11.glTranslatef(bounds().x, bounds().y, 0);
+					}
+					decorator = aDecorator;
+				}
 
-			GLGlyphMetric glyph = metric.glyphs.get((int) c);
-			if (glyph == null) // blank glyph?
-				continue;
-			// TODO: formatting?
-			GL11.glColor3f(0.0f, 0.0f, 0.0f);
-			double u = glyph.ux / metric.fontImageWidth;
-			double v = (glyph.vy - glyph.ascent) / metric.fontImageHeight;
-			double wz = glyph.width / metric.fontImageWidth;
-			double hz = glyph.height / metric.fontImageHeight;
-			GLUtils.drawDefaultRect(x, y, glyph.width, glyph.height, 1.0);
-			GLUtils.drawTexturedRectUV(x, y, glyph.width, glyph.height, u, v, wz, hz, 1.0);
-			x += glyph.width; // shunt by glpyh size
+				GLFontMetrics metric = decorator.font.getMetric();
+				GLGlyphMetric glyph = metric.glyphs.get((int) c);
+				if (glyph == null) // blank glyph?
+					continue;
+
+				if (decorator.color == null)
+					GL11.glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+				else
+					GL11.glColor4f(decorator.color.redF(), decorator.color.greenF(), decorator.color.blueF(),
+							decorator.color.alphaF());
+
+				float tiltTop = 0.0f, tiltBottom = 0.0f;
+				if (decorator.decorations.contains(DecorationStyle.ITALIC)) {
+					tiltTop = -5.55f;
+					tiltBottom = 5.55f;
+				}
+
+				renderGlyphInPlace(metric, glyph, x, y, tiltTop, tiltBottom);
+				if (decorator.decorations.contains(DecorationStyle.BOLD))
+					renderGlyphInPlace(metric, glyph, x + 0.5f, y + 0.5f, tiltTop, tiltBottom);
+
+				x += glyph.width;
+			} else
+				x += space_size;
 		}
+
+		GL11.glPopMatrix();
 
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
+	}
+
+	private void renderGlyphInPlace(GLFontMetrics metric, GLGlyphMetric glyph, float x, float y, float tiltTop,
+			float tiltBottom) {
+		double u = glyph.ux / metric.fontImageWidth;
+		double v = (glyph.vy - glyph.ascent) / metric.fontImageHeight;
+		double us = glyph.width / metric.fontImageWidth;
+		double vs = glyph.height / metric.fontImageHeight;
+		GL11.glBegin(GL11.GL_QUADS);
+
+		GL11.glTexCoord2d(u, v + vs);
+		GL11.glVertex3d(x + tiltTop, y + glyph.height, 1.0);
+
+		GL11.glTexCoord2d(u + us, v + vs);
+		GL11.glVertex3d(x + tiltTop + glyph.width, y + glyph.height, 1.0);
+
+		GL11.glTexCoord2d(u + us, v);
+		GL11.glVertex3d(x + tiltBottom + glyph.width, y, 1.0);
+		GL11.glTexCoord2d(u, v);
+		GL11.glVertex3d(x + tiltBottom, y, 1.0);
+		GL11.glEnd();
 	}
 
 	@Override

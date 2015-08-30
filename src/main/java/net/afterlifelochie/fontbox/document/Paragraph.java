@@ -3,6 +3,7 @@ package net.afterlifelochie.fontbox.document;
 import java.io.IOException;
 
 import net.afterlifelochie.fontbox.api.ITracer;
+import net.afterlifelochie.fontbox.data.FormattedString;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.PageWriter;
@@ -11,32 +12,29 @@ import net.afterlifelochie.fontbox.render.BookGUI;
 
 public class Paragraph extends Element {
 
-	/** @deprecated To be replaced with a mixed-type stream */
-	public String text;
+	public FormattedString text;
 	public AlignmentMode align;
 
 	/**
 	 * Create a new paragraph with a specified text and the default alignment
 	 * (justified).
 	 * 
-	 * @deprecated To be replaced with a mixed-type stream
 	 * @param text
 	 *            The text
 	 */
-	public Paragraph(String text) {
+	public Paragraph(FormattedString text) {
 		this(text, AlignmentMode.JUSTIFY);
 	}
 
 	/**
 	 * Create a new paragraph with the specified properties.
 	 * 
-	 * @deprecated To be replaced with a mixed-type stream
 	 * @param text
 	 *            The text
 	 * @param align
 	 *            The alignment mode
 	 */
-	public Paragraph(String text, AlignmentMode align) {
+	public Paragraph(FormattedString text, AlignmentMode align) {
 		this.text = text;
 		this.align = align;
 	}
@@ -44,7 +42,7 @@ public class Paragraph extends Element {
 	@Override
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		Page page = writer.current();
-		boxText(trace, writer, page.properties.bodyFont, text, null, AlignmentMode.JUSTIFY);
+		boxText(trace, writer, page.properties.bodyFormat, text, null, AlignmentMode.JUSTIFY);
 		writer.cursor().pushDown(10);
 	}
 

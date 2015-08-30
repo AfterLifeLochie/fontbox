@@ -1,7 +1,6 @@
 package net.afterlifelochie.fontbox.layout;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.CompilerHint;
@@ -11,11 +10,7 @@ import net.afterlifelochie.fontbox.document.Heading;
 import net.afterlifelochie.fontbox.document.Image;
 import net.afterlifelochie.fontbox.document.ImageItemStack;
 import net.afterlifelochie.fontbox.document.Paragraph;
-import net.afterlifelochie.fontbox.font.GLFont;
-import net.afterlifelochie.fontbox.font.GLGlyphMetric;
-import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.Page;
-import net.afterlifelochie.fontbox.layout.components.PageProperties;
 
 public class DocumentProcessor {
 
@@ -23,39 +18,6 @@ public class DocumentProcessor {
 		for (Element element : page.elements())
 			if (element.bounds().encloses(x, y))
 				return element;
-		return null;
-	}
-
-	public static String getWord(Page page, int x, int y) {
-		Element element = getElementAt(page, x, y);
-		if (element == null || !(element instanceof Line))
-			return null;
-		String word = "";
-		Line line = (Line) element;
-		for (int i = 0; i < line.line.length(); i++) {
-			if (x < 0) {
-				if (word.isEmpty())
-					return null;
-				for (; i < line.line.length(); i++) {
-					char c = line.line.charAt(i);
-					if (c == ' ')
-						break;
-					word += c;
-				}
-				return word;
-			}
-			char c = line.line.charAt(i);
-			word += c;
-			if (c == ' ') {
-				x -= line.space_size * line.font.getScale();
-				word = "";
-				continue;
-			}
-			GLGlyphMetric mx = line.font.getMetric().glyphs.get((int) c);
-			if (mx == null)
-				continue;
-			x -= mx.width * line.font.getScale();
-		}
 		return null;
 	}
 

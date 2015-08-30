@@ -2,7 +2,11 @@ package net.afterlifelochie.fontbox.layout.components;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
+import net.afterlifelochie.fontbox.document.formatting.TextFormat;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.font.GLFont;
@@ -16,12 +20,15 @@ public class LineWriter {
 
 	/** The writer stream */
 	private final PageWriter writer;
-	/** The font to write with */
-	private final GLFont font;
 	/** The alignment writing in */
 	private final AlignmentMode alignment;
+
 	/** The list of words on the stack currently */
 	private final ArrayList<String> words;
+	/** The map of formatting objects on the stack currently */
+	private final HashMap<Integer, TextFormat> format;
+	/** The default formatting */
+	private final TextFormat zeroFormat;
 
 	/** The current computed bounds of the stack's words */
 	private ObjectBounds bounds;
@@ -34,35 +41,43 @@ public class LineWriter {
 	 * 
 	 * @param writer
 	 *            The underlying stream to operate on.
-	 * @param font
-	 *            The font to write with.
+	 * @param defaultFormat
+	 *            The default text formatting to use.
 	 * @param alignment
 	 *            The alignment to paginate in.
 	 */
-	public LineWriter(PageWriter writer, GLFont font, AlignmentMode alignment) {
+	public LineWriter(PageWriter writer, TextFormat defaultFormat, AlignmentMode alignment) {
 		this.writer = writer;
-		this.font = font;
 		this.alignment = alignment;
+		this.zeroFormat = defaultFormat;
 		words = new ArrayList<String>();
+		format = new HashMap<Integer, TextFormat>();
+		format.put(0, zeroFormat.clone());
 	}
 
 	private void update() throws LayoutException, IOException {
 		int width = 0, height = 0;
 
-		GLFontMetrics metric = font.getMetric();
 		Page page = writer.current();
+		TextFormat activeFormat = format.get(0);
 
+		int offset = 0;
 		int wordsWidth = 0;
 		for (String word : words) {
 			char[] chars = word.toCharArray();
 			for (char cz : chars) {
-				GLGlyphMetric cm = metric.glyphs.get((int) cz);
+				if (format.get(offset) != null)
+					activeFormat = format.get(offset);
+				GLGlyphMetric cm = activeFormat.font.getMetric().glyphs.get((int) cz);
 				if (cm == null)
-					throw new LayoutException(String.format("Glyph %s not supported by this font.", cz));
+					throw new LayoutException(String.format("Glyph %s not supported by font %s.", cz,
+							activeFormat.font.getName()));
 				wordsWidth += cm.width;
 				if (cm.ascent > height)
 					height = cm.ascent;
+				offset++;
 			}
+			offset++;
 		}
 
 		int blankWidth = page.width - page.properties.margin_left - page.properties.margin_right - wordsWidth;
@@ -112,10 +127,17 @@ public class LineWriter {
 			if (i < words.length() - 1)
 				words.append(" ");
 		}
-		Line what = new Line(words.toString(), uid, bounds, font, spaceSize);
+		char[] glyphs = words.toString().toCharArray();
+		TextFormat[] format = new TextFormat[glyphs.length];
+		for (int i = 0; i < glyphs.length; i++)
+			if (this.format.get(i) != null)
+				format[i] = this.format.get(i);
+		Line what = new Line(words.toString().toCharArray(), format, uid, bounds, spaceSize);
 		bounds = null;
 		spaceSize = 0;
 		this.words.clear();
+		this.format.clear();
+		this.format.put(0, zeroFormat.clone());
 		return what;
 	}
 
@@ -134,6 +156,8 @@ public class LineWriter {
 	 * 
 	 * @param word
 	 *            The word to place on the end of the stack
+	 * @param format
+	 *            The text formatting, if any
 	 * @throws IOException
 	 *             Any exception which occurs when reading from the page writing
 	 *             stream underlying this writer
@@ -141,7 +165,21 @@ public class LineWriter {
 	 *             Any exception which occurs when updating the potentially
 	 *             paginated text
 	 */
-	public void push(String word) throws LayoutException, IOException {
+	public void push(String word, TextFormat[] format) throws LayoutException, IOException {
+		if (format != null) {
+			if (word.length() != format.length)
+				throw new LayoutException("Specified format doesn't bound word length");
+
+			int offset = 0;
+			for (String wd : words)
+				offset += wd.length() + 1;
+
+			for (int i = 0; i < format.length; i++) {
+				TextFormat aformat = format[i];
+				if (aformat != null)
+					this.format.put(offset + i, aformat);
+			}
+		}
 		words.add(word);
 		update();
 	}
@@ -160,6 +198,19 @@ public class LineWriter {
 	 */
 	public String pop() throws LayoutException, IOException {
 		String word = words.remove(words.size() - 1);
+
+		int offset = 0;
+		for (String wd : words)
+			offset += wd.length() + 1;
+		Iterator<Entry<Integer, TextFormat>> itx = format.entrySet().iterator();
+		while (itx.hasNext()) {
+			Entry<Integer, TextFormat> etx = itx.next();
+			if (etx.getKey() >= offset)
+				itx.remove();
+		}
+		if (!format.containsKey(0))
+			format.put(0, zeroFormat.clone());
+
 		update();
 		return word;
 	}

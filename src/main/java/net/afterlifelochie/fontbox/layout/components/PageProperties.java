@@ -1,5 +1,6 @@
 package net.afterlifelochie.fontbox.layout.components;
 
+import net.afterlifelochie.fontbox.document.formatting.TextFormat;
 import net.afterlifelochie.fontbox.font.GLFont;
 
 /**
@@ -29,12 +30,12 @@ public class PageProperties {
 	/** The size of non-breaking tabs */
 	public int tab_size = 8;
 
-	/** The font to use when rendering headings */
-	public GLFont headingFont;
-	/** The font to use when rendering body text */
-	public GLFont bodyFont;
-	/** The font to use when rendering links */
-	public GLFont linkFont;
+	/** The TextFormat to use when rendering headings */
+	public TextFormat headingFormat;
+	/** The TextFormat to use when rendering body text */
+	public TextFormat bodyFormat;
+	/** The TextFormat to use when rendering links */
+	public TextFormat linkFormat;
 
 	/**
 	 * Create a new PageProperties container
@@ -43,13 +44,13 @@ public class PageProperties {
 	 *            The width of the page
 	 * @param h
 	 *            The height of the page
-	 * @param defaultFont
+	 * @param defaultFormat
 	 *            The default font to use
 	 */
-	public PageProperties(int w, int h, GLFont defaultFont) {
+	public PageProperties(int w, int h, TextFormat defaultFormat) {
 		width = w;
 		height = h;
-		headingFont = bodyFont = linkFont = defaultFont;
+		headingFormat = bodyFormat = linkFormat = defaultFormat;
 	}
 
 	/**
@@ -80,7 +81,7 @@ public class PageProperties {
 	 * 
 	 */
 	public PageProperties(int w, int h, int ml, int mr, int min_sp, int min_lhs, float line_density, int tab,
-			GLFont head, GLFont body, GLFont link) {
+			TextFormat head, TextFormat body, TextFormat link) {
 		width = w;
 		height = h;
 		margin_left = ml;
@@ -89,9 +90,9 @@ public class PageProperties {
 		lineheight_size = min_lhs;
 		min_line_density = line_density;
 		tab_size = tab;
-		headingFont = head;
-		bodyFont = body;
-		linkFont = link;
+		headingFormat = head;
+		bodyFormat = body;
+		linkFormat = link;
 	}
 
 	/**
@@ -183,38 +184,38 @@ public class PageProperties {
 	}
 
 	/**
-	 * Set the headings font
+	 * Set the headings format
 	 * 
 	 * @param font
-	 *            The font to use
+	 *            The format to use
 	 * @return The self object
 	 */
-	public PageProperties headingFont(GLFont font) {
-		headingFont = font;
+	public PageProperties headingFormat(TextFormat font) {
+		headingFormat = font;
 		return this;
 	}
 
 	/**
-	 * Set the body font
+	 * Set the body format
 	 * 
 	 * @param font
-	 *            The font to use
+	 *            The format to use
 	 * @return The self object
 	 */
-	public PageProperties bodyFont(GLFont font) {
-		bodyFont = font;
+	public PageProperties bodyFormat(TextFormat font) {
+		bodyFormat = font;
 		return this;
 	}
 
 	/**
-	 * Set the links font
+	 * Set the links format
 	 * 
 	 * @param font
-	 *            The font to use
+	 *            The format to use
 	 * @return The self object
 	 */
-	public PageProperties linkFont(GLFont font) {
-		linkFont = font;
+	public PageProperties linkFormat(TextFormat font) {
+		linkFormat = font;
 		return this;
 	}
 
@@ -227,7 +228,7 @@ public class PageProperties {
 	 */
 	public PageProperties copy() {
 		return new PageProperties(width, height, margin_left, margin_right, min_space_size, lineheight_size,
-				min_line_density, tab_size, headingFont, bodyFont, linkFont);
+				min_line_density, tab_size, headingFormat, bodyFormat, linkFormat);
 	}
 
 }

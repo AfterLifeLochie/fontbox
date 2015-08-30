@@ -3,6 +3,7 @@ package net.afterlifelochie.fontbox.document;
 import java.io.IOException;
 
 import net.afterlifelochie.fontbox.api.ITracer;
+import net.afterlifelochie.fontbox.data.FormattedString;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.PageWriter;
@@ -13,7 +14,7 @@ import net.afterlifelochie.fontbox.render.BookGUI;
 public class Heading extends Element {
 
 	public String id;
-	public String text;
+	public FormattedString text;
 
 	/**
 	 * Creates a new Heading element
@@ -23,7 +24,7 @@ public class Heading extends Element {
 	 * @param text
 	 *            The heading's text value
 	 */
-	public Heading(String id, String text) {
+	public Heading(String id, FormattedString text) {
 		this.id = id;
 		this.text = text;
 	}
@@ -31,7 +32,7 @@ public class Heading extends Element {
 	@Override
 	public void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException {
 		Page page = writer.current();
-		boxText(trace, writer, page.properties.headingFont, text, id, AlignmentMode.LEFT);
+		boxText(trace, writer, page.properties.headingFormat, text, id, AlignmentMode.LEFT);
 		writer.cursor().pushDown(10);
 	}
 
