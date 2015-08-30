@@ -390,27 +390,48 @@ public abstract class BookGUI extends GuiScreen {
 	private void renderPage(int index, Page page, float x, float y, float z, int mx, int my, float frame)
 			throws RenderException {
 		if (!useDisplayList) {
-			renderPageImmediate(page, x, y, z, mx, my, frame);
+			renderPageStaticsImmediate(index, page, x, y, z, mx, my, frame);
+			renderPageDynamics(index, page, x, y, z, mx, my, frame);
 		} else {
-			if (glBufferDirty[index]) {
-				GL11.glNewList(glDisplayLists[index], GL11.GL_COMPILE);
-				renderPageImmediate(page, x, y, z, mx, my, frame);
-				GL11.glEndList();
-				glBufferDirty[index] = false;
-			}
-			GL11.glCallList(glDisplayLists[index]);
+			renderPageStaticsBuffered(index, page, x, y, z, mx, my, frame);
+			renderPageDynamics(index, page, x, y, z, mx, my, frame);
 		}
 	}
 
-	private void renderPageImmediate(Page page, float x, float y, float z, int mx, int my, float frame)
+	private void renderPageDynamics(int index, Page page, float x, float y, float z, int mx, int my, float frame)
 			throws RenderException {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, z);
-		int count = page.staticElements().size();
+		rendeElementGroupImmediate(page.dynamicElements(), mx, my, frame);
+		GL11.glPopMatrix();
+	}
+
+	private void renderPageStaticsBuffered(int index, Page page, float x, float y, float z, int mx, int my, float frame)
+			throws RenderException {
+		if (glBufferDirty[index]) {
+			GL11.glNewList(glDisplayLists[index], GL11.GL_COMPILE);
+			renderPageStaticsImmediate(index, page, x, y, z, mx, my, frame);
+			GL11.glEndList();
+			glBufferDirty[index] = false;
+		}
+		GL11.glCallList(glDisplayLists[index]);
+	}
+
+	private void renderPageStaticsImmediate(int index, Page page, float x, float y, float z, int mx, int my, float frame)
+			throws RenderException {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(x, y, z);
+		rendeElementGroupImmediate(page.staticElements(), mx, my, frame);
+		GL11.glPopMatrix();
+	}
+
+	private void rendeElementGroupImmediate(ArrayList<Element> elements, int mx, int my, float frame)
+			throws RenderException {
+		int count = elements.size();
 		for (int i = 0; i < count; i++) {
-			page.staticElements().get(i).render(this, mx, my, frame);
+			elements.get(i).render(this, mx, my, frame);
 			if (this.cursors != null) {
-				ObjectBounds bounds = page.staticElements().get(i).bounds();
+				ObjectBounds bounds = elements.get(i).bounds();
 				if (bounds != null) {
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
 					GL11.glEnable(GL11.GL_BLEND);
@@ -425,7 +446,6 @@ public abstract class BookGUI extends GuiScreen {
 				}
 			}
 		}
-		GL11.glPopMatrix();
 	}
 
 }
