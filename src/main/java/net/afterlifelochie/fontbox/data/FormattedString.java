@@ -9,7 +9,7 @@ public class FormattedString {
 
 	public FormattedString(String string) {
 		this.string = string;
-		this.format = new TextFormat[string.length()];
+		format = new TextFormat[string.length()];
 	}
 
 	public FormattedString applyFormat(TextFormat format, int index) {

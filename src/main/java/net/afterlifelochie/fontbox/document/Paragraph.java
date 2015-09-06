@@ -18,7 +18,7 @@ public class Paragraph extends Element {
 	/**
 	 * Create a new paragraph with a specified text and the default alignment
 	 * (justified).
-	 * 
+	 *
 	 * @param text
 	 *            The text
 	 */
@@ -28,7 +28,7 @@ public class Paragraph extends Element {
 
 	/**
 	 * Create a new paragraph with the specified properties.
-	 * 
+	 *
 	 * @param text
 	 *            The text
 	 * @param align
@@ -54,6 +54,11 @@ public class Paragraph extends Element {
 	@Override
 	public void update() {
 		/* No action required */
+	}
+
+	@Override
+	public boolean canCompileRender() {
+		return true;
 	}
 
 	@Override

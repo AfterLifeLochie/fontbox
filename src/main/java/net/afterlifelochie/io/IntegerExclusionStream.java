@@ -28,17 +28,15 @@ public class IntegerExclusionStream {
 
 	public int largest() {
 		int size = 0, bestStart = 0, bestSize = 0;
-		for (int start = 0; start <= max; start++) {
+		for (int start = 0; start <= max; start++)
 			if (exclusions.contains(start)) {
 				if (size > bestSize) {
 					bestStart = start - size;
 					bestSize = size;
 				}
 				size = 0;
-			} else {
+			} else
 				size++;
-			}
-		}
 		if (size > bestSize) {
 			bestStart = max - size;
 			bestSize = size;

@@ -7,9 +7,9 @@ import java.util.Stack;
 /**
  * StringReader with nested (stack-based) pushback and mark functionality,
  * particularly useful for recursive parsers and readers.
- * 
+ *
  * @author AfterLifeLochie
- * 
+ *
  */
 public class StackedPushbackStringReader {
 
@@ -25,17 +25,17 @@ public class StackedPushbackStringReader {
 	/**
 	 * Create a new StackedPushbackStringReader at the start of the string. The
 	 * contents of the string are copied to a local buffer.
-	 * 
+	 *
 	 * @param s
 	 *            The source string.
 	 */
 	public StackedPushbackStringReader(String s) {
-		this.lock = this;
-		this.str = new ArrayList<Character>();
-		this.pushback = new Stack<Integer>();
+		lock = this;
+		str = new ArrayList<Character>();
+		pushback = new Stack<Integer>();
 		char[] chars = s.toCharArray();
-		for (int i = 0; i < chars.length; i++)
-			str.add(chars[i]);
+		for (char c : chars)
+			str.add(c);
 	}
 
 	/** Check to make sure that the stream has not been closed */
@@ -47,7 +47,7 @@ public class StackedPushbackStringReader {
 	/**
 	 * Get the next character on the stream, or 0 if no characters are remaining
 	 * on the stream.
-	 * 
+	 *
 	 * @return A character or 0
 	 * @throws IOException
 	 *             If the lock cannot be obtained or if the stream is not open,
@@ -65,7 +65,7 @@ public class StackedPushbackStringReader {
 	/**
 	 * Pushes the current position onto the stack. If the stack is full, a
 	 * pushback overflow will be returned.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If the lock cannot be obtained or if the stream is not open,
 	 *             an IOException will be thrown.
@@ -73,16 +73,16 @@ public class StackedPushbackStringReader {
 	public void pushPosition() throws IOException {
 		synchronized (lock) {
 			ensureOpen();
-			if (this.pushback.size() > 64)
+			if (pushback.size() > 64)
 				throw new IOException("Pusback overflow!");
-			this.pushback.push(next);
+			pushback.push(next);
 		}
 	}
 
 	/**
 	 * Pops the previous position off the stack. If the stack is empty, a
 	 * pushback underflow will be returned.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If the lock cannot be obtained or if the stream is not open,
 	 *             an IOException will be thrown.
@@ -90,15 +90,15 @@ public class StackedPushbackStringReader {
 	public void popPosition() throws IOException {
 		synchronized (lock) {
 			ensureOpen();
-			if (this.pushback.size() == 0)
+			if (pushback.size() == 0)
 				throw new IOException("Pushback underflow!");
-			this.next = this.pushback.pop();
+			next = pushback.pop();
 		}
 	}
 
 	/**
 	 * Returns the current position of the reader.
-	 * 
+	 *
 	 * @return The current position of the reader.
 	 * @throws IOException
 	 *             If the lock cannot be obtained or if the stream is not open,
@@ -107,13 +107,13 @@ public class StackedPushbackStringReader {
 	public int getPosition() throws IOException {
 		synchronized (lock) {
 			ensureOpen();
-			return this.next;
+			return next;
 		}
 	}
 
 	/**
 	 * Sets the position of the reader.
-	 * 
+	 *
 	 * @param ns
 	 *            A new position.
 	 * @throws IOException
@@ -123,14 +123,14 @@ public class StackedPushbackStringReader {
 	public void setPosition(int ns) throws IOException {
 		synchronized (lock) {
 			ensureOpen();
-			this.next = ns;
+			next = ns;
 		}
 	}
 
 	/**
 	 * Commits the current position of the reader. This pops the previous return
 	 * position without restoring the pointer.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If the lock cannot be obtained or if the stream is not open,
 	 *             an IOException will be thrown.
@@ -138,13 +138,13 @@ public class StackedPushbackStringReader {
 	public void commitPosition() throws IOException {
 		synchronized (lock) {
 			ensureOpen();
-			this.pushback.pop();
+			pushback.pop();
 		}
 	}
 
 	/**
 	 * Skips forward a number of characters.
-	 * 
+	 *
 	 * @param ns
 	 *            How far forward to skip.
 	 * @throws IOException
@@ -164,7 +164,7 @@ public class StackedPushbackStringReader {
 
 	/**
 	 * Skips backwards a number of characters.
-	 * 
+	 *
 	 * @param ns
 	 *            How far backwards to skip.
 	 * @throws IOException
@@ -184,7 +184,7 @@ public class StackedPushbackStringReader {
 
 	/**
 	 * Ensures the stream is ready for use.
-	 * 
+	 *
 	 * @return If the stream is ready for use.
 	 * @throws IOException
 	 *             If the lock cannot be obtained or if the stream is not open,
@@ -199,7 +199,7 @@ public class StackedPushbackStringReader {
 
 	/**
 	 * Determine the number of characters remaining in the read collection.
-	 * 
+	 *
 	 * @return The number of characters waiting to be read.
 	 * @throws IOException
 	 *             If the lock cannot be obtained or if the stream is not open,

@@ -2,9 +2,6 @@ package net.afterlifelochie.fontbox.layout.components;
 
 import java.io.IOException;
 
-import org.lwjgl.opengl.GL11;
-
-import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.document.formatting.DecorationStyle;
@@ -16,12 +13,13 @@ import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
 import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.render.BookGUI;
-import net.afterlifelochie.fontbox.render.GLUtils;
 import net.afterlifelochie.fontbox.render.RenderException;
+
+import org.lwjgl.opengl.GL11;
 
 /**
  * One formatted line with a spacing and line-height
- * 
+ *
  * @author AfterLifeLochie
  */
 public class Line extends Element {
@@ -37,7 +35,7 @@ public class Line extends Element {
 
 	/**
 	 * Create a new line
-	 * 
+	 *
 	 * @param line
 	 *            The line's text
 	 * @param format
@@ -48,16 +46,16 @@ public class Line extends Element {
 	 *            The size of the spacing between words
 	 */
 	public Line(char[] line, TextFormat[] format, ObjectBounds bounds, int space_size) {
-		this.setBounds(bounds);
+		setBounds(bounds);
 		this.line = line;
 		this.format = format;
-		this.id = null;
+		id = null;
 		this.space_size = space_size;
 	}
 
 	/**
 	 * Create a new line with an ID
-	 * 
+	 *
 	 * @param line
 	 *            The line's text
 	 * @param format
@@ -71,7 +69,7 @@ public class Line extends Element {
 	 */
 	public Line(char[] line, TextFormat[] format, String uid, ObjectBounds bounds, int space_size) {
 		this(line, format, bounds, space_size);
-		this.id = uid;
+		id = uid;
 	}
 
 	@Override
@@ -87,6 +85,11 @@ public class Line extends Element {
 	@Override
 	public void update() {
 		/* No action required */
+	}
+
+	@Override
+	public boolean canCompileRender() {
+		return true;
 	}
 
 	private void safeSwitchToFont(GLFont font) throws RenderException {

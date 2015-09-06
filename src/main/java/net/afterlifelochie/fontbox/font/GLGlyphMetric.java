@@ -2,7 +2,7 @@ package net.afterlifelochie.fontbox.font;
 
 /**
  * Metrics about a character
- * 
+ *
  * @author AfterLifeLochie
  */
 public class GLGlyphMetric {
@@ -22,7 +22,7 @@ public class GLGlyphMetric {
 
 	/**
 	 * Creates a new GlpyhMetric.
-	 * 
+	 *
 	 * @param w
 	 *            The character's glyph width. Used to compute the size of the
 	 *            glyph on the screen and the size of the texture region.

@@ -1,22 +1,17 @@
 package net.afterlifelochie.fontbox.document;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.data.FormattedString;
 import net.afterlifelochie.fontbox.document.formatting.TextFormat;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.document.property.FloatMode;
-import net.afterlifelochie.fontbox.font.GLFont;
-import net.afterlifelochie.fontbox.font.GLFontMetrics;
-import net.afterlifelochie.fontbox.font.GLGlyphMetric;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
-import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.layout.PageCursor;
+import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.layout.components.Line;
 import net.afterlifelochie.fontbox.layout.components.LineWriter;
 import net.afterlifelochie.fontbox.layout.components.Page;
@@ -29,7 +24,7 @@ import net.afterlifelochie.io.StackedPushbackStringReader;
  * Document element class. Elements are used to in a Document to construct a
  * linked list of objects which are subsequently paginated and rendered.
  * </p>
- * 
+ *
  * @author AfterLifeLochie
  *
  */
@@ -39,21 +34,21 @@ public abstract class Element {
 
 	/**
 	 * Get the bounds of the object
-	 * 
+	 *
 	 * @return The bounds of the object
 	 */
 	public ObjectBounds bounds() {
-		return this.bounds;
+		return bounds;
 	}
 
 	/**
 	 * Set the bounds of the object
-	 * 
+	 *
 	 * @param bb
 	 *            The new bounds of the object
 	 */
 	public void setBounds(ObjectBounds bb) {
-		this.bounds = bb;
+		bounds = bb;
 	}
 
 	/**
@@ -62,7 +57,7 @@ public abstract class Element {
 	 * rendering-based properties. The element should place itself on the
 	 * current page and update the writing cursor if required.
 	 * </p>
-	 * 
+	 *
 	 * @param trace
 	 *            The debugging tracer object
 	 * @param writer
@@ -76,8 +71,10 @@ public abstract class Element {
 	public abstract void layout(ITracer trace, PageWriter writer) throws IOException, LayoutException;
 
 	/**
-	 * Called to determine if this element requires explicit update ticks.
-	 * 
+	 * Called to determine if this element requires explicit update ticks. This
+	 * value is cached; that is, if this method returns <code>false</code>, this
+	 * method will not be queried again to see if updating is required.
+	 *
 	 * @return If the element requires update ticks
 	 */
 	public abstract boolean canUpdate();
@@ -88,12 +85,21 @@ public abstract class Element {
 	public abstract void update();
 
 	/**
+	 * Called to determine if this element can be compile-rendered. If an
+	 * element is compiled-rendered, it will be drawn once to a video-buffer;
+	 * else, the element will be redrawn each frame.
+	 *
+	 * @return If the element can be compile-rendered.
+	 */
+	public abstract boolean canCompileRender();
+
+	/**
 	 * <p>
 	 * Called to render the element on the page. You should use the pre-computed
 	 * rendering properties generated through the call to
 	 * {@link Element#layout(ITracer, PageWriter)}.
 	 * </p>
-	 * 
+	 *
 	 * @param gui
 	 *            The GUI rendering on
 	 * @param mx
@@ -112,7 +118,7 @@ public abstract class Element {
 	 * <p>
 	 * Called by the container controller when a click occurs on the element.
 	 * </p>
-	 * 
+	 *
 	 * @param gui
 	 *            The GUI being clicked
 	 * @param mx
@@ -126,7 +132,7 @@ public abstract class Element {
 	 * <p>
 	 * Called by the container when a key press occurs.
 	 * </p>
-	 * 
+	 *
 	 * @param gui
 	 *            The GUI being typed into
 	 * @param val
@@ -142,7 +148,7 @@ public abstract class Element {
 	 * object does not need to be indexed, this method should return null and
 	 * not be overridden; else, you should return a unique identifier.
 	 * </p>
-	 * 
+	 *
 	 * @return The unique identifier for this element
 	 */
 	public String identifier() {
@@ -155,7 +161,7 @@ public abstract class Element {
 	 * text provided will be added to the tail of the current page and will
 	 * overflow onto any subsequent pages as is required.
 	 * </p>
-	 * 
+	 *
 	 * @param trace
 	 *            The debugging tracer object
 	 * @param writer
@@ -263,10 +269,9 @@ public abstract class Element {
 				// Consider the word:
 				trace.trace("Element.boxText", "considerWord", inWord.toString());
 				TextFormat[] fmt = new TextFormat[inWord.toString().length()];
-				if (formatting.size() != 0) {
+				if (formatting.size() != 0)
 					for (int i = 0; i < fmt.length; i++)
 						fmt[i] = formatting.get(i);
-				}
 				stream.push(inWord.toString(), fmt);
 				ObjectBounds future = stream.pendingBounds();
 				Page current = writer.current();

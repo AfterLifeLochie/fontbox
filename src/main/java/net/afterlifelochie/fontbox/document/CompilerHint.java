@@ -6,8 +6,8 @@ import java.util.Iterator;
 
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.layout.LayoutException;
-import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.layout.PageCursor;
+import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 
@@ -21,19 +21,19 @@ public class CompilerHint extends Element {
 
 	/**
 	 * Constructs a new compiler hint rule with one hint type.
-	 * 
+	 *
 	 * @param type
 	 *            The type of hint. May not be null.
 	 */
 	public CompilerHint(HintType type) {
 		if (type == null)
 			throw new IllegalArgumentException("Hint type cannot be null");
-		this.types = EnumSet.of(type);
+		types = EnumSet.of(type);
 	}
 
 	/**
 	 * Constructs a new compiler hint rule with a set of hint types.
-	 * 
+	 *
 	 * @param types
 	 *            The list of hints. May not be null, may not be empty.
 	 */
@@ -56,7 +56,7 @@ public class CompilerHint extends Element {
 				Page current = writer.current();
 				Element lowest = null;
 				int dfx = 0;
-				for (Element elem : current.elements()) {
+				for (Element elem : current.allElements()) {
 					int dux = elem.bounds().y + elem.bounds().height;
 					if (dux > dfx) {
 						dfx = dux;
@@ -78,6 +78,11 @@ public class CompilerHint extends Element {
 						+ ((whatHint == null) ? "<null>" : whatHint.getClass().getName()));
 			}
 		}
+	}
+
+	@Override
+	public boolean canCompileRender() {
+		throw new RuntimeException("Undefined behaviour: CompilerHint in doctree!");
 	}
 
 	@Override

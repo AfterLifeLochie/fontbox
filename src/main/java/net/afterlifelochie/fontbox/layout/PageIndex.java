@@ -7,7 +7,7 @@ public class PageIndex {
 	private final HashMap<String, Integer> ids;
 
 	public PageIndex() {
-		this.ids = new HashMap<String, Integer>();
+		ids = new HashMap<String, Integer>();
 	}
 
 	public void push(String id, int page) {

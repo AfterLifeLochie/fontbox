@@ -15,7 +15,7 @@ import net.afterlifelochie.fontbox.layout.components.Page;
 public class DocumentProcessor {
 
 	public static Element getElementAt(Page page, int x, int y) {
-		for (Element element : page.elements())
+		for (Element element : page.allElements())
 			if (element.bounds().encloses(x, y))
 				return element;
 		return null;
@@ -32,7 +32,7 @@ public class DocumentProcessor {
 	 * The Elements in the Document list are modified so that they contain
 	 * rendering properties and other pre-computed parameters.
 	 * </p>
-	 * 
+	 *
 	 * @param trace
 	 *            The debugger
 	 * @param doc
@@ -47,7 +47,7 @@ public class DocumentProcessor {
 	 *             element on a Page
 	 */
 	public static void generatePages(ITracer trace, Document doc, PageWriter writer) throws IOException,
-			LayoutException {
+	LayoutException {
 		for (int i = 0; i < doc.elements.size(); i++) {
 			Element e0 = doc.elements.get(i);
 			pushElement(trace, writer, e0);
@@ -55,7 +55,7 @@ public class DocumentProcessor {
 	}
 
 	private static void pushElement(ITracer trace, PageWriter writer, Element element) throws IOException,
-			LayoutException {
+	LayoutException {
 		if (element instanceof CompilerHint) {
 			CompilerHint hint = (CompilerHint) element;
 			hint.layout(trace, writer);
@@ -67,9 +67,8 @@ public class DocumentProcessor {
 			if (image instanceof ImageItemStack) {
 				ImageItemStack blockIconImg = (ImageItemStack) image;
 				blockIconImg.layout(trace, writer);
-			} else {
+			} else
 				image.layout(trace, writer);
-			}
 		} else if (element instanceof Paragraph) {
 			Paragraph paragraph = (Paragraph) element;
 			paragraph.layout(trace, writer);

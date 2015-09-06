@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Document class. Used to contain an ordered list of Elements which are later
  * transformed into renderable Elements for the book renderer.
- * 
+ *
  * @author AfterLifeLochie
  */
 public class Document {
@@ -18,7 +18,7 @@ public class Document {
 	 * Creates a new blank Document
 	 */
 	public Document() {
-		this.elements = new ArrayList<Element>();
+		elements = new ArrayList<Element>();
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class Document {
 	 * already exists in the document, an {@link IllegalArgumentException} will
 	 * be thrown.
 	 * </p>
-	 * 
+	 *
 	 * @param element
 	 *            The element to add
 	 */
@@ -49,7 +49,7 @@ public class Document {
 	 * already exists in the document, an {@link IllegalArgumentException} will
 	 * be thrown.
 	 * </p>
-	 * 
+	 *
 	 * @param elements
 	 *            The elements to add
 	 */
@@ -64,7 +64,7 @@ public class Document {
 	 * Removes an element from the end of the document and returns it. If the
 	 * document is empty, null will be returned.
 	 * </p>
-	 * 
+	 *
 	 * @return The element on the end of the document, or null if the document
 	 *         is empty
 	 */
@@ -79,7 +79,7 @@ public class Document {
 	 * Returns the element from the beginning of the document. If the document
 	 * is empty, null is returned.
 	 * </p>
-	 * 
+	 *
 	 * @return The first element in the document, or null
 	 */
 	public Element head() {
@@ -91,7 +91,7 @@ public class Document {
 	 * Returns last element from the end of the document. If the document is
 	 * empty, null is returned.
 	 * </p>
-	 * 
+	 *
 	 * @return The last element in the document, or null
 	 */
 	public Element tail() {

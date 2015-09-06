@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.document.Element;
-import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;
 import net.afterlifelochie.io.IntegerExclusionStream;
@@ -22,7 +21,7 @@ public class PageWriter {
 
 	public PageWriter(PageProperties attributes) {
 		this.attributes = attributes;
-		this.index = new PageIndex();
+		index = new PageIndex();
 	}
 
 	public void close() {
@@ -80,7 +79,7 @@ public class PageWriter {
 			what.push(element);
 
 			PageCursor current = cursor();
-			for (Element e : what.elements()) {
+			for (Element e : what.allElements()) {
 				if (e.bounds().floating())
 					continue;
 				ObjectBounds bb = e.bounds();
@@ -89,7 +88,7 @@ public class PageWriter {
 			}
 
 			IntegerExclusionStream window = new IntegerExclusionStream(0, what.width);
-			for (Element e : what.elements()) {
+			for (Element e : what.allElements()) {
 				ObjectBounds bb = e.bounds();
 				if (current.y() >= bb.y && bb.y + bb.height >= current.y())
 					window.excludeRange(0, bb.x + bb.width);

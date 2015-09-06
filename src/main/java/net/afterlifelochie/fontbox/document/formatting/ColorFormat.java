@@ -19,19 +19,19 @@ public class ColorFormat implements Cloneable {
 	}
 
 	public float redF() {
-		return (float) (red / 255.0f);
+		return red / 255.0f;
 	}
 
 	public float greenF() {
-		return (float) (green / 255.0f);
+		return green / 255.0f;
 	}
 
 	public float blueF() {
-		return (float) (blue / 255.0f);
+		return blue / 255.0f;
 	}
 
 	public float alphaF() {
-		return (float) (alpha / 255.0f);
+		return alpha / 255.0f;
 	}
 
 	@Override

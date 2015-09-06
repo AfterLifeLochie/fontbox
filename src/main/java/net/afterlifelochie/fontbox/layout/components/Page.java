@@ -8,7 +8,7 @@ import net.afterlifelochie.fontbox.layout.ObjectBounds;
 /**
  * One whole page containing a collection of spaced lines with line-heights and
  * inside a page margin (gutters).
- * 
+ *
  * @author AfterLifeLochie
  */
 public class Page extends Container {
@@ -16,12 +16,14 @@ public class Page extends Container {
 	/** The page layout properties container */
 	public PageProperties properties;
 
-	/** The list of elements on the page */
-	private ArrayList<Element> elements = new ArrayList<Element>();
+	/** The list of static elements on the page */
+	private ArrayList<Element> staticElements = new ArrayList<Element>();
+	/** The list of dynamic elements on the page */
+	private ArrayList<Element> dynamicElements = new ArrayList<Element>();
 
 	/**
 	 * Initialize a new Page with a specified set of page layout properties.
-	 * 
+	 *
 	 * @param properties
 	 *            The page layout properties.
 	 */
@@ -30,36 +32,55 @@ public class Page extends Container {
 		this.properties = properties;
 	}
 
+	public ArrayList<Element> allElements() {
+		ArrayList<Element> all = new ArrayList<Element>();
+		all.addAll(staticElements);
+		all.addAll(dynamicElements);
+		return all;
+	}
+
 	/**
-	 * Get a list of all elements on the page
-	 * 
-	 * @return The list of elements on the page
+	 * Get a list of all static elements on the page
+	 *
+	 * @return The list of static elements on the page
 	 */
-	public ArrayList<Element> elements() {
-		return elements;
+	public ArrayList<Element> staticElements() {
+		return staticElements;
+	}
+
+	/**
+	 * Get a list of all dynamic elements on the page
+	 *
+	 * @return The list of dynamic elements on the page
+	 */
+	public ArrayList<Element> dynamicElements() {
+		return dynamicElements;
 	}
 
 	/**
 	 * Push an element onto the page, unchecked.
-	 * 
+	 *
 	 * @param element
 	 *            The element to push
 	 */
 	public void push(Element element) {
-		elements.add(element);
+		if (!element.canCompileRender())
+			dynamicElements.add(element);
+		else
+			staticElements.add(element);
 	}
 
 	/**
 	 * Determine if the provided bounding box intersects with an existing
 	 * element on the page. Returns true if an intersection occurs, false if
 	 * not.
-	 * 
+	 *
 	 * @param bounds
 	 *            The bounding box to check
 	 * @return If an intersection occurs
 	 */
 	public Element intersectsElement(ObjectBounds bounds) {
-		for (Element element : elements)
+		for (Element element : staticElements)
 			if (element.bounds() != null && element.bounds().intersects(bounds))
 				return element;
 		return null;
@@ -68,7 +89,7 @@ public class Page extends Container {
 	/**
 	 * Determine if the provided bounding box fits entirely on the page. Returns
 	 * true if the bounding box fits inside the page, false if not.
-	 * 
+	 *
 	 * @param bounds
 	 *            The bounding box to check
 	 * @return If the bounding box fits inside the page

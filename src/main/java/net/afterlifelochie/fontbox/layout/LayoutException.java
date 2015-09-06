@@ -4,7 +4,7 @@ package net.afterlifelochie.fontbox.layout;
  * Layout manager exception. Used when a layout cannot be computed due to
  * invalid or unspecified parameters, behaviours or other issues which prevent
  * the layout from being built.
- * 
+ *
  * @author AfterLifeLochie
  *
  */
@@ -17,7 +17,7 @@ public class LayoutException extends Exception {
 
 	/**
 	 * Initializes the layout exception
-	 * 
+	 *
 	 * @param reason
 	 *            The reason for the exception
 	 */
@@ -27,7 +27,7 @@ public class LayoutException extends Exception {
 
 	/**
 	 * Initializes the layout exception
-	 * 
+	 *
 	 * @param reason
 	 *            The reason for the exception
 	 * @param cause

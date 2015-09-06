@@ -11,7 +11,7 @@ public class MixedObjectOutputStream {
 	private List<Object> list;
 
 	public MixedObjectOutputStream(List<Object> list) {
-		this.lock = this;
+		lock = this;
 		this.list = list;
 	}
 
@@ -23,7 +23,7 @@ public class MixedObjectOutputStream {
 
 	/**
 	 * Ensures the stream is ready for use.
-	 * 
+	 *
 	 * @return If the stream is ready for use.
 	 * @throws IOException
 	 *             If the lock cannot be obtained or if the stream is not open,
@@ -45,7 +45,7 @@ public class MixedObjectOutputStream {
 
 	/**
 	 * Pushes an object to the stream.
-	 * 
+	 *
 	 * @param o
 	 *            The object
 	 * @throws IOException

@@ -3,7 +3,7 @@ package net.afterlifelochie.fontbox.font;
 /**
  * Font processor exception. Used when a font file cannot be loaded or when a
  * Font related exception state is encountered.
- * 
+ *
  * @author AfterLifeLochie
  *
  */
@@ -16,7 +16,7 @@ public class FontException extends Exception {
 
 	/**
 	 * Initializes the font exception
-	 * 
+	 *
 	 * @param reason
 	 *            The reason for the exception
 	 */
@@ -26,7 +26,7 @@ public class FontException extends Exception {
 
 	/**
 	 * Initializes the font exception
-	 * 
+	 *
 	 * @param reason
 	 *            The reason for the exception
 	 * @param cause
