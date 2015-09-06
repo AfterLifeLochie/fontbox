@@ -8,7 +8,7 @@ import net.afterlifelochie.fontbox.layout.ObjectBounds;
 /**
  * One whole page containing a collection of spaced lines with line-heights and
  * inside a page margin (gutters).
- * 
+ *
  * @author AfterLifeLochie
  */
 public class Page extends Container {
@@ -23,7 +23,7 @@ public class Page extends Container {
 
 	/**
 	 * Initialize a new Page with a specified set of page layout properties.
-	 * 
+	 *
 	 * @param properties
 	 *            The page layout properties.
 	 */
@@ -31,7 +31,7 @@ public class Page extends Container {
 		super(properties.width, properties.height);
 		this.properties = properties;
 	}
-	
+
 	public ArrayList<Element> allElements() {
 		ArrayList<Element> all = new ArrayList<Element>();
 		all.addAll(staticElements);
@@ -41,7 +41,7 @@ public class Page extends Container {
 
 	/**
 	 * Get a list of all static elements on the page
-	 * 
+	 *
 	 * @return The list of static elements on the page
 	 */
 	public ArrayList<Element> staticElements() {
@@ -50,7 +50,7 @@ public class Page extends Container {
 
 	/**
 	 * Get a list of all dynamic elements on the page
-	 * 
+	 *
 	 * @return The list of dynamic elements on the page
 	 */
 	public ArrayList<Element> dynamicElements() {
@@ -59,7 +59,7 @@ public class Page extends Container {
 
 	/**
 	 * Push an element onto the page, unchecked.
-	 * 
+	 *
 	 * @param element
 	 *            The element to push
 	 */
@@ -74,7 +74,7 @@ public class Page extends Container {
 	 * Determine if the provided bounding box intersects with an existing
 	 * element on the page. Returns true if an intersection occurs, false if
 	 * not.
-	 * 
+	 *
 	 * @param bounds
 	 *            The bounding box to check
 	 * @return If an intersection occurs
@@ -89,7 +89,7 @@ public class Page extends Container {
 	/**
 	 * Determine if the provided bounding box fits entirely on the page. Returns
 	 * true if the bounding box fits inside the page, false if not.
-	 * 
+	 *
 	 * @param bounds
 	 *            The bounding box to check
 	 * @return If the bounding box fits inside the page

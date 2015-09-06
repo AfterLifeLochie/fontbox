@@ -8,7 +8,7 @@ import net.afterlifelochie.fontbox.font.GLFont;
 
 /**
  * Fontbox main registry.
- * 
+ *
  * @author AfterLifeLochie
  *
  */
@@ -19,7 +19,7 @@ public class Fontbox {
 	/**
 	 * Get the current Fontbox instance. If the instance doesn't exist, a new
 	 * one will be created for the environment.
-	 * 
+	 *
 	 * @return The current global Fontbox instance
 	 */
 	public static Fontbox instance() {
@@ -30,7 +30,7 @@ public class Fontbox {
 
 	/**
 	 * Perform a protected assertion
-	 * 
+	 *
 	 * @param condition
 	 *            The condition
 	 * @param reason
@@ -43,7 +43,7 @@ public class Fontbox {
 
 	/**
 	 * Get the current system tracer.
-	 * 
+	 *
 	 * @return The current system tracer
 	 */
 	public static ITracer tracer() {
@@ -52,7 +52,7 @@ public class Fontbox {
 
 	/**
 	 * Set the current system tracer.
-	 * 
+	 *
 	 * @param tracer
 	 *            The new tracer
 	 */
@@ -63,7 +63,7 @@ public class Fontbox {
 	/**
 	 * Allocate a font on the font record heap. The font can later be referenced
 	 * using {@link Fontbox#fromName(String)}.
-	 * 
+	 *
 	 * @param font
 	 *            The font object
 	 */
@@ -76,7 +76,7 @@ public class Fontbox {
 	 * heap and can no longer be referenced using
 	 * {@link Fontbox#fromName(String)}. Note that this doesn't de-allocate the
 	 * resources associated with the font.
-	 * 
+	 *
 	 * @see GLFont#delete()
 	 * @param font
 	 *            The font to de-register
@@ -88,7 +88,7 @@ public class Fontbox {
 	/**
 	 * Get a font from the font record heap. If the font hasn't been loaded or
 	 * doesn't exist, null will be returned.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the font, case sensitive
 	 * @return The game font associated with the name, or null if the font

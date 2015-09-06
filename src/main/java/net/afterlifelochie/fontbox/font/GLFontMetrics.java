@@ -13,31 +13,31 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.afterlifelochie.fontbox.api.ITracer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.util.ResourceLocation;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import net.afterlifelochie.fontbox.api.ITracer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.util.ResourceLocation;
-
 /**
  * A font metric digest. Contains information on the font, such as the
  * orientation and size of each glyph supported, the texture coordinate for each
  * glyph and the resource mappings to the font image file.
- * 
+ *
  * @author AfterLifeLochie
- * 
+ *
  */
 public class GLFontMetrics {
 
 	/**
 	 * Derive a font metric from a font file, a font render context and the
 	 * layout properties specified.
-	 * 
+	 *
 	 * @param trace
 	 *            The debugging tracer object
 	 * @param font
@@ -78,13 +78,13 @@ public class GLFontMetrics {
 
 			float cy = (float) rect.getHeight();
 			Rectangle rect0 = layout.getPixelBounds(null, 100, 100);
-			float cx = (float) -(rect0.x - 100);
+			float cx = -(rect0.x - 100);
 
 			int u = (int) Math.ceil(rect.getWidth() + cx);
 			int v = (int) Math.ceil(layout.getAscent() + layout.getDescent());
 			trace.trace("GLFontMetrics.fromFontMetrics", "placeGlyph", k, u, v, x - cx, y - cy);
-			metric.glyphs.put((int) k, new GLGlyphMetric(u, v, (int) layout.getAscent(), (int) (x - cx),
-					(int) (y - cy)));
+			metric.glyphs.put((int) k,
+					new GLGlyphMetric(u, v, (int) layout.getAscent(), (int) (x - cx), (int) (y - cy)));
 		}
 		trace.trace("GLFontMetrics.fromFontMetrics", metric);
 		return metric;
@@ -93,7 +93,7 @@ public class GLFontMetrics {
 	/**
 	 * Derive a font metric from an XML document path and the layout properties
 	 * specified.
-	 * 
+	 *
 	 * @param trace
 	 *            The debugging tracer object
 	 * @param fontMetricName
@@ -183,8 +183,8 @@ public class GLFontMetrics {
 	public final float fontImageHeight;
 
 	private GLFontMetrics(int fontImageWidth, int fontImageHeight) {
-		this.fontImageWidth = (float) fontImageWidth;
-		this.fontImageHeight = (float) fontImageHeight;
+		this.fontImageWidth = fontImageWidth;
+		this.fontImageHeight = fontImageHeight;
 	}
 
 	@Override

@@ -2,32 +2,34 @@ package net.afterlifelochie.fontbox.document;
 
 import java.io.IOException;
 
-import org.lwjgl.opengl.GL11;
-
-import sun.java2d.windows.GDIRenderer.Tracer;
 import net.afterlifelochie.fontbox.api.ITracer;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.ObjectBounds;
-import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.layout.PageCursor;
+import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 import net.afterlifelochie.fontbox.render.GLUtils;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.opengl.GL11;
+
 public class Image extends Element {
 
+	/** The resource source */
 	public ResourceLocation source;
 	public int width, height;
 
+	/** The alignment of the image */
 	public AlignmentMode align;
+	/** The floating of the image */
 	public FloatMode floating;
 
 	/**
 	 * Creates a new inline image with the properties specified.
-	 * 
+	 *
 	 * @param source
 	 *            The image source location, may not be null.
 	 * @param width
@@ -43,7 +45,7 @@ public class Image extends Element {
 
 	/**
 	 * Creates a new floating image with the properties specified.
-	 * 
+	 *
 	 * @param source
 	 *            The image source location, may not be null.
 	 * @param width
@@ -59,7 +61,7 @@ public class Image extends Element {
 
 	/**
 	 * Creates a new image with the properties specified.
-	 * 
+	 *
 	 * @param source
 	 *            The image source location, may not be null.
 	 * @param width

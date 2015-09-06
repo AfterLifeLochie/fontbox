@@ -1,13 +1,12 @@
 package net.afterlifelochie.fontbox.layout.components;
 
 import net.afterlifelochie.fontbox.document.formatting.TextFormat;
-import net.afterlifelochie.fontbox.font.GLFont;
 
 /**
  * The page layout properties. Includes properties such as the width, the
  * height, the gutters (margins), the minimum space dimensions and the default
  * line-height sizes.
- * 
+ *
  * @author AfterLifeLochie
  *
  */
@@ -39,7 +38,7 @@ public class PageProperties {
 
 	/**
 	 * Create a new PageProperties container
-	 * 
+	 *
 	 * @param w
 	 *            The width of the page
 	 * @param h
@@ -55,7 +54,7 @@ public class PageProperties {
 
 	/**
 	 * Create a new PageProperties container
-	 * 
+	 *
 	 * @param w
 	 *            The width of the page
 	 * @param h
@@ -78,7 +77,7 @@ public class PageProperties {
 	 *            The body font to use
 	 * @param link
 	 *            The link font to use
-	 * 
+	 *
 	 */
 	public PageProperties(int w, int h, int ml, int mr, int min_sp, int min_lhs, float line_density, int tab,
 			TextFormat head, TextFormat body, TextFormat link) {
@@ -97,7 +96,7 @@ public class PageProperties {
 
 	/**
 	 * Set the left margin of the page
-	 * 
+	 *
 	 * @param ml
 	 *            The new value
 	 * @return The self object
@@ -109,7 +108,7 @@ public class PageProperties {
 
 	/**
 	 * Set the right margin of the page
-	 * 
+	 *
 	 * @param mr
 	 *            The new value
 	 * @return The self object
@@ -121,7 +120,7 @@ public class PageProperties {
 
 	/**
 	 * Set the left and right margins of the page
-	 * 
+	 *
 	 * @param m
 	 *            The new value
 	 * @return The self object
@@ -133,7 +132,7 @@ public class PageProperties {
 
 	/**
 	 * Set the spacing size between words
-	 * 
+	 *
 	 * @param s
 	 *            The new value
 	 * @return The self object
@@ -145,7 +144,7 @@ public class PageProperties {
 
 	/**
 	 * Set the default line-height size
-	 * 
+	 *
 	 * @param s
 	 *            The new value
 	 * @return The self object
@@ -157,7 +156,7 @@ public class PageProperties {
 
 	/**
 	 * Set the default density for computation of justified text
-	 * 
+	 *
 	 * @param rz
 	 *            The new value
 	 * @return The self object
@@ -173,7 +172,7 @@ public class PageProperties {
 
 	/**
 	 * Set the default tab wid1th for fixed-width tabs
-	 * 
+	 *
 	 * @param sz
 	 *            The new value
 	 * @return The self object
@@ -185,7 +184,7 @@ public class PageProperties {
 
 	/**
 	 * Set the headings format
-	 * 
+	 *
 	 * @param font
 	 *            The format to use
 	 * @return The self object
@@ -197,7 +196,7 @@ public class PageProperties {
 
 	/**
 	 * Set the body format
-	 * 
+	 *
 	 * @param font
 	 *            The format to use
 	 * @return The self object
@@ -209,7 +208,7 @@ public class PageProperties {
 
 	/**
 	 * Set the links format
-	 * 
+	 *
 	 * @param font
 	 *            The format to use
 	 * @return The self object
@@ -223,7 +222,7 @@ public class PageProperties {
 	 * Copy the PageProperties object with all current values. The new object
 	 * generated is an identical clone; modifications to the parent object will
 	 * not alter any children and visa-versa.
-	 * 
+	 *
 	 * @return An identical copy of this PageProperties object
 	 */
 	public PageProperties copy() {

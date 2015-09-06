@@ -7,18 +7,19 @@ import net.afterlifelochie.fontbox.data.FormattedString;
 import net.afterlifelochie.fontbox.document.property.AlignmentMode;
 import net.afterlifelochie.fontbox.layout.LayoutException;
 import net.afterlifelochie.fontbox.layout.PageWriter;
-import net.afterlifelochie.fontbox.layout.PageCursor;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.afterlifelochie.fontbox.render.BookGUI;
 
 public class Heading extends Element {
 
+	/** The heading ID */
 	public String id;
+	/** The heading text string */
 	public FormattedString text;
 
 	/**
 	 * Creates a new Heading element
-	 * 
+	 *
 	 * @param id
 	 *            The heading's unique identifier
 	 * @param text

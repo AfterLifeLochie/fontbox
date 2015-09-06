@@ -25,14 +25,14 @@ public class ObjectBounds {
 	}
 
 	public boolean intersects(ObjectBounds that) {
-		boolean flag0 = (this.x < that.x + that.width && this.x + this.width > that.x);
-		boolean flag1 = (this.y < that.y + that.height && this.y + this.height > that.y);
+		boolean flag0 = (x < that.x + that.width && x + width > that.x);
+		boolean flag1 = (y < that.y + that.height && y + height > that.y);
 		return flag0 && flag1;
 	}
 
 	public boolean encloses(int x, int y) {
-		boolean flag0 = (this.x <= x && this.x + this.width >= x);
-		boolean flag1 = (this.y <= y && this.y + this.height >= y);
+		boolean flag0 = (this.x <= x && this.x + width >= x);
+		boolean flag1 = (this.y <= y && this.y + height >= y);
 		return flag0 && flag1;
 	}
 

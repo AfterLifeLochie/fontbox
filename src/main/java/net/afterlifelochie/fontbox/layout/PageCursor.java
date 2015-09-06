@@ -5,8 +5,8 @@ public class PageCursor {
 	private int x, y;
 
 	public PageCursor() {
-		this.x = 0;
-		this.y = 0;
+		x = 0;
+		y = 0;
 	}
 
 	public int x() {
