@@ -1,11 +1,10 @@
 package net.afterlifelochie.demo;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(name = "fontbox-demo", modid = FontboxDemoMod.modid)
 public class FontboxDemoMod {
@@ -15,17 +14,17 @@ public class FontboxDemoMod {
 	@SidedProxy(clientSide = "net.afterlifelochie.demo.FontboxClient", serverSide = "net.afterlifelochie.demo.FontboxServer")
 	public static FontboxServer proxy;
 
-	@EventHandler
+	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		proxy.preInit(e);
 	}
 
-	@EventHandler
+	@Mod.EventHandler
 	public void init(FMLInitializationEvent e) {
 		proxy.init(e);
 	}
 
-	@EventHandler
+	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		proxy.postInit(e);
 	}

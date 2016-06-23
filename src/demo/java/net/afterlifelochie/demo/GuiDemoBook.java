@@ -1,23 +1,9 @@
 package net.afterlifelochie.demo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.EnumSet;
-
-import org.lwjgl.opengl.GL11;
-
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.data.FormattedString;
-import net.afterlifelochie.fontbox.document.CompilerHint;
+import net.afterlifelochie.fontbox.document.*;
 import net.afterlifelochie.fontbox.document.CompilerHint.HintType;
-import net.afterlifelochie.fontbox.document.Document;
-import net.afterlifelochie.fontbox.document.Heading;
-import net.afterlifelochie.fontbox.document.Image;
-import net.afterlifelochie.fontbox.document.ImageItemStack;
-import net.afterlifelochie.fontbox.document.Paragraph;
 import net.afterlifelochie.fontbox.document.formatting.ColorFormat;
 import net.afterlifelochie.fontbox.document.formatting.DecorationStyle;
 import net.afterlifelochie.fontbox.document.formatting.TextFormat;
@@ -26,7 +12,6 @@ import net.afterlifelochie.fontbox.document.property.FloatMode;
 import net.afterlifelochie.fontbox.font.GLFont;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
 import net.afterlifelochie.fontbox.layout.LayoutException;
-import net.afterlifelochie.fontbox.layout.PageIndex;
 import net.afterlifelochie.fontbox.layout.PageWriter;
 import net.afterlifelochie.fontbox.layout.components.PageProperties;
 import net.afterlifelochie.fontbox.render.BookGUI;
@@ -37,6 +22,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.EnumSet;
 
 public class GuiDemoBook extends BookGUI {
 
@@ -76,7 +69,7 @@ public class GuiDemoBook extends BookGUI {
 			document.push(new Heading("author", new FormattedString("Written by Aesop")));
 
 			document.push(new CompilerHint(HintType.FLOATBREAK));
-			document.push(new ImageItemStack(new ItemStack(Items.diamond, 1), 32, 32, AlignmentMode.CENTER));
+			document.push(new ImageItemStack(new ItemStack(Items.DIAMOND, 1), 32, 32, AlignmentMode.CENTER));
 			document.push(new Paragraph(new FormattedString("The classic fable demonstration book thingy.")
 					.applyFormat(new TextFormat(notethis, EnumSet.of(DecorationStyle.BOLD), new ColorFormat(128, 128,
 							255)), 0)));
@@ -88,16 +81,16 @@ public class GuiDemoBook extends BookGUI {
 				if (para.trim().length() > 0)
 					reallines.add(para.trim());
 
-			document.push(new ImageItemStack(new ItemStack(Blocks.anvil, 1), 32, 32, FloatMode.LEFT));
+			document.push(new ImageItemStack(new ItemStack(Blocks.ANVIL, 1), 32, 32, FloatMode.LEFT));
 			document.push(new Paragraph(new FormattedString(reallines.get(0))));
-			document.push(new ImageItemStack(new ItemStack(Items.diamond, 1), 32, 32, AlignmentMode.CENTER));
-			document.push(new ImageItemStack(new ItemStack(Items.apple, 1), 32, 32, FloatMode.LEFT));
+			document.push(new ImageItemStack(new ItemStack(Items.DIAMOND, 1), 32, 32, AlignmentMode.CENTER));
+			document.push(new ImageItemStack(new ItemStack(Items.APPLE, 1), 32, 32, FloatMode.LEFT));
 			document.push(new Paragraph(new FormattedString(reallines.get(1))));
 			document.push(new CompilerHint(HintType.PAGEBREAK));
 
 			document.push(new Heading("ending", new FormattedString("The Finish")));
-			document.push(new ImageItemStack(new ItemStack(Items.diamond, 1), 32, 32, AlignmentMode.CENTER));
-			document.push(new ImageItemStack(new ItemStack(Items.gold_ingot, 1), 32, 32, FloatMode.LEFT));
+			document.push(new ImageItemStack(new ItemStack(Items.DIAMOND, 1), 32, 32, AlignmentMode.CENTER));
+			document.push(new ImageItemStack(new ItemStack(Items.GOLD_INGOT, 1), 32, 32, FloatMode.LEFT));
 			document.push(new Paragraph(new FormattedString(reallines.get(2))));
 
 			/* Actually generate some pages */

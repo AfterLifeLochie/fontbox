@@ -1,11 +1,13 @@
 package net.afterlifelochie.demo;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.api.PrintOutputTracer;
 import net.afterlifelochie.fontbox.font.FontException;
 import net.afterlifelochie.fontbox.font.GLFont;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 public class FontboxClient extends FontboxServer {
 
@@ -20,6 +22,8 @@ public class FontboxClient extends FontboxServer {
 		} catch (FontException f0) {
 			f0.printStackTrace();
 		}
-	}
+
+        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(FontboxServer.book, 0, new ModelResourceLocation("minecraft:book", "inventory"));
+    }
 
 }

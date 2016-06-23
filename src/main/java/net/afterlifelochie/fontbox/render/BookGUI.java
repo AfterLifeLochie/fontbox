@@ -1,7 +1,5 @@
 package net.afterlifelochie.fontbox.render;
 
-import java.util.ArrayList;
-
 import net.afterlifelochie.fontbox.Fontbox;
 import net.afterlifelochie.fontbox.document.Element;
 import net.afterlifelochie.fontbox.layout.DocumentProcessor;
@@ -10,61 +8,20 @@ import net.afterlifelochie.fontbox.layout.PageCursor;
 import net.afterlifelochie.fontbox.layout.PageIndex;
 import net.afterlifelochie.fontbox.layout.components.Page;
 import net.minecraft.client.gui.GuiScreen;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.OpenGLException;
 import org.lwjgl.opengl.Util;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 public abstract class BookGUI extends GuiScreen {
-
-	/**
-	 * The page-up mode.
-	 *
-	 * @author AfterLifeLochie
-	 */
-	public static enum UpMode {
-		/** One-up (one page) mode */
-		ONEUP(1),
-		/** Two-up (two page) mode */
-		TWOUP(2);
-
-		/** The number of pages in this mode */
-		public final int pages;
-
-		UpMode(int pages) {
-			this.pages = pages;
-		}
-	}
-
-	/**
-	 * Page layout container
-	 *
-	 * @author AfterLifeLochie
-	 *
-	 */
-	public static class Layout {
-		public int x, y;
-
-		/**
-		 * Create a new Layout container for rendering the page on screen.
-		 *
-		 * @param x
-		 *            The x-coordinate to render at
-		 * @param y
-		 *            The y-coordinate to render at
-		 */
-		public Layout(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-	}
 
 	/** The renderer's UpMode */
 	protected final UpMode mode;
 	/** The page layout grid */
 	protected final Layout[] layout;
-
 	/** The list of pages */
 	protected ArrayList<Page> pages;
 	/** The list of cursors */
@@ -73,14 +30,12 @@ public abstract class BookGUI extends GuiScreen {
 	protected PageIndex index;
 	/** The current page pointer */
 	protected int ptr = 0;
-
 	/** The current opengl display list state */
 	protected boolean useDisplayList = false;
 	/** The current opengl buffer list */
 	protected int[] glDisplayLists;
 	/** The current buffer dirty state */
 	protected boolean glBufferDirty[];
-
 	/**
 	 * <p>
 	 * Create a new Book rendering context on top of the existing Minecraft GUI
@@ -349,36 +304,39 @@ public abstract class BookGUI extends GuiScreen {
 	}
 
 	@Override
-	protected void keyTyped(char val, int code) {
-		super.keyTyped(val, code);
-		if (code == Keyboard.KEY_LEFT)
+    protected void keyTyped(char val, int code) throws IOException {
+        try {
+            super.keyTyped(val, code);
+        } catch (IOException exception) {
+            System.out.println(exception);
+        }
+        if (code == Keyboard.KEY_LEFT)
 			previous();
 		if (code == Keyboard.KEY_RIGHT)
 			next();
 	}
 
 	@Override
-	protected void mouseClicked(int mx, int my, int button) {
-		super.mouseClicked(mx, my, button);
-		for (int i = 0; i < mode.pages; i++) {
-			Layout where = layout[i];
-			int which = ptr + i;
-			if (pages.size() <= which)
-				break;
-			Page page = pages.get(ptr + i);
-			int mouseX = mx - where.x, mouseY = my - where.y;
-			if (mouseX >= 0 && mouseY >= 0 && mouseX <= page.width && mouseY <= page.height) {
-				Element elem = DocumentProcessor.getElementAt(page, mouseX, mouseY);
-				if (elem != null)
-					elem.clicked(this, mouseX, mouseY);
-			}
-		}
-	}
-
-	@Override
-	protected void mouseMovedOrUp(int mx, int my, int button) {
-		super.mouseMovedOrUp(mx, my, button);
-	}
+    protected void mouseClicked(int mx, int my, int button) throws IOException {
+        try {
+            super.mouseClicked(mx, my, button);
+        } catch (IOException exception) {
+            System.out.println(exception);
+        }
+        for (int i = 0; i < mode.pages; i++) {
+            Layout where = layout[i];
+            int which = ptr + i;
+            if (pages.size() <= which)
+                break;
+            Page page = pages.get(ptr + i);
+            int mouseX = mx - where.x, mouseY = my - where.y;
+            if (mouseX >= 0 && mouseY >= 0 && mouseX <= page.width && mouseY <= page.height) {
+                Element elem = DocumentProcessor.getElementAt(page, mouseX, mouseY);
+                if (elem != null)
+                    elem.clicked(this, mouseX, mouseY);
+            }
+        }
+    }
 
 	@Override
 	protected void mouseClickMove(int mx, int my, int button, long ticks) {
@@ -443,7 +401,54 @@ public abstract class BookGUI extends GuiScreen {
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 				}
 			}
-		}
+        }
+    }
+
+    /**
+     * The page-up mode.
+     *
+     * @author AfterLifeLochie
+     */
+    public static enum UpMode {
+        /**
+         * One-up (one page) mode
+         */
+        ONEUP(1),
+        /**
+         * Two-up (two page) mode
+         */
+        TWOUP(2);
+
+        /**
+         * The number of pages in this mode
+         */
+        public final int pages;
+
+        UpMode(int pages) {
+            this.pages = pages;
+        }
+    }
+
+    /**
+     * Page layout container
+     *
+     * @author AfterLifeLochie
+     */
+    public static class Layout {
+        public int x, y;
+
+        /**
+         * Create a new Layout container for rendering the page on screen.
+         *
+         * @param x
+         *            The x-coordinate to render at
+         * @param y
+         *            The y-coordinate to render at
+         */
+        public Layout(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
 	}
 
 }
